@@ -19,10 +19,12 @@ public class ParagraphExplanationActivity extends Activity {
   File file=new File(getFilesDir(),"tipitaka_offline.sqlite");
   if(!file.exists()){notice("မူရင်းကျမ်းစာသား Database ကို APK ထဲ မထည့်သွင်းရသေးပါ။");return;}
   try{db=SQLiteDatabase.openDatabase(file.getAbsolutePath(),null,SQLiteDatabase.OPEN_READONLY);
-    Cursor c=db.rawQuery("SELECT p.id,p.body,e.explanation_my,e.source_ref FROM paragraphs p LEFT JOIN paragraph_explanations e ON e.paragraph_id=p.id AND e.language='my' WHERE p.volume=? ORDER BY p.id LIMIT 200",new String[]{String.valueOf(volume)});
+    String selected=getIntent().getStringExtra("paragraph_id");
+    String sql="SELECT p.id,p.body,e.explanation_my,e.source_ref FROM paragraphs p LEFT JOIN paragraph_explanations e ON e.paragraph_id=p.id AND e.language='my' AND e.reviewed=1 WHERE p.volume=?"+(selected!=null?" AND p.id=?":"")+" ORDER BY p.id LIMIT 200";
+    Cursor c=db.rawQuery(sql,selected!=null?new String[]{String.valueOf(volume),selected}:new String[]{String.valueOf(volume)});
     int count=0;while(c.moveToNext()){final String id=c.getString(0),body=c.getString(1),explain=c.isNull(2)?null:c.getString(2),ref=c.isNull(3)?"":c.getString(3);
       TextView t=new TextView(this);t.setText("§"+id+"\n"+body+"\n\n☸ မြန်မာရှင်းလင်းချက် ကြည့်ရန်");t.setTextSize(18);t.setTextColor(0xff17493c);
-      t.setPadding(22,18,22,18);rows.addView(t);t.setOnClickListener(v->popup(body,explain,ref));count++;}
+      t.setPadding(22,18,22,18);rows.addView(t);t.setOnClickListener(v->popup(body,explain,ref));if(selected!=null)popup(body,explain,ref);count++;}
     c.close();if(count==0)notice("ဤကျမ်းအတွက် Offline ကျမ်းပိုဒ်များ မတွေ့ပါ။");
   }catch(Exception e){notice("Offline Database တွင် paragraph_explanations Table သို့မဟုတ် သက်ဆိုင်ရာ Data မရှိသေးပါ။");}
  }
