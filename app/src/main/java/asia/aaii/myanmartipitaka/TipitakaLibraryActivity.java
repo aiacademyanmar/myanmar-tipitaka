@@ -74,6 +74,7 @@ public final class TipitakaLibraryActivity extends Activity {
       final int index=i;String group=i<8?"ဝိနည်း":i<33?"သုတ္တန်":"အဘိဓမ္မာ";
       row(String.format(Locale.US,"%02d  %s\n%s",i+1,NAMES[i],group),()->openVolume(index));
     }
+    row("⌕  Offline ကျမ်းပိုဒ် စာသားရှာရန်",()->startActivity(new Intent(this,OfflineSearchActivity.class)));
     row("📖  မိမိစာအုပ်ဖိုင် ဖွင့်ဖတ်ရန်",()->startActivity(new Intent(this,BookReaderActivity.class)));
     TextView close=text("‹ ပြန်ရန်",17);close.setTextColor(Color.WHITE);close.setBackgroundColor(GREEN);root.addView(close);close.setOnClickListener(v->finish());setContentView(root);
   }
