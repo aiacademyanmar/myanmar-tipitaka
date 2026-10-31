@@ -28,10 +28,11 @@ public class NativeFrontPagesActivity extends Activity {
     content.addView(b,lp);b.setElevation(dp(2));b.setOnClickListener(v->go(target));
   }
   private void go(int p){
-    if(p<=6){render(p);return;}
+    if(p==3){toggleMenu();return;}
+    if(p<=9){render(p);return;}
     Intent i=new Intent(this,ExactScreensActivity.class);i.putExtra("openPage",p);startActivity(i);
   }
-  @Override public void onCreate(Bundle state){super.onCreate(state);page=state==null?getIntent().getIntExtra("openPage",1):state.getInt("page",1);render(Math.max(1,Math.min(6,page)));}
+  @Override public void onCreate(Bundle state){super.onCreate(state);page=state==null?getIntent().getIntExtra("openPage",1):state.getInt("page",1);render(Math.max(1,Math.min(9,page)));}
   private void render(int n){
     page=n;getWindow().setStatusBarColor(GREEN);getWindow().setNavigationBarColor(GREEN);
     root=new LinearLayout(this);root.setOrientation(LinearLayout.VERTICAL);root.setBackgroundColor(CREAM);
@@ -43,7 +44,38 @@ public class NativeFrontPagesActivity extends Activity {
     ScrollView scroll=new ScrollView(this);scroll.setFillViewport(true);
     content=new LinearLayout(this);content.setOrientation(LinearLayout.VERTICAL);content.setPadding(dp(18),dp(15),dp(18),dp(28));
     scroll.addView(content);root.addView(scroll,new LinearLayout.LayoutParams(-1,0,1));
-    if(n==4){
+    if(n==7){
+      addText("ဓမ္မစာအုပ်တိုက်",26,GREEN,true);
+      addText("My Offline Library",16,GOLD,false);
+      addText("ဖုန်းအတွင်းရှိ PDF, EPUB နှင့် UTF-8 TXT စာအုပ်များကို ရွေးချယ်ဖတ်ရှုနိုင်ပါသည်။",16,INK,false);
+      TextView open=text("＋  စာအုပ်ဖိုင်ရွေးပြီး ဖတ်ရန်",19,Color.WHITE,true);
+      open.setBackground(bg(GREEN,18));content.addView(open);
+      open.setOnClickListener(v->startActivity(new Intent(this,BookReaderActivity.class)));
+      button("နောက်ဆုံးဖတ်ခဲ့သော စာအုပ်",8);
+      button("ပိဋကတ်တော် အမျိုးအစားများ",4);
+      button("သုတ် • ဝိနည်း • အဘိဓမ္မာ",5);
+      addText("မှတ်ချက် — စာအုပ်စာရင်း Database မပါသေးပါ။ ဖိုင်ရွေးချယ်ခြင်းကို Android System Picker ဖြင့် ပြုလုပ်ပါသည်။",14,INK,false);
+    }else if(n==8){
+      addText("စာဖတ်ခြင်းနှင့် ဆက်လက်ဖတ်ရှုရန်",25,GREEN,true);
+      addText("Reading & Continue",16,GOLD,true);
+      addText("Reader အတွင်း နောက်ဆုံးဖွင့်ခဲ့သော PDF, EPUB သို့မဟုတ် TXT စာအုပ်နှင့် ဖတ်နေရာကို အလိုအလျောက် မှတ်သားထားပါသည်။",16,INK,false);
+      TextView resume=text("▶  ဆက်လက်ဖတ်ရှုရန်",19,Color.WHITE,true);
+      resume.setBackground(bg(GREEN,18));content.addView(resume);
+      resume.setOnClickListener(v->startActivity(new Intent(this,BookReaderActivity.class)));
+      button("စာအုပ်အသစ်ဖွင့်ရန်",7);
+      button("Native Reader Settings",6);
+      button("စာမှတ်များနှင့် မှတ်စု",12);
+    }else if(n==9){
+      addText("ဓမ္မလေ့လာရေး",27,GREEN,true);
+      addText("Dhamma Learning",16,GOLD,true);
+      addText("ပိဋကတ်တော်ကို အကြောင်းအရာအလိုက် လေ့လာရန် လမ်းညွှန်",16,INK,false);
+      button("၁။ သုံးပုံပိဋကတ်ကို လေ့လာရန်",4);
+      button("၂။ သုတ္တန်နှင့် နိကာယ်ငါးရပ်",19);
+      button("၃။ အဘိဓမ္မာကို လေ့လာရန်",15);
+      button("၄။ မင်္ဂလသုတ် လေ့လာရန်",18);
+      button("၅။ မိမိစာအုပ်ကို ဖွင့်ဖတ်ရန်",6);
+      addText("သင်ခန်းစာစာသား၊ မေးခွန်းနှင့် အဖြေဒေတာကို နောက်ဆက်တွဲ ထည့်သွင်းရန် လိုအပ်ပါသည်။",14,INK,false);
+    }else if(n==4){
       addText("ပိဋကတ်တော် အမျိုးအစားများ",26,GREEN,true);
       addText("သုံးပုံပိဋကတ် • Tipitaka Collections",16,GOLD,false);
       button("☸  ဝိနည်းပိဋကတ် — Vinaya Pitaka",5);
@@ -92,7 +124,7 @@ public class NativeFrontPagesActivity extends Activity {
       for(int i=0;i<targets.length;i++)button(String.format(java.util.Locale.US,"%02d  %s",targets[i],names[i]),targets[i]);
     }
     menuPanel=new LinearLayout(this);menuPanel.setOrientation(LinearLayout.VERTICAL);menuPanel.setBackground(bg(Color.WHITE,18));menuPanel.setVisibility(View.GONE);
-    ScrollView menuScroll=new ScrollView(this);LinearLayout items=new LinearLayout(this);items.setOrientation(LinearLayout.VERTICAL);String[] menuTitles={"Home","Categories","Books","Native Reader","Search","Bookmarks","Reading History","About"};int[] menuTargets={2,4,5,6,10,12,13,20};
+    ScrollView menuScroll=new ScrollView(this);LinearLayout items=new LinearLayout(this);items.setOrientation(LinearLayout.VERTICAL);String[] menuTitles={"Home","Categories","Books","Native Reader","Library","Continue Reading","Learning","Search","Bookmarks","Reading History","About"};int[] menuTargets={2,4,5,6,7,8,9,10,12,13,20};
     for(int i=0;i<menuTitles.length;i++){final int target=menuTargets[i];TextView item=text(menuTitles[i],17,GREEN,true);items.addView(item);item.setOnClickListener(v->go(target));}
     menuScroll.addView(items);menuPanel.addView(menuScroll,new LinearLayout.LayoutParams(-1,dp(235)));
     root.addView(menuPanel);
