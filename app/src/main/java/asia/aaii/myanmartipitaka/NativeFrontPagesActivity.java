@@ -29,10 +29,10 @@ public class NativeFrontPagesActivity extends Activity {
   }
   private void go(int p){
     if(p==3){toggleMenu();return;}
-    if(p<=12){render(p);return;}
+    if(p<=15){render(p);return;}
     Intent i=new Intent(this,ExactScreensActivity.class);i.putExtra("openPage",p);startActivity(i);
   }
-  @Override public void onCreate(Bundle state){super.onCreate(state);page=state==null?getIntent().getIntExtra("openPage",1):state.getInt("page",1);render(Math.max(1,Math.min(12,page)));}
+  @Override public void onCreate(Bundle state){super.onCreate(state);page=state==null?getIntent().getIntExtra("openPage",1):state.getInt("page",1);render(Math.max(1,Math.min(15,page)));}
   private void render(int n){
     page=n;getWindow().setStatusBarColor(GREEN);getWindow().setNavigationBarColor(GREEN);
     root=new LinearLayout(this);root.setOrientation(LinearLayout.VERTICAL);root.setBackgroundColor(CREAM);
@@ -44,7 +44,60 @@ public class NativeFrontPagesActivity extends Activity {
     ScrollView scroll=new ScrollView(this);scroll.setFillViewport(true);
     content=new LinearLayout(this);content.setOrientation(LinearLayout.VERTICAL);content.setPadding(dp(18),dp(15),dp(18),dp(28));
     scroll.addView(content);root.addView(scroll,new LinearLayout.LayoutParams(-1,0,1));
-    if(n==10){
+    if(n==13){
+      addText("ဖတ်ရှုမှုမှတ်တမ်း",26,GREEN,true);
+      addText("Reading History & Continue",16,GOLD,true);
+      android.content.SharedPreferences reader=getSharedPreferences("native_reader",MODE_PRIVATE);
+      String last=reader.getString("lastUri",null);
+      if(last==null){
+        addText("ဖတ်ရှုထားသော စာအုပ်မရှိသေးပါ။",17,INK,false);
+        button("စာအုပ်ဖိုင် ဖွင့်ဖတ်ရန်",6);
+      }else{
+        addText("နောက်ဆုံးဖတ်ခဲ့သော စာအုပ်",18,GREEN,true);
+        addText(android.net.Uri.parse(last).getLastPathSegment(),15,INK,false);
+        int position=reader.getInt("position_"+last,0)+1;
+        addText("ဖတ်ခဲ့သည့် စာမျက်နှာ: "+position,17,GOLD,true);
+        TextView resume=text("▶ ဆက်လက်ဖတ်ရှုရန်",19,Color.WHITE,true);
+        resume.setBackground(bg(GREEN,16));content.addView(resume);
+        resume.setOnClickListener(v->startActivity(new Intent(this,BookReaderActivity.class)));
+        button("စာအုပ်အသစ် ဖွင့်ရန်",7);
+      }
+      addText("ဖတ်ရှုမှုနေရာကို ဖုန်းအတွင်းတွင် အလိုအလျောက် သိမ်းဆည်းထားသည်။",14,INK,false);
+    }else if(n==14){
+      addText("အဆင့်မြင့် ရှာဖွေရန်",26,GREEN,true);
+      addText("Advanced Search & Filter",16,GOLD,true);
+      EditText term=new EditText(this);term.setSingleLine(true);term.setTextSize(18);
+      term.setHint("ရှာဖွေလိုသော စာသား");term.setText(getPreferences(MODE_PRIVATE).getString("searchQuery",""));
+      term.setBackground(bg(Color.WHITE,14));term.setPadding(dp(15),dp(14),dp(15),dp(14));content.addView(term);
+      String[] choices={"အားလုံး","ဝိနည်း","သုတ္တန်","အဘိဓမ္မာ"};
+      Spinner pitaka=new Spinner(this);
+      pitaka.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item,choices));
+      content.addView(pitaka);
+      CheckBox exact=new CheckBox(this);exact.setText("Exact phrase");exact.setTextColor(INK);content.addView(exact);
+      TextView run=text("⌕  Filter နှင့် ရှာမည်",19,Color.WHITE,true);
+      run.setBackground(bg(GREEN,16));content.addView(run);
+      run.setOnClickListener(v->{String q=term.getText().toString().trim();if(q.isEmpty()){term.setError("စာသားထည့်ပါ");return;}
+        getPreferences(MODE_PRIVATE).edit().putString("searchQuery",q)
+          .putString("searchFilter",choices[pitaka.getSelectedItemPosition()])
+          .putBoolean("exactMatch",exact.isChecked()).apply();go(11);
+      });
+      addText("လက်ရှိတွင် ခေါင်းစဉ်ရှာဖွေမှုသာ ပါဝင်ပါသည်။ စာသား Full-text Search အတွက် စာအုပ်ဒေတာနှင့် Index လိုအပ်ပါသည်။",14,INK,false);
+    }else if(n==15){
+      addText("အဘိဓမ္မာပိဋကတ်",27,GREEN,true);
+      addText("Abhidhamma Books • အဘိဓမ္မာ ၇ ကျမ်း",16,GOLD,true);
+      String[] books={"ဓမ္မသင်္ဂဏီ — Dhammasaṅgaṇī","ဝိဘင်္ဂ — Vibhaṅga","ဓာတုကထာ — Dhātukathā",
+        "ပုဂ္ဂလပညတ္တိ — Puggalapaññatti","ကထာဝတ္ထု — Kathāvatthu",
+        "ယမက — Yamaka","ပဋ္ဌာန်း — Paṭṭhāna"};
+      for(String name:books){
+        TextView row=text("▤  "+name+"\n       ဖိုင်ရွေး၍ ဖတ်ရှုရန်",16,INK,true);
+        row.setBackground(bg(Color.WHITE,16));
+        LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(-1,-2);lp.setMargins(dp(4),dp(5),dp(4),dp(5));
+        content.addView(row,lp);
+        row.setOnClickListener(v->startActivity(new Intent(this,BookReaderActivity.class)));
+      }
+      addText("မူရင်း အဘိဓမ္မာစာအုပ် ဖိုင်များကို ကြိုတင်ထည့်မထားသေးပါ။ ကိုယ့်ဖုန်းရှိ PDF/EPUB/TXT ဖိုင်ကို Reader မှ ရွေးဖတ်နိုင်ပါသည်။",14,INK,false);
+      button("အဘိဓမ္မာ Native Reader",16);
+    }else if(n==10){
       addText("ပိဋကတ်တော် ရှာဖွေရန်",26,GREEN,true);
       addText("Search • မြန်မာ / Pāli",16,GOLD,false);
       EditText query=new EditText(this);query.setSingleLine(true);query.setTextSize(19);
@@ -167,7 +220,7 @@ public class NativeFrontPagesActivity extends Activity {
       for(int i=0;i<targets.length;i++)button(String.format(java.util.Locale.US,"%02d  %s",targets[i],names[i]),targets[i]);
     }
     menuPanel=new LinearLayout(this);menuPanel.setOrientation(LinearLayout.VERTICAL);menuPanel.setBackground(bg(Color.WHITE,18));menuPanel.setVisibility(View.GONE);
-    ScrollView menuScroll=new ScrollView(this);LinearLayout items=new LinearLayout(this);items.setOrientation(LinearLayout.VERTICAL);String[] menuTitles={"Home","Categories","Books","Native Reader","Library","Continue Reading","Learning","Search","Search Results","Bookmarks","Reading History","About"};int[] menuTargets={2,4,5,6,7,8,9,10,11,12,13,20};
+    ScrollView menuScroll=new ScrollView(this);LinearLayout items=new LinearLayout(this);items.setOrientation(LinearLayout.VERTICAL);String[] menuTitles={"Home","Categories","Books","Native Reader","Library","Continue Reading","Learning","Search","Search Results","Bookmarks","Reading History","Advanced Search","Abhidhamma Books","About"};int[] menuTargets={2,4,5,6,7,8,9,10,11,12,13,14,15,20};
     for(int i=0;i<menuTitles.length;i++){final int target=menuTargets[i];TextView item=text(menuTitles[i],17,GREEN,true);items.addView(item);item.setOnClickListener(v->go(target));}
     menuScroll.addView(items);menuPanel.addView(menuScroll,new LinearLayout.LayoutParams(-1,dp(235)));
     root.addView(menuPanel);
