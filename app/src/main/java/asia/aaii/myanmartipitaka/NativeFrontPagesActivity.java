@@ -29,10 +29,10 @@ public class NativeFrontPagesActivity extends Activity {
   }
   private void go(int p){
     if(p==3){toggleMenu();return;}
-    if(p<=9){render(p);return;}
+    if(p<=12){render(p);return;}
     Intent i=new Intent(this,ExactScreensActivity.class);i.putExtra("openPage",p);startActivity(i);
   }
-  @Override public void onCreate(Bundle state){super.onCreate(state);page=state==null?getIntent().getIntExtra("openPage",1):state.getInt("page",1);render(Math.max(1,Math.min(9,page)));}
+  @Override public void onCreate(Bundle state){super.onCreate(state);page=state==null?getIntent().getIntExtra("openPage",1):state.getInt("page",1);render(Math.max(1,Math.min(12,page)));}
   private void render(int n){
     page=n;getWindow().setStatusBarColor(GREEN);getWindow().setNavigationBarColor(GREEN);
     root=new LinearLayout(this);root.setOrientation(LinearLayout.VERTICAL);root.setBackgroundColor(CREAM);
@@ -44,7 +44,50 @@ public class NativeFrontPagesActivity extends Activity {
     ScrollView scroll=new ScrollView(this);scroll.setFillViewport(true);
     content=new LinearLayout(this);content.setOrientation(LinearLayout.VERTICAL);content.setPadding(dp(18),dp(15),dp(18),dp(28));
     scroll.addView(content);root.addView(scroll,new LinearLayout.LayoutParams(-1,0,1));
-    if(n==7){
+    if(n==10){
+      addText("ပိဋကတ်တော် ရှာဖွေရန်",26,GREEN,true);
+      addText("Search • မြန်မာ / Pāli",16,GOLD,false);
+      EditText query=new EditText(this);query.setSingleLine(true);query.setTextSize(19);
+      query.setHint("ရှာဖွေလိုသော စကားလုံး");query.setText(getPreferences(MODE_PRIVATE).getString("searchQuery",""));
+      query.setBackground(bg(Color.WHITE,14));query.setPadding(dp(16),dp(13),dp(16),dp(13));
+      content.addView(query);
+      String[] filters={"အားလုံး","သုတ္တန်","ဝိနည်း","အဘိဓမ္မာ"};
+      Spinner filter=new Spinner(this);ArrayAdapter<String> adapter=new ArrayAdapter<>(this,android.R.layout.simple_spinner_dropdown_item,filters);
+      filter.setAdapter(adapter);content.addView(filter);
+      TextView find=text("⌕   ရှာဖွေရန်",19,Color.WHITE,true);find.setBackground(bg(GREEN,16));content.addView(find);
+      find.setOnClickListener(v->{String q=query.getText().toString().trim();
+        if(q.isEmpty()){query.setError("စာသားထည့်ပါ");return;}
+        getPreferences(MODE_PRIVATE).edit().putString("searchQuery",q).putString("searchFilter",filters[filter.getSelectedItemPosition()]).apply();
+        go(11);
+      });
+      addText("မှတ်ချက် — လက်ရှိတွင် Menu/ခေါင်းစဉ်များကိုသာ ရှာနိုင်ပါသည်။ ပိဋကတ်တော် စာသားအပြည့်အစုံ Search အတွက် Index Database လိုအပ်ပါသည်။",14,INK,false);
+    }else if(n==11){
+      String q=getPreferences(MODE_PRIVATE).getString("searchQuery","");
+      addText("ရှာဖွေမှုရလဒ်",26,GREEN,true);
+      addText("Search Results • "+q,16,GOLD,true);
+      if(q.isEmpty()){addText("ရှာဖွေမည့် စကားလုံးမရှိသေးပါ။",16,INK,false);button("ရှာဖွေရန်",10);}
+      else{
+        String[] titles={"ဝိနည်းပိဋကတ်","သုတ္တန်ပိဋကတ်","အဘိဓမ္မာပိဋကတ်","နိကာယ်ငါးရပ်","မင်္ဂလသုတ်","ဓမ္မစာအုပ်တိုက်","PDF EPUB TXT Reader"};
+        int[] targets={4,4,15,19,18,7,6};int count=0;
+        for(int i=0;i<titles.length;i++)if(titles[i].toLowerCase(java.util.Locale.ROOT).contains(q.toLowerCase(java.util.Locale.ROOT))){button(titles[i],targets[i]);count++;}
+        if(count==0)addText("အက်ပ်၏ လက်ရှိခေါင်းစဉ်များတွင် ကိုက်ညီမှုမရှိပါ။ ပိဋကတ်တော် Full-text Index မထည့်သွင်းရသေးပါ။",16,INK,false);
+        button("ရှာဖွေမှု ပြန်ပြင်ရန်",10);
+      }
+    }else if(n==12){
+      addText("စာမှတ်များနှင့် မှတ်စု",26,GREEN,true);
+      addText("Bookmarks & Notes",16,GOLD,true);
+      String old=getPreferences(MODE_PRIVATE).getString("note","");
+      EditText note=new EditText(this);note.setText(old);note.setTextSize(18);note.setMinLines(5);
+      note.setGravity(Gravity.TOP);note.setHint("မိမိမှတ်စု ရေးသားရန်...");
+      note.setBackground(bg(Color.WHITE,14));note.setPadding(dp(16),dp(13),dp(16),dp(13));
+      content.addView(note);
+      TextView save=text("✓   မှတ်စု သိမ်းမည်",18,Color.WHITE,true);save.setBackground(bg(GREEN,14));content.addView(save);
+      save.setOnClickListener(v->{getPreferences(MODE_PRIVATE).edit().putString("note",note.getText().toString()).apply();
+        Toast.makeText(this,"မှတ်စု သိမ်းဆည်းပြီး",Toast.LENGTH_SHORT).show();});
+      button("စာအုပ်ဖတ်စက် (Reader Bookmark)",6);
+      button("ဆက်လက်ဖတ်ရှုရန်",8);
+      addText("စာမှတ်များကို Reader အတွင်း သိမ်းဆည်းထားနိုင်ပြီး စာမှတ်တစ်ခုချင်းကို Reader ၏ Go to → Bookmark ဖြင့် ဖွင့်နိုင်ပါသည်။",14,INK,false);
+    }else if(n==7){
       addText("ဓမ္မစာအုပ်တိုက်",26,GREEN,true);
       addText("My Offline Library",16,GOLD,false);
       addText("ဖုန်းအတွင်းရှိ PDF, EPUB နှင့် UTF-8 TXT စာအုပ်များကို ရွေးချယ်ဖတ်ရှုနိုင်ပါသည်။",16,INK,false);
@@ -124,7 +167,7 @@ public class NativeFrontPagesActivity extends Activity {
       for(int i=0;i<targets.length;i++)button(String.format(java.util.Locale.US,"%02d  %s",targets[i],names[i]),targets[i]);
     }
     menuPanel=new LinearLayout(this);menuPanel.setOrientation(LinearLayout.VERTICAL);menuPanel.setBackground(bg(Color.WHITE,18));menuPanel.setVisibility(View.GONE);
-    ScrollView menuScroll=new ScrollView(this);LinearLayout items=new LinearLayout(this);items.setOrientation(LinearLayout.VERTICAL);String[] menuTitles={"Home","Categories","Books","Native Reader","Library","Continue Reading","Learning","Search","Bookmarks","Reading History","About"};int[] menuTargets={2,4,5,6,7,8,9,10,12,13,20};
+    ScrollView menuScroll=new ScrollView(this);LinearLayout items=new LinearLayout(this);items.setOrientation(LinearLayout.VERTICAL);String[] menuTitles={"Home","Categories","Books","Native Reader","Library","Continue Reading","Learning","Search","Search Results","Bookmarks","Reading History","About"};int[] menuTargets={2,4,5,6,7,8,9,10,11,12,13,20};
     for(int i=0;i<menuTitles.length;i++){final int target=menuTargets[i];TextView item=text(menuTitles[i],17,GREEN,true);items.addView(item);item.setOnClickListener(v->go(target));}
     menuScroll.addView(items);menuPanel.addView(menuScroll,new LinearLayout.LayoutParams(-1,dp(235)));
     root.addView(menuPanel);
