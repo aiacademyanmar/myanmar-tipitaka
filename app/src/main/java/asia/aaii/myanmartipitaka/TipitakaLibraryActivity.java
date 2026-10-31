@@ -67,19 +67,6 @@ public final class TipitakaLibraryActivity extends Activity {
   private void openVolume(int index){
     if(db==null){startActivity(new Intent(this,BookReaderActivity.class));return;}
     Intent popup=new Intent(this,ParagraphExplanationActivity.class);popup.putExtra("volume",index+1);startActivity(popup);return;
-    /*
-    // Volume IDs in an approved corpus must map to the 1..45 edition-specific indices.
-    Cursor c=null;
-    try{
-      c=db.rawQuery("SELECT body FROM paragraphs WHERE volume=? ORDER BY id LIMIT 300",new String[]{String.valueOf(index+1)});
-      StringBuilder sb=new StringBuilder();
-      while(c.moveToNext()&&sb.length()<50000)sb.append(c.getString(0)).append("\n\n");
-      if(sb.length()==0){Toast.makeText(this,"ဤကျမ်း၏ စာသားဒေတာ မပါဝင်သေးပါ",Toast.LENGTH_LONG).show();return;}
-      ScrollView scroll=new ScrollView(this);TextView body=text(sb.toString(),19);body.setTextIsSelectable(true);scroll.addView(body);
-      new AlertDialog.Builder(this).setTitle(NAMES[index]).setView(scroll).setPositiveButton("ပိတ်မည်",null).show();
-    }catch(Exception e){Toast.makeText(this,"Offline data format error",Toast.LENGTH_LONG).show();}
-    finally{if(c!=null)c.close();}
   }
-    */
   @Override protected void onDestroy(){if(db!=null)db.close();super.onDestroy();}
 }
