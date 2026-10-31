@@ -50,7 +50,7 @@ public class ExactScreensActivity extends Activity {
         image.setBackgroundColor(Color.BLACK);
         image.setScaleType(ImageView.ScaleType.FIT_CENTER);
         setContentView(image);
-        int start=saved==null?getPreferences(MODE_PRIVATE).getInt("lastPage",1):saved.getInt("page",1);
+        int start=saved==null?getIntent().getIntExtra("openPage",getPreferences(MODE_PRIVATE).getInt("lastPage",4)):saved.getInt("page",4);
         showScreen(start);
         image.setOnTouchListener((v,e)->{
             if(e.getAction()==MotionEvent.ACTION_DOWN){downX=e.getX();downY=e.getY();return true;}
