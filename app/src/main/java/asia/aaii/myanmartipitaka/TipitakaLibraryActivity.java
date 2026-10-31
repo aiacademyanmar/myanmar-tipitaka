@@ -66,6 +66,8 @@ public final class TipitakaLibraryActivity extends Activity {
   }
   private void openVolume(int index){
     if(db==null){startActivity(new Intent(this,BookReaderActivity.class));return;}
+    Intent popup=new Intent(this,ParagraphExplanationActivity.class);popup.putExtra("volume",index+1);startActivity(popup);return;
+    /*
     // Volume IDs in an approved corpus must map to the 1..45 edition-specific indices.
     Cursor c=null;
     try{
@@ -78,5 +80,6 @@ public final class TipitakaLibraryActivity extends Activity {
     }catch(Exception e){Toast.makeText(this,"Offline data format error",Toast.LENGTH_LONG).show();}
     finally{if(c!=null)c.close();}
   }
+    */
   @Override protected void onDestroy(){if(db!=null)db.close();super.onDestroy();}
 }
