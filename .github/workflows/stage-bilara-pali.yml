@@ -1,0 +1,42 @@
+name: Stage Published Bilara Pali SQLite (Source Validation)
+on:
+  workflow_dispatch:
+jobs:
+  stage:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Fetch published Bilara Pali source
+        run: |
+          git clone --depth 1 --branch published --filter=blob:none --sparse https://github.com/suttacentral/bilara-data.git upstream-bilara
+          cd upstream-bilara
+          git sparse-checkout set root/pli/ms LICENSE.md
+          git rev-parse HEAD > ../bilara_source_commit.txt
+      - name: Stage Pali root segments
+        run: |
+          python scripts/stage_bilara_pali.py upstream-bilara/root/pli/ms --output bilara_pali_staging.csv
+          python scripts/build_bilara_source_sqlite.py upstream-bilara/root/pli/ms --output pali_root_source.sqlite --source-commit "$(cat bilara_source_commit.txt)"
+      - name: Provenance audit
+        run: |
+          python - <<'PY'
+          import sqlite3
+          db=sqlite3.connect("pali_root_source.sqlite")
+          n=db.execute("select count(*) from source_segments").fetchone()[0]
+          print("Pali source segments:",n)
+          print("Edition-specific volumes mapped: 0 / 45")
+          assert n>0
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Bilara-Pali-Source-UNMAPPED-Not-APK-Ready
+          path: |
+            pali_root_source.sqlite
+            bilara_source_commit.txt
+            bilara_pali_staging.csv
+            upstream-bilara/LICENSE.md
+          if-no-files-found: error
