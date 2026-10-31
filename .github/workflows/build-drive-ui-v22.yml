@@ -4,7 +4,9 @@ on:
   push:
     branches: [v2.2-exact-20-screens]
     paths:
-      - 'scripts/import_drive_ui.py'
+      - 'scripts/**'
+      - 'corpus/**'
+      - 'database/**'
       - 'app/**'
       - '.github/workflows/build-drive-ui-v22.yml'
 jobs:
@@ -47,4 +49,5 @@ jobs:
           path: |
             app/build/outputs/apk/debug/app-debug.apk
             exact_assets_manifest.json
+            offline_coverage_report.json
           if-no-files-found: error
