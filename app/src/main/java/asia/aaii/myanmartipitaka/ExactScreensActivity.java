@@ -1,6 +1,7 @@
 package asia.aaii.myanmartipitaka;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
