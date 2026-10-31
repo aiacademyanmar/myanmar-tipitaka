@@ -57,6 +57,7 @@ public class NativeFrontPagesActivity extends Activity {
     }else if(n==17){
       addText("ဓမ္မသင်ခန်းစာများ",27,GREEN,true);
       addText("Dhamma Learning • Study Hub",16,GOLD,true);
+      TextView offline=text("☸  Offline ဓမ္မစာများနှင့် မြန်မာရှင်းလင်းချက် Popup",19,Color.WHITE,true);offline.setBackground(bg(GREEN,16));content.addView(offline);offline.setOnClickListener(v->startActivity(new Intent(this,OfflineDhammaActivity.class)));
       button("ပိဋကတ်တော် အခြေခံမိတ်ဆက်",4);
       button("နိကာယ်ငါးရပ်ကို လေ့လာရန်",19);
       button("အဘိဓမ္မာ ၇ ကျမ်း",15);
@@ -67,6 +68,7 @@ public class NativeFrontPagesActivity extends Activity {
       addText("မင်္ဂလသုတ်နှင့် နိဗ္ဗာန်",26,GREEN,true);
       addText("Maṅgala Sutta & Nibbāna Learning",16,GOLD,true);
       addText("မင်္ဂလာတရား ၃၈ ပါးကို လေ့လာရန် အကြောင်းအရာများ",17,INK,false);
+      TextView dhamma=text("☸  Offline ဓမ္မရှင်းလင်းချက်များ",18,Color.WHITE,true);dhamma.setBackground(bg(GREEN,16));content.addView(dhamma);dhamma.setOnClickListener(v->startActivity(new Intent(this,OfflineDhammaActivity.class)));
       button("မင်္ဂလသုတ် စာအုပ်ဖတ်ရန်",6);
       button("ဓမ္မသင်ခန်းစာများ",17);
       button("မှတ်စုများရေးရန်",12);
@@ -91,6 +93,7 @@ public class NativeFrontPagesActivity extends Activity {
       addText("Version 2.2  •  by AAII",16,GREEN,true);
       addText("ပါဝင်သောလုပ်ဆောင်ချက်များ",19,GREEN,true);
       addText("• Native Screen Navigation\n• Offline PDF / EPUB / TXT Reader\n• Reader Bookmark နှင့် Continue Reading\n• App Search (ခေါင်းစဉ်များ)\n• Notes နှင့် Reading History",16,INK,false);
+      TextView offlineHelp=text("☸  Offline ဓမ္မစာများ ဖတ်ရန်",18,Color.WHITE,true);offlineHelp.setBackground(bg(GREEN,16));content.addView(offlineHelp);offlineHelp.setOnClickListener(v->startActivity(new Intent(this,OfflineDhammaActivity.class)));
       button("စာအုပ်ဖွင့်ဖတ်ရန်",6);
       button("Advanced Search",14);
       button("Help — စာအုပ်ရွေးနည်း",7);
