@@ -21,6 +21,10 @@ jobs:
         run: python -m pip install 'Pillow>=10,<12' 'gdown>=5,<6'
       - name: Download and validate all 20 supplied Google Drive images
         run: python scripts/import_drive_ui.py
+      - name: Import approved offline corpus if supplied
+        run: |
+          python scripts/import_reviewed_corpus.py
+          python scripts/check_offline_coverage.py
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
