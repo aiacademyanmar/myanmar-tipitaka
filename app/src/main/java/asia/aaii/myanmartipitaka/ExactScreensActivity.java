@@ -88,6 +88,7 @@ public class ExactScreensActivity extends Activity {
             if(y>0.50f&&y<0.90f){showScreen(6);return;}
         }
         if(page==6||page==16){
+            if(y>0.27f&&y<0.86f){startActivity(new android.content.Intent(this,BookReaderActivity.class));return;}
             if(y>0.86f){
                 if(x<0.19f)showScreen(Math.max(1,page-1));
                 else if(x<0.40f)showScreen(4);
