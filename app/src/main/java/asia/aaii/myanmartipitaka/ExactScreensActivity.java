@@ -29,7 +29,7 @@ public class ExactScreensActivity extends Activity {
       "History","Advanced Search","Abhidhamma","Abhidhamma Reader",
       "Dhamma","Mangala Sutta","Five Nikayas","About & Help"};
     private void showScreen(int next){
-        page=Math.min(20,Math.max(1,next));
+        if(next>=1&&next<=6){Intent nativePage=new Intent(this,NativeFrontPagesActivity.class);nativePage.putExtra("openPage",next);startActivity(nativePage);finish();return;}\n        page=Math.min(20,Math.max(7,next));
         String file=String.format(Locale.US,"screens/screen_%02d.png",page);
         try(InputStream stream=getAssets().open(file)){
             Bitmap bmp=BitmapFactory.decodeStream(stream);
