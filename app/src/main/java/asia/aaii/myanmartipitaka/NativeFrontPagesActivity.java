@@ -228,6 +228,7 @@ public class NativeFrontPagesActivity extends Activity {
     }else if(n==4){
       addText("ပိဋကတ်တော် အမျိုးအစားများ",26,GREEN,true);
       addText("သုံးပုံပိဋကတ် • Tipitaka Collections",16,GOLD,false);
+      TextView catalog=text("☸  ပိဋကတ် ၄၅ ကျမ်း Offline Library",19,Color.WHITE,true);catalog.setBackground(bg(GREEN,16));content.addView(catalog);catalog.setOnClickListener(v->startActivity(new Intent(this,TipitakaLibraryActivity.class)));
       button("☸  ဝိနည်းပိဋကတ် — Vinaya Pitaka",5);
       button("☸  သုတ္တန်ပိဋကတ် — Sutta Pitaka",5);
       button("☸  အဘိဓမ္မာပိဋကတ် — Abhidhamma Pitaka",15);
