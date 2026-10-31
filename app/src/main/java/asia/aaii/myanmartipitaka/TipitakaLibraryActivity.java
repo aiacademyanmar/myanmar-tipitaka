@@ -56,6 +56,19 @@ public final class TipitakaLibraryActivity extends Activity {
     scroll.addView(content);root.addView(scroll,new LinearLayout.LayoutParams(-1,0,1));
     boolean ready=openDb();
     content.addView(text(ready?"✓ Offline စာသားဒေတာ ရရှိပါပြီ":"၄၅ ကျမ်း စာရင်းနှင့် Offline Reader",19));
+    if(ready){
+      try {
+        long paragraphCount=0,explainedCount=0;int coveredVolumes=0;
+        try(Cursor c=db.rawQuery("SELECT COUNT(*),COUNT(DISTINCT volume) FROM paragraphs WHERE LENGTH(TRIM(body))>0",null)){
+          if(c.moveToFirst()){paragraphCount=c.getLong(0);coveredVolumes=c.getInt(1);}
+        }
+        try(Cursor c=db.rawQuery("SELECT COUNT(*) FROM paragraph_explanations WHERE language='my' AND reviewed=1 AND LENGTH(TRIM(explanation_my))>0",null)){
+          if(c.moveToFirst())explainedCount=c.getLong(0);
+        }
+        content.addView(text("Offline Data Coverage  •  ကျမ်း "+coveredVolumes+"/45\\nကျမ်းပိုဒ် "+paragraphCount+" ပိုဒ်\\nစိစစ်ပြီး မြန်မာရှင်းလင်းချက် "+explainedCount+" ပိုဒ်",18));
+        if(coveredVolumes<45||explainedCount<paragraphCount)content.addView(text("သတိပြုရန် — ပိဋကတ်တော် Offline Full Library မပြည့်စုံသေးပါ။",16));
+      }catch(Exception e){content.addView(text("Database Format / Explanation Coverage စစ်ဆေး၍ မရပါ။",16));}
+    }
     if(!ready)content.addView(text("၄၅ ကျမ်း၏ စာအုပ်ခေါင်းစဉ်များကို အင်တာနက်မလိုဘဲ ကြည့်နိုင်ပါသည်။ မူရင်းစာသားဒေတာကို ပြန်လည်ဖြန့်ဝေခွင့်နှင့်တကွ ထည့်သွင်းထားခြင်းမရှိသေးပါ။ ကျမ်းဖတ်လိုပါက မိမိဖုန်းရှိ PDF/EPUB/TXT ဖိုင်ကို ရွေးချယ်နိုင်ပါသည်။",15));
     for(int i=0;i<NAMES.length;i++){
       final int index=i;String group=i<8?"ဝိနည်း":i<33?"သုတ္တန်":"အဘိဓမ္မာ";
