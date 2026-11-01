@@ -27,6 +27,11 @@ public class NativeFrontPagesActivity extends Activity {
     LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(-1,-2);lp.setMargins(dp(4),dp(6),dp(4),dp(6));
     content.addView(b,lp);b.setElevation(dp(2));b.setOnClickListener(v->go(target));
   }
+  private void sourceLink(String title,String url){
+    TextView item=text("↗  "+title+"  (Online Source)",16,GREEN,true);
+    item.setBackground(bg(Color.WHITE,14));content.addView(item);
+    item.setOnClickListener(v->{try{startActivity(new Intent(Intent.ACTION_VIEW,android.net.Uri.parse(url)));}catch(Exception e){Toast.makeText(this,"Browser ဖွင့်၍မရပါ",Toast.LENGTH_SHORT).show();}});
+  }
   private void go(int p){
     if(p==3){toggleMenu();return;}
     if(p<=20){render(p);return;}
@@ -58,6 +63,9 @@ public class NativeFrontPagesActivity extends Activity {
       addText("ဓမ္မသင်ခန်းစာများ",27,GREEN,true);
       addText("Dhamma Learning • Study Hub",16,GOLD,true);
       TextView offline=text("☸  Offline ဓမ္မစာများနှင့် မြန်မာရှင်းလင်းချက် Popup",19,Color.WHITE,true);offline.setBackground(bg(GREEN,16));content.addView(offline);offline.setOnClickListener(v->startActivity(new Intent(this,OfflineDhammaActivity.class)));
+      sourceLink("၄၅ ကျမ်း မူရင်းစာအုပ်တိုက်","https://tipitaka.cloud/library/");
+      sourceLink("ဓမ္မပဒ • Dhammapada","https://tipitaka.cloud/en/learn/suttas/dhammapada");
+      sourceLink("သတိပဋ္ဌာန် • Satipaṭṭhāna","https://tipitaka.cloud/en/learn/topics/satipatthana");
       button("ပိဋကတ်တော် အခြေခံမိတ်ဆက်",4);
       button("နိကာယ်ငါးရပ်ကို လေ့လာရန်",19);
       button("အဘိဓမ္မာ ၇ ကျမ်း",15);
@@ -69,6 +77,8 @@ public class NativeFrontPagesActivity extends Activity {
       addText("Maṅgala Sutta & Nibbāna Learning",16,GOLD,true);
       addText("မင်္ဂလာတရား ၃၈ ပါးကို လေ့လာရန် အကြောင်းအရာများ",17,INK,false);
       TextView dhamma=text("☸  Offline ဓမ္မရှင်းလင်းချက်များ",18,Color.WHITE,true);dhamma.setBackground(bg(GREEN,16));content.addView(dhamma);dhamma.setOnClickListener(v->startActivity(new Intent(this,OfflineDhammaActivity.class)));
+      sourceLink("မင်္ဂလသုတ် • Maṅgala Sutta","https://tipitaka.cloud/learn/suttas/mangala");
+      sourceLink("နိဗ္ဗာန် • Nibbāna","https://tipitaka.cloud/en/learn/topics/nibbana");
       button("မင်္ဂလသုတ် စာအုပ်ဖတ်ရန်",6);
       button("ဓမ္မသင်ခန်းစာများ",17);
       button("မှတ်စုများရေးရန်",12);
@@ -76,6 +86,7 @@ public class NativeFrontPagesActivity extends Activity {
     }else if(n==19){
       addText("နိကာယ်ငါးရပ်",27,GREEN,true);
       addText("Five Nikāyas",16,GOLD,true);
+      sourceLink("နိကာယ်ငါးရပ် မူရင်းရင်းမြစ်","https://tipitaka.cloud/learn/structure/suttanta");
       String[] nikayas={"ဒီဃနိကာယ် — Dīgha Nikāya","မဇ္ဈိမနိကာယ် — Majjhima Nikāya",
         "သံယုတ္တနိကာယ် — Saṃyutta Nikāya","အင်္ဂုတ္တရနိကာယ် — Aṅguttara Nikāya",
         "ခုဒ္ဒကနိကာယ် — Khuddaka Nikāya"};
