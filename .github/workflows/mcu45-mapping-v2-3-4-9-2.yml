@@ -1,0 +1,62 @@
+name: Myanmar Tipitaka V2.3.4.9.2 — MCU45 Mapping Dossier
+on:
+  workflow_dispatch:
+    inputs:
+      source_run_id:
+        description: Successful V2.3.4.9.1 Pali source acquisition run ID
+        required: true
+        type: string
+permissions:
+  actions: read
+  contents: read
+jobs:
+  mapping:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download pinned Pali staging artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: Myanmar-Tipitaka-V2.3.4.9.1-Pali-Source-Staging-UNMAPPED
+          run-id: ${{ inputs.source_run_id }}
+          github-token: ${{ github.token }}
+          path: source-staging
+      - name: Verify source database before mapping analysis
+        run: |
+          python - <<'PY'
+          import pathlib,sqlite3
+          p=pathlib.Path("source-staging/pali_root_source.sqlite")
+          assert p.is_file(), "Staged source SQLite missing"
+          db=sqlite3.connect(f"file:{p.resolve()}?mode=ro",uri=True)
+          assert db.execute("PRAGMA integrity_check").fetchone()[0]=="ok"
+          n=db.execute("SELECT COUNT(*) FROM source_segments").fetchone()[0]
+          assert n==444701, f"Unexpected pinned source segment count: {n}"
+          print("Verified source segments:",n)
+          PY
+      - name: Generate MCU45 candidate dossier (not an approval)
+        run: |
+          python scripts/analyze_mcu45_mapping_candidates.py source-staging/pali_root_source.sqlite --out mapping-dossier
+      - name: Enforce fail-closed edition mapping gate
+        run: |
+          python - <<'PY'
+          import json,pathlib,sys
+          r=json.loads(pathlib.Path("mapping-dossier/mapping_review_report.json").read_text())
+          assert r["candidate_volume_rows"]==45
+          assert r["volumes_with_all_candidate_families_present"]==45
+          assert r["editorially_verified_volumes"]==0
+          assert r["approved_45_volume_mapping"] is False
+          assert r["native_reader_database_generated"] is False
+          print("Candidate dossier complete. Edition approval remains blocked pending human review.")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Myanmar-Tipitaka-V2.3.4.9.2-MCU45-Mapping-Dossier-REVIEW-REQUIRED
+          path: |
+            mapping-dossier/
+            source-staging/bilara_source_commit.txt
+            source-staging/bilara_source_LICENSE.md
+          if-no-files-found: error
+          retention-days: 30
