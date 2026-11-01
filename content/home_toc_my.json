@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "locale": "my-MM",
+  "title": "☸ ပိဋကတ်သုံးပုံ",
+  "subtitle": "Tipiṭaka · 45 ကျမ်း · အခမဲ့",
+  "description": "ထေရဝါဒ ပါဠိဘာသာ ပိဋကတ်သုံးပုံ (တိပိဋကတ်) ကို အောက်ပါ ကဏ္ဍများမှတစ်ဆင့် ဖတ်ရှုနိုင်ပါသည်။ ဝိနည်းပိဋကတ်၊ သုတ္တပိဋကတ်နှင့် အဘိဓမ္မပိဋကတ် — MCU ထိုင်းဘာသာနှင့် ပါဠိဘာသာ ၄၅ ကျမ်း။",
+  "access_label": "အခမဲ့",
+  "primary_actions": [
+    {
+      "id": "library_45",
+      "title": "📚 ကျမ်းဖတ်ခန်း (45 ကျမ်း)",
+      "url": "https://tipitaka.cloud/library",
+      "destination": "tipitaka_library",
+      "is_external_fallback": true
+    },
+    {
+      "id": "read_tipitaka",
+      "title": "📖 ဖတ်ရှုရန်",
+      "url": "https://tipitaka.cloud/?panes=en_translation",
+      "destination": "tipitaka_reader",
+      "is_external_fallback": true
+    }
+  ],
+  "featured_topics": [
+    {
+      "id": "dhammapada",
+      "title": "ဓမ္မပဒ (Dhammapada)",
+      "description": "ဂါထာ ၄၂၃ ပါဒ၊ ဝဂ် ၂၆ ခု",
+      "url": "https://tipitaka.cloud/en/learn/suttas/dhammapada",
+      "destination": "dhammapada",
+      "action_label": "→"
+    },
+    {
+      "id": "mangala",
+      "title": "မင်္ဂလသုတ် (Maṅgala Sutta)",
+      "description": "မင်္ဂလာ ၃၈ ပါး",
+      "url": "https://tipitaka.cloud/learn/suttas/mangala",
+      "destination": "mangala_sutta",
+      "action_label": "→"
+    },
+    {
+      "id": "nibbana",
+      "title": "နိဗ္ဗာန် (Nibbāna)",
+      "description": "ဒုက္ခနိရောဓနှင့် နိဗ္ဗာန်ဆိုင်ရာ အကြောင်းအရာများ",
+      "url": "https://tipitaka.cloud/en/learn/topics/nibbana",
+      "destination": "nibbana",
+      "action_label": "→"
+    },
+    {
+      "id": "satipatthana",
+      "title": "သတိပဋ္ဌာန် (Satipaṭṭhāna)",
+      "description": "သတိပဋ္ဌာန် ၄ ပါး",
+      "url": "https://tipitaka.cloud/en/learn/topics/satipatthana",
+      "destination": "satipatthana",
+      "action_label": "→"
+    },
+    {
+      "id": "five_nikayas",
+      "title": "နိကာယ် ၅ မျိုး",
+      "description": "ဒီဃနိကာယ်၊ မဇ္ဈိမနိကာယ်၊ သံယုတ္တနိကာယ်၊ အင်္ဂုတ္တရနိကာယ်၊ ခုဒ္ဒကနိကာယ်",
+      "url": "https://tipitaka.cloud/learn/structure/suttanta",
+      "destination": "five_nikayas",
+      "action_label": "→"
+    }
+  ],
+  "presentation": {
+    "layout": "vertical_content_cards",
+    "show_dhamma_wheel": true,
+    "show_45_book_count": true,
+    "show_free_label": true,
+    "preserve_myanmar_unicode": true,
+    "offline_first": true,
+    "open_local_destination_before_external_url": true
+  }
+}
