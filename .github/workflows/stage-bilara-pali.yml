@@ -1,6 +1,12 @@
 name: Stage Published Bilara Pali SQLite (Source Validation)
 on:
   workflow_dispatch:
+  push:
+    branches: [v2.2-exact-20-screens]
+    paths:
+      - '.github/workflows/stage-bilara-pali.yml'
+      - 'scripts/build_bilara_source_sqlite.py'
+      - 'scripts/stage_bilara_pali.py'
 jobs:
   stage:
     runs-on: ubuntu-latest
