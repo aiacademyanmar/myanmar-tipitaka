@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
   <application android:allowBackup="false" android:label="Myanmar Tipitaka" android:theme="@android:style/Theme.Material.Light.NoActionBar" android:icon="@drawable/icon_dhamma" android:usesCleartextTraffic="false">
-    <activity android:name=".NativeFrontPagesActivity" android:exported="true" android:screenOrientation="portrait"><intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter></activity>
+    <activity android:name=".SplashActivity" android:exported="true" android:screenOrientation="portrait"><intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter></activity>
+    <activity android:name=".NativeFrontPagesActivity" android:exported="false" android:screenOrientation="portrait"/>
     <activity android:name=".MangalaSuttaActivity" android:exported="false"/>
     <activity android:name=".NibbanaActivity" android:exported="false"/>
     <activity android:name=".PaliReferenceActivity" android:exported="false"/>
