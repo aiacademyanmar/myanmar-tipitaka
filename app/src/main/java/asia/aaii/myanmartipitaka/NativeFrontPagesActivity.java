@@ -239,18 +239,14 @@ public class NativeFrontPagesActivity extends Activity {
       addText("Advanced Search သည် Offline ကျမ်းပိုဒ် Search ကို အသုံးပြုသည်။ Exact phrase option သည် လက်ရှိ Search Engine တွင် မသက်ရောက်သေးပါ။",14,INK,false);
     }else if(n==11){
       String q=getPreferences(MODE_PRIVATE).getString("searchQuery","");
-      addText("Offline Search Results",26,GREEN,true);
-      addText("ရှာဖွေမှု စကားလုံး • "+q,16,GOLD,true);
-      button("၄၅ ကျမ်းအတွင်း အပြည့်အစုံ ရှာဖွေရန်",10);
-      button("Offline Search ဖွင့်ရန်",24);
-      if(q.isEmpty()){addText("ရှာဖွေမည့် စကားလုံးမရှိသေးပါ။",16,INK,false);button("ရှာဖွေရန်",10);}
-      else{
-        String[] titles={"ဝိနည်းပိဋကတ်","သုတ္တန်ပိဋကတ်","အဘိဓမ္မာပိဋကတ်","နိကာယ်ငါးရပ်","မင်္ဂလသုတ်","ဓမ္မစာအုပ်တိုက်","PDF EPUB TXT Reader"};
-        int[] targets={4,4,15,19,18,7,6};int count=0;
-        for(int i=0;i<titles.length;i++)if(titles[i].toLowerCase(java.util.Locale.ROOT).contains(q.toLowerCase(java.util.Locale.ROOT))){button(titles[i],targets[i]);count++;}
-        if(count==0)addText("အက်ပ်၏ လက်ရှိခေါင်းစဉ်များတွင် ကိုက်ညီမှုမရှိပါ။ ပိဋကတ်တော် Full-text Index မထည့်သွင်းရသေးပါ။",16,INK,false);
-        button("ရှာဖွေမှု ပြန်ပြင်ရန်",10);
-      }
+      addText("ရှာဖွေမှုရလဒ်",26,GREEN,true);
+      addText("Offline Search Results • "+q,16,GOLD,true);
+      addText("ကျမ်းပိုဒ်အမှန်တကယ် ရှာဖွေမှုကို Offline SQLite Search Engine မှ ဆောင်ရွက်ပါသည်။",15,INK,false);
+      TextView openResults=text("⌕  Offline ကျမ်းပိုဒ်ရလဒ်များ ဖွင့်ရန်",18,Color.WHITE,true);
+      openResults.setBackground(bg(GREEN,16));content.addView(openResults);
+      openResults.setOnClickListener(v->{Intent si=new Intent(this,OfflineSearchActivity.class);si.putExtra("query",q);
+        si.putExtra("pitaka_filter",getPreferences(MODE_PRIVATE).getString("searchFilter","အားလုံး"));startActivity(si);});
+      button("ရှာဖွေမှု ပြန်ပြင်ရန်",10);
     }else if(n==12){
       addText("စာမှတ်များနှင့် မှတ်စု",26,GREEN,true);
       addText("Bookmarks & Notes",16,GOLD,true);
