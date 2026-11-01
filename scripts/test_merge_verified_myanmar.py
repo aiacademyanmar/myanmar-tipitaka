@@ -63,7 +63,7 @@ class ReviewedMyanmarImporterTests(unittest.TestCase):
         MODULE.create_table(self.db)
         row=dict(self.row,reviewer_2="Reviewer A")
         self.write(row)
-        with self.assertRaisesRegex(ValueError,"two distinct human reviewers"):
+        with self.assertRaisesRegex(ValueError,"two distinct reviewers"):
             MODULE.import_rows(self.db,self.csv)
     def test_rejects_missing_rights_evidence(self):
         MODULE.create_table(self.db)
