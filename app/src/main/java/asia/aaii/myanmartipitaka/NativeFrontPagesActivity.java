@@ -61,6 +61,8 @@ public class NativeFrontPagesActivity extends Activity {
   }
   private void go(int p){
     if(p==22){startActivity(new Intent(this,DhammapadaYamakavaggaActivity.class));return;}
+    if(p==23){startActivity(new Intent(this,OfflineBookmarksActivity.class));return;}
+    if(p==24){startActivity(new Intent(this,OfflineSearchActivity.class));return;}
     if(p==3){toggleMenu();return;}
     if(p<=21){render(p);return;}
     Intent i=new Intent(this,ExactScreensActivity.class);i.putExtra("openPage",p);startActivity(i);
@@ -155,7 +157,7 @@ public class NativeFrontPagesActivity extends Activity {
       button("☸  ပိဋကတ် ၄၅ ကျမ်း Offline Library",4);
       button("စာအုပ်ဖွင့်ဖတ်ရန်",6);
       button("Advanced Search",14);
-      button("Myanmar Translation Coverage",21);
+      button("သတိပဋ္ဌာန် လေ့လာရေး",20);
       button("Help — စာအုပ်ရွေးနည်း",7);
       addText("Online Reference Edition — Chaṭṭha Saṅgāyana Tipiṭaka (CST), digitized by VRI.",14,INK,false);
       addText("tipitakaonline.org ၏ မြန်မာဘာသာပြန်သည် AI-generated ဖြစ်ပြီး လူပညာရှင်များက မစိစစ်ရသေးပါ။ Offline APK ထဲသို့ အတည်ပြုပြီးသား မြန်မာရှင်းလင်းချက်အဖြစ် မထည့်သွင်းထားပါ။",14,INK,false);
@@ -196,9 +198,12 @@ public class NativeFrontPagesActivity extends Activity {
       run.setOnClickListener(v->{String q=term.getText().toString().trim();if(q.isEmpty()){term.setError("စာသားထည့်ပါ");return;}
         getPreferences(MODE_PRIVATE).edit().putString("searchQuery",q)
           .putString("searchFilter",choices[pitaka.getSelectedItemPosition()])
-          .putBoolean("exactMatch",exact.isChecked()).apply();go(11);
+          .putBoolean("exactMatch",exact.isChecked()).apply();
+        Intent searchIntent=new Intent(this,OfflineSearchActivity.class);searchIntent.putExtra("query",q);
+        searchIntent.putExtra("pitaka_filter",choices[pitaka.getSelectedItemPosition()]);
+        searchIntent.putExtra("exact_match",exact.isChecked());startActivity(searchIntent);
       });
-      addText("လက်ရှိတွင် ခေါင်းစဉ်ရှာဖွေမှုသာ ပါဝင်ပါသည်။ စာသား Full-text Search အတွက် စာအုပ်ဒေတာနှင့် Index လိုအပ်ပါသည်။",14,INK,false);
+      addText("၄၅ ကျမ်း Offline SQLite ထဲရှိ ပါဠိမူရင်းနှင့် စိစစ်အတည်ပြုထားသော မြန်မာစာသားများကို ရှာဖွေရန် အသုံးပြုပါ။",14,INK,false);
     }else if(n==15){
       addText("အဘိဓမ္မာပိဋကတ်",27,GREEN,true);
       addText("Abhidhamma Books • အဘိဓမ္မာ ၇ ကျမ်း",16,GOLD,true);
@@ -228,13 +233,16 @@ public class NativeFrontPagesActivity extends Activity {
       find.setOnClickListener(v->{String q=query.getText().toString().trim();
         if(q.isEmpty()){query.setError("စာသားထည့်ပါ");return;}
         getPreferences(MODE_PRIVATE).edit().putString("searchQuery",q).putString("searchFilter",filters[filter.getSelectedItemPosition()]).apply();
-        go(11);
+        Intent searchIntent=new Intent(this,OfflineSearchActivity.class);searchIntent.putExtra("query",q);
+        searchIntent.putExtra("pitaka_filter",filters[filter.getSelectedItemPosition()]);startActivity(searchIntent);
       });
-      addText("မှတ်ချက် — လက်ရှိတွင် Menu/ခေါင်းစဉ်များကိုသာ ရှာနိုင်ပါသည်။ ပိဋကတ်တော် စာသားအပြည့်အစုံ Search အတွက် Index Database လိုအပ်ပါသည်။",14,INK,false);
+      addText("Advanced Search သည် Offline ကျမ်းပိုဒ် Search ကို အသုံးပြုသည်။ Exact phrase option သည် လက်ရှိ Search Engine တွင် မသက်ရောက်သေးပါ။",14,INK,false);
     }else if(n==11){
       String q=getPreferences(MODE_PRIVATE).getString("searchQuery","");
-      addText("ရှာဖွေမှုရလဒ်",26,GREEN,true);
-      addText("Search Results • "+q,16,GOLD,true);
+      addText("Offline Search Results",26,GREEN,true);
+      addText("ရှာဖွေမှု စကားလုံး • "+q,16,GOLD,true);
+      button("၄၅ ကျမ်းအတွင်း အပြည့်အစုံ ရှာဖွေရန်",10);
+      button("Offline Search ဖွင့်ရန်",24);
       if(q.isEmpty()){addText("ရှာဖွေမည့် စကားလုံးမရှိသေးပါ။",16,INK,false);button("ရှာဖွေရန်",10);}
       else{
         String[] titles={"ဝိနည်းပိဋကတ်","သုတ္တန်ပိဋကတ်","အဘိဓမ္မာပိဋကတ်","နိကာယ်ငါးရပ်","မင်္ဂလသုတ်","ဓမ္မစာအုပ်တိုက်","PDF EPUB TXT Reader"};
@@ -254,6 +262,7 @@ public class NativeFrontPagesActivity extends Activity {
       TextView save=text("✓   မှတ်စု သိမ်းမည်",18,Color.WHITE,true);save.setBackground(bg(GREEN,14));content.addView(save);
       save.setOnClickListener(v->{getPreferences(MODE_PRIVATE).edit().putString("note",note.getText().toString()).apply();
         Toast.makeText(this,"မှတ်စု သိမ်းဆည်းပြီး",Toast.LENGTH_SHORT).show();});
+      button("ကျမ်းပိုဒ် Bookmark စာရင်း",23);
       button("စာအုပ်ဖတ်စက် (Reader Bookmark)",6);
       button("ဆက်လက်ဖတ်ရှုရန်",8);
       addText("စာမှတ်များကို Reader အတွင်း သိမ်းဆည်းထားနိုင်ပြီး စာမှတ်တစ်ခုချင်းကို Reader ၏ Go to → Bookmark ဖြင့် ဖွင့်နိုင်ပါသည်။",14,INK,false);
@@ -277,6 +286,7 @@ public class NativeFrontPagesActivity extends Activity {
       resume.setOnClickListener(v->startActivity(new Intent(this,BookReaderActivity.class)));
       button("စာအုပ်အသစ်ဖွင့်ရန်",7);
       button("Native Reader Settings",6);
+      button("ကျမ်းပိုဒ် Bookmark စာရင်း",23);
       button("စာမှတ်များနှင့် မှတ်စု",12);
     }else if(n==9){
       addText("ဓမ္မလေ့လာရေး",27,GREEN,true);
