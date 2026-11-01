@@ -17,6 +17,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.ArrayList;
 
 /**
  * On-device editorial workbench. Drafts are stored separately from the shipped
@@ -77,6 +78,7 @@ public final class MyanmarEditorialActivity extends Activity {
     Button save=new Button(this);save.setText("Draft သိမ်းဆည်းရန်");root.addView(save);save.setOnClickListener(v->saveDraft("draft"));
     Button submit=new Button(this);submit.setText("စိစစ်ရန် တင်သွင်းမည်");root.addView(submit);submit.setOnClickListener(v->saveDraft("submitted_for_review"));
     Button list=new Button(this);list.setText("သိမ်းထားသော Draft များ ကြည့်ရန်");root.addView(list);list.setOnClickListener(v->showDrafts());
+    Button review=new Button(this);review.setText("Reviewer Queue ဖွင့်ရန်");root.addView(review);review.setOnClickListener(v->showReviewQueue());
     root.addView(text("မှတ်ချက် — ဤ Version သည် Offline Reader database ကို မပြင်ဆင်ပါ။ Approve/Publish လုပ်ဆောင်ချက်ကိုလည်း မပေးထားပါ။ Approved CSV import သည် သီးခြား QA workflow ဖြင့်သာ လုပ်ဆောင်ရမည်။",13,0xff665b49,false));
     setContentView(scroll);
   }
@@ -137,12 +139,54 @@ public final class MyanmarEditorialActivity extends Activity {
       }).setNegativeButton("ပိတ်မည်",null).show();
   }
 
+
+  private void createReviewTable(SQLiteDatabase db){
+    db.execSQL("CREATE TABLE IF NOT EXISTS editorial_reviews(volume INTEGER NOT NULL,paragraph_id TEXT NOT NULL,reviewer_name TEXT NOT NULL,decision TEXT NOT NULL CHECK(decision IN ('approve','revision','reject')),notes TEXT NOT NULL,reviewed_at TEXT NOT NULL,PRIMARY KEY(volume,paragraph_id,reviewer_name))");
+  }
+  private void showReviewQueue(){
+    ArrayList<String> keys=new ArrayList<>(),labels=new ArrayList<>();
+    try(Cursor c=drafts.getReadableDatabase().rawQuery("SELECT volume,paragraph_id,status FROM editorial_drafts WHERE status='submitted_for_review' ORDER BY updated_at",null)){
+      while(c.moveToNext()){int vol=c.getInt(0);String pid=c.getString(1);keys.add(vol+"|"+pid);labels.add("ကျမ်း "+vol+" • § "+pid+" • "+c.getString(2));}
+    }
+    if(labels.isEmpty()){toast("စိစစ်ရန်တင်ထားသော Draft မရှိသေးပါ။");return;}
+    new AlertDialog.Builder(this).setTitle("Reviewer Queue").setItems(labels.toArray(new String[0]),(d,w)->reviewDraft(keys.get(w))).setNegativeButton("ပိတ်မည်",null).show();
+  }
+  private void reviewDraft(String key){
+    String[] k=key.split("\\|",2);int vol=Integer.parseInt(k[0]);String pid=k[1];
+    LinearLayout form=new LinearLayout(this);form.setOrientation(1);form.setPadding(dp(16),dp(8),dp(16),dp(8));
+    EditText reviewer=field("Reviewer အမည်",1,false),notes=field("စိစစ်မှတ်ချက်",3,true);
+    RadioGroup decisions=new RadioGroup(this);decisions.setOrientation(RadioGroup.VERTICAL);
+    String[] choices={"Approve","Revision လိုအပ်","Reject"};
+    for(int i=0;i<choices.length;i++){RadioButton b=new RadioButton(this);b.setText(choices[i]);b.setId(100+i);decisions.addView(b);}
+    form.addView(reviewer);form.addView(decisions);form.addView(notes);
+    new AlertDialog.Builder(this).setTitle("ကျမ်း "+vol+" • § "+pid).setView(form)
+      .setPositiveButton("ဆုံးဖြတ်ချက် သိမ်းမည်",(d,w)->{
+        String name=reviewer.getText().toString().trim();int choice=decisions.getCheckedRadioButtonId()-100;
+        if(name.isEmpty()||choice<0||choice>2){toast("Reviewer အမည်နှင့် ဆုံးဖြတ်ချက် ဖြည့်ပါ။");return;}
+        saveReview(vol,pid,name,new String[]{"approve","revision","reject"}[choice],notes.getText().toString().trim());
+      }).setNegativeButton("မလုပ်တော့ပါ",null).show();
+  }
+  private void saveReview(int vol,String pid,String reviewer,String decision,String notes){
+    SQLiteDatabase db=drafts.getWritableDatabase();db.beginTransaction();
+    try{
+      ContentValues v=new ContentValues();v.put("volume",vol);v.put("paragraph_id",pid);v.put("reviewer_name",reviewer);v.put("decision",decision);v.put("notes",notes);
+      v.put("reviewed_at",new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.US).format(new Date()));
+      db.insertWithOnConflict("editorial_reviews",null,v,SQLiteDatabase.CONFLICT_REPLACE);
+      int approvals=0;
+      try(Cursor c=db.rawQuery("SELECT COUNT(*) FROM editorial_reviews WHERE volume=? AND paragraph_id=? AND decision='approve'",new String[]{Integer.toString(vol),pid})){if(c.moveToFirst())approvals=c.getInt(0);}
+      db.setTransactionSuccessful();
+      toast("Review မှတ်တမ်း သိမ်းပြီး။ Approve မှတ်တမ်း "+approvals+" ဦး။");
+    }catch(Exception e){toast("Review သိမ်းမရပါ: "+e.getMessage());}
+    finally{db.endTransaction();}
+  }
+
   private final class DraftDb extends SQLiteOpenHelper {
-    DraftDb(){super(MyanmarEditorialActivity.this,"myanmar_editorial_drafts.db",null,1);}
+    DraftDb(){super(MyanmarEditorialActivity.this,"myanmar_editorial_drafts.db",null,2);}
     @Override public void onCreate(SQLiteDatabase db){
+      createReviewTable(db);
       db.execSQL("CREATE TABLE editorial_drafts(volume INTEGER NOT NULL,paragraph_id TEXT NOT NULL,translation_my TEXT NOT NULL,explanation_my TEXT NOT NULL,source_ref TEXT NOT NULL,rights_evidence TEXT NOT NULL,reviewer_1 TEXT NOT NULL,reviewer_2 TEXT NOT NULL,review_reference TEXT NOT NULL,status TEXT NOT NULL CHECK(status IN ('draft','submitted_for_review')),updated_at TEXT NOT NULL,PRIMARY KEY(volume,paragraph_id))");
     }
-    @Override public void onUpgrade(SQLiteDatabase db,int oldVersion,int newVersion){}
+    @Override public void onUpgrade(SQLiteDatabase db,int oldVersion,int newVersion){if(oldVersion<2)createReviewTable(db);}
   }
   @Override protected void onDestroy(){if(drafts!=null)drafts.close();super.onDestroy();}
 }
