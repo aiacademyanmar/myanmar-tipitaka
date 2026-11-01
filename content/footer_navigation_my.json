@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "placement": "bottom_navigation",
+  "position": "fixed_bottom",
+  "safe_area_inset": true,
+  "overlay_content": false,
+  "reserve_content_space": true,
+  "show_labels": true,
+  "items": [
+    {
+      "id": "home",
+      "label": "ပင်မ",
+      "icon": "home",
+      "destination": "home",
+      "order": 1
+    },
+    {
+      "id": "library",
+      "label": "ကျမ်းဖတ်",
+      "icon": "library",
+      "destination": "tipitaka_library",
+      "order": 2
+    },
+    {
+      "id": "search",
+      "label": "ရှာဖွေရန်",
+      "icon": "search",
+      "destination": "offline_search",
+      "order": 3
+    },
+    {
+      "id": "bookmarks",
+      "label": "မှတ်သား",
+      "icon": "bookmark",
+      "destination": "offline_bookmarks",
+      "order": 4
+    },
+    {
+      "id": "settings",
+      "label": "ဆက်တင်",
+      "icon": "settings",
+      "destination": "settings",
+      "order": 5
+    }
+  ],
+  "behavior": {
+    "persistent_across_screens": true,
+    "hide_on_splash": true,
+    "hide_on_fullscreen_reader": false,
+    "respect_android_navigation_bar_inset": true,
+    "tap_feedback": "ripple",
+    "selected_state": "highlight_icon_and_label"
+  },
+  "qa": [
+    "Footer stays at the bottom on all primary screens",
+    "Content is not obscured by footer",
+    "Footer remains visible while scrolling",
+    "Navigation works offline",
+    "Test on small and large Samsung screens"
+  ]
+}
