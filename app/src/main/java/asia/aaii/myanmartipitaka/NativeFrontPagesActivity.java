@@ -108,6 +108,7 @@ public class NativeFrontPagesActivity extends Activity {
       TextView dhamma=text("☸  Offline ဓမ္မရှင်းလင်းချက်များ",18,Color.WHITE,true);dhamma.setBackground(bg(GREEN,16));content.addView(dhamma);dhamma.setOnClickListener(v->startActivity(new Intent(this,OfflineDhammaActivity.class)));
       sourceLink("မင်္ဂလသုတ် • Maṅgala Sutta","https://tipitaka.cloud/learn/suttas/mangala");
       sourceLink("နိဗ္ဗာန် • Nibbāna","https://tipitaka.cloud/en/learn/topics/nibbana");
+      menuCard("☸","နိဗ္ဗာန် — Nibbāna Offline Reader","ခေါင်းစဉ် ၁၂ ခု • ပါဠိရင်းမြစ် • SQLite Offline",()->startActivity(new Intent(this,NibbanaActivity.class)));
       menuCard("📖","မင်္ဂလာ ၃၈ ပါး — Offline စာအုပ်ဖတ်ရန်","ပါဠိမူရင်းနှင့် မြန်မာရှင်းလင်းချက် Popup",()->startActivity(new Intent(this,MangalaSuttaActivity.class)));
       button("ဓမ္မသင်ခန်းစာများ",17);
       button("မှတ်စုများရေးရန်",12);
