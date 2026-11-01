@@ -9,6 +9,7 @@ on:
       - 'app/**'
       - 'content/**'
       - 'corpus/**'
+      - 'scripts/validate_myanmar_source_inventory.py'
       - 'database/**'
       - 'scripts/**'
       - 'docs/V2.3.4.8_*'
@@ -43,6 +44,8 @@ jobs:
         id: special_content
         continue-on-error: true
         run: python3 scripts/validate_special_content.py
+      - name: Validate V2.3.5.4 Myanmar source inventory
+        run: python3 scripts/validate_myanmar_source_inventory.py
       - name: Test 45-volume editorial batch planner
         run: python3 -m unittest scripts/test_myanmar_editorial_batches.py -v
       - name: Generate 45-volume Myanmar editorial intake plan (fail closed)
