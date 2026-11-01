@@ -114,6 +114,9 @@ def main():
  batch_306_359=load_drafts(ROOT/"corpus/dhammapada_draft_306_359.csv")
  if set(drafts)&set(batch_306_359):raise ValueError("Overlapping Myanmar drafts 306-359")
  drafts.update(batch_306_359)
+ batch_360_423=load_drafts(ROOT/"corpus/dhammapada_draft_360_423.csv")
+ if set(drafts)&set(batch_360_423):raise ValueError("Overlapping Myanmar drafts 360-423")
+ drafts.update(batch_360_423)
  with sqlite3.connect(a.database) as db:
   draft_count=build(db,drafts)
  print(f"Dhammapada: 423 original Pali verses / 26 chapters; {draft_count} unreviewed Myanmar draft translations; {423-draft_count} without translations")
