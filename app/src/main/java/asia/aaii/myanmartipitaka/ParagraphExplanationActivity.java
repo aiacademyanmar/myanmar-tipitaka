@@ -94,6 +94,8 @@ public class ParagraphExplanationActivity extends Activity {
       // Both library and reader share one synchronized installer.
       File file=OfflineCorpusInstaller.prepare(getApplicationContext());
       opened=SQLiteDatabase.openDatabase(file.getAbsolutePath(),null,SQLiteDatabase.OPEN_READONLY);
+      File publisherFile=new File(getFilesDir(),MyanmarContentStore.DB_NAME);
+      if(publisherFile.isFile()) opened.execSQL("ATTACH DATABASE ? AS publisher",new Object[]{publisherFile.getAbsolutePath()});
       long count;
       try(Cursor c=opened.rawQuery(
           "SELECT COUNT(*) FROM paragraphs WHERE volume=?",
@@ -153,16 +155,19 @@ public class ParagraphExplanationActivity extends Activity {
     if(db==null || destroyed)return;
     rows.removeAllViews();pager.removeAllViews();
     if(readingScroll!=null)readingScroll.post(()->readingScroll.scrollTo(0,0));
-    final String translationExpression=hasMyanmarContent?"tr.text_my":"NULL AS text_my";
-    final String translationJoin=hasMyanmarContent?
-        " LEFT JOIN paragraph_myanmar_content tr ON tr.segment_id=p.segment_id AND tr.content_type='translation' AND tr.reviewed=1 ":"";
+    boolean hasPublisher=false; try(Cursor pc=db.rawQuery("PRAGMA publisher.table_info(paragraph_myanmar_content)",null)){hasPublisher=pc.moveToFirst();}
+    final String translationExpression=(hasMyanmarContent||hasPublisher)?"tr.text_my":"NULL AS text_my";
+    final String translationJoin=hasPublisher?
+        " LEFT JOIN publisher.paragraph_myanmar_content tr ON tr.paragraph_id=p.id AND tr.content_type='translation' AND tr.reviewed=1 ":
+        (hasMyanmarContent?" LEFT JOIN paragraph_myanmar_content tr ON tr.segment_id=p.segment_id AND tr.content_type='translation' AND tr.reviewed=1 ":"");
     final String where=selected==null?" WHERE p.volume=? ":" WHERE p.volume=? AND p.id=? ";
-    final String reviewColumns=hasMyanmarContent?
+    final String reviewColumns=(hasMyanmarContent||hasPublisher)?
         ",tr.source_ref,tr.reviewer_1,tr.reviewer_2,tr.review_reference,tr.reviewed_at,"+
         "ex.text_my,ex.source_ref,ex.reviewer_1,ex.reviewer_2,ex.review_reference,ex.reviewed_at":
         ",NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL";
-    final String explanationJoin=hasMyanmarContent?
-        " LEFT JOIN paragraph_myanmar_content ex ON ex.segment_id=p.segment_id AND ex.content_type='explanation' AND ex.reviewed=1 ":"";
+    final String explanationJoin=hasPublisher?
+        " LEFT JOIN publisher.paragraph_myanmar_content ex ON ex.paragraph_id=p.id AND ex.content_type='explanation' AND ex.reviewed=1 ":
+        (hasMyanmarContent?" LEFT JOIN paragraph_myanmar_content ex ON ex.segment_id=p.segment_id AND ex.content_type='explanation' AND ex.reviewed=1 ":"");
     final String sql="SELECT p.id,p.segment_id,p.body,e.explanation_my,e.source_ref,"+
         translationExpression+reviewColumns+" FROM paragraphs p "+
         " LEFT JOIN paragraph_explanations e ON e.paragraph_id=p.id AND e.language='my' AND e.reviewed=1 "+
