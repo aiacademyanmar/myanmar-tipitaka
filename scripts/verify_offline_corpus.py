@@ -10,12 +10,11 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 DB=ROOT/"app/src/main/assets/tipitaka_offline.sqlite"
 CROSSWALK=ROOT/"corpus/45_volume_crosswalk.csv"
-EXPECTED_PARAGRAPHS=425_953
 REQUIRED_TABLES={"paragraphs","paragraph_explanations"}
 REQUIRED_PARAGRAPH_COLUMNS={"id","volume","body","source_ref"}
 REQUIRED_EXPLANATION_COLUMNS={"paragraph_id","language","explanation_my","source_ref","provenance","reviewed"}
 report={"database":str(DB.relative_to(ROOT)),"exists":DB.is_file(),"expected_volumes":45,
-        "expected_paragraphs":EXPECTED_PARAGRAPHS,"checks":{},"errors":[]}
+        "expected_paragraphs":"must match build_info.pali_paragraph_count","checks":{},"errors":[]}
 if not DB.is_file():
     report["errors"].append("Missing Android offline SQLite asset. Supply a licensed, verified database at app/src/main/assets/tipitaka_offline.sqlite.")
 else:
@@ -39,7 +38,19 @@ else:
             per_volume={str(v):con.execute("SELECT COUNT(*) FROM paragraphs WHERE volume=?",(v,)).fetchone()[0] for v in range(1,46)}
             report["checks"].update({"distinct_volumes":volumes,"paragraph_count":count,"empty_or_unreferenced":empty,"paragraphs_per_volume":per_volume})
             if volumes!=45:report["errors"].append(f"Expected 45 distinct volumes, found {volumes}.")
-            if count!=EXPECTED_PARAGRAPHS:report["errors"].append(f"Expected {EXPECTED_PARAGRAPHS} source-aligned paragraphs, found {count}.")
+            if "build_info" not in tables:
+                report["errors"].append("Missing build_info metadata table.")
+            else:
+                meta=dict(con.execute("SELECT name,value FROM build_info").fetchall())
+                try: expected_count=int(meta.get("pali_paragraph_count","-1"))
+                except ValueError: expected_count=-1
+                report["checks"]["build_info_paragraph_count"]=expected_count
+                if expected_count!=count:
+                    report["errors"].append(f"build_info paragraph count mismatch: metadata={expected_count}, actual={count}.")
+                if meta.get("edition_mapping")!="45-volume human-reviewed crosswalk":
+                    report["errors"].append("Edition mapping metadata is missing or not approved.")
+                if not meta.get("source_commit"):
+                    report["errors"].append("Pinned source commit metadata is missing.")
             if empty:report["errors"].append(f"{empty} paragraphs have empty text or missing source references.")
             absent=[v for v,n in per_volume.items() if n==0]
             if absent:report["errors"].append("Empty volumes: "+", ".join(absent))
@@ -69,6 +80,9 @@ else:
     report["checks"]["crosswalk_verified_rows"]=sum(1 for r in rows if r.get("mapping_status","").upper()=="VERIFIED")
     report["checks"]["crosswalk_unique_volume_ids"]=len(set(ids))
     report["checks"]["crosswalk_missing_source_prefix"]=sum(1 for r in rows if not r.get("source_file_prefix","").strip())
+    evidence_fields=("source_file_prefix","start_segment_id","end_segment_id","reviewer_reference","rights_evidence")
+    report["checks"]["crosswalk_missing_evidence_cells"]=sum(
+        1 for r in rows for key in evidence_fields if not (r.get(key) or "").strip())
     report["checks"]["crosswalk_missing_reviewer_reference"]=sum(1 for r in rows if r.get("mapping_status","").upper()=="VERIFIED" and not r.get("reviewer_reference","").strip())
     if len(set(ids))!=45 or set(ids)!={str(i) for i in range(1,46)}: report["errors"].append("Crosswalk volume_id must contain each ID 1..45 exactly once.")
     if report["checks"]["crosswalk_missing_source_prefix"]: report["errors"].append("Crosswalk has missing source_file_prefix values.")
