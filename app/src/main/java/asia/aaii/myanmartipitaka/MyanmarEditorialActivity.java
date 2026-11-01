@@ -123,8 +123,8 @@ public final class MyanmarEditorialActivity extends Activity {
     if(labels.isEmpty()){toast("သိမ်းထားသော Draft မရှိသေးပါ။");return;}
     new AlertDialog.Builder(this).setTitle("Editorial Drafts ("+labels.size()+")")
       .setItems(labels.toArray(new String[0]),(d,w)->{
-        String id=ids.get(w);
-        try(Cursor c=drafts.getReadableDatabase().rawQuery("SELECT volume,paragraph_id,translation_my,explanation_my,source_ref,rights_evidence,reviewer_1,reviewer_2,review_reference,status FROM editorial_drafts WHERE paragraph_id=?",(new String[]{id}))){
+        String[] key=ids.get(w).split("\\|",2); String volKey=key[0], id=key[1];
+        try(Cursor c=drafts.getReadableDatabase().rawQuery("SELECT volume,paragraph_id,translation_my,explanation_my,source_ref,rights_evidence,reviewer_1,reviewer_2,review_reference,status FROM editorial_drafts WHERE volume=? AND paragraph_id=?",new String[]{volKey,id})){
           if(c.moveToFirst()){
             volumeInput.setText(Integer.toString(c.getInt(0)));paragraphInput.setText(c.getString(1));
             translationInput.setText(c.getString(2));explanationInput.setText(c.getString(3));
