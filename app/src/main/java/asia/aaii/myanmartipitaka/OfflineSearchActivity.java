@@ -49,7 +49,8 @@ public class OfflineSearchActivity extends Activity {
      if(c.moveToFirst()){
       java.util.HashSet<String> cols=new java.util.HashSet<>();
       try(Cursor x=db.rawQuery("PRAGMA table_info(paragraph_myanmar_content)",null)){while(x.moveToNext())cols.add(x.getString(1));}
-      hasReviewedMyanmar=cols.contains("segment_id")&&cols.contains("content_type")&&cols.contains("text_my")&&cols.contains("reviewed");
+      boolean paragraphSegment=false;try(Cursor y=db.rawQuery("PRAGMA table_info(paragraphs)",null)){while(y.moveToNext())if("segment_id".equals(y.getString(1)))paragraphSegment=true;}
+      hasReviewedMyanmar=paragraphSegment&&cols.contains("segment_id")&&cols.contains("content_type")&&cols.contains("text_my")&&cols.contains("reviewed");
      }
     }
    }
