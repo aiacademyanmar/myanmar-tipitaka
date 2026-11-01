@@ -1,4 +1,4 @@
-name: Myanmar Tipitaka V2.3.4.9.5 Native SQLite Foundation + APK
+name: Myanmar Tipitaka V2.3.4.9.6 Native SQLite Foundation + APK
 
 on:
   workflow_dispatch:
@@ -51,6 +51,9 @@ jobs:
       - name: Import reviewed Myanmar translations and explanations (if supplied)
         if: steps.corpus_gate.outcome == 'success' && steps.crosswalk_gate.outcome == 'success' && steps.myanmar_batch.outcome == 'success'
         run: python3 scripts/merge_verified_myanmar.py --database app/src/main/assets/tipitaka_offline.sqlite --reviewed corpus/reviewed_myanmar.csv --report myanmar_review_coverage.json
+      - name: Report approved Myanmar coverage by volume
+        if: always()
+        run: python3 scripts/report_myanmar_content_coverage.py --database app/src/main/assets/tipitaka_offline.sqlite --output corpus/myanmar_content_coverage.json
       - name: Compile debug APK (compile smoke test even when corpus is incomplete)
         if: always() && steps.importer_tests.outcome == 'success'
         run: gradle --no-daemon assembleDebug
@@ -58,10 +61,11 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: Myanmar-Tipitaka-V2.3.4.9.5-Corpus-QA-Reports
+          name: Myanmar-Tipitaka-V2.3.4.9.6-Corpus-QA-Reports
           path: |
             corpus/offline_corpus_audit.json
             corpus/myanmar_editorial_batch_audit.json
+            corpus/myanmar_content_coverage.json
             myanmar_review_coverage.json
           if-no-files-found: ignore
           retention-days: 14
@@ -69,7 +73,7 @@ jobs:
         if: steps.corpus_gate.outcome == 'success' && steps.crosswalk_gate.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
-          name: Myanmar-Tipitaka-V2.3.4.9.5-debug-APK
+          name: Myanmar-Tipitaka-V2.3.4.9.6-debug-APK
           path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 14
