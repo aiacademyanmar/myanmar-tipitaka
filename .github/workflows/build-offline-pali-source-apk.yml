@@ -7,6 +7,7 @@ on:
       - 'app/src/main/java/asia/aaii/myanmartipitaka/PaliSourceLibraryActivity.java'
       - 'corpus/PALI_ORIGINAL_SOURCE_LICENSE.md'
       - 'scripts/build_offline_45_volumes.py'
+      - 'scripts/test_offline_45_boundaries.py'
       - 'app/src/main/java/asia/aaii/myanmartipitaka/TipitakaLibraryActivity.java'
       - 'app/src/main/java/asia/aaii/myanmartipitaka/OfflineCorpusInstaller.java'
   workflow_dispatch:
@@ -48,6 +49,8 @@ jobs:
             assert count>400000, f"Unexpectedly incomplete corpus: {count}"
             print(f"Offline original Pali segments in APK asset: {count}")
           PY
+      - name: Verify individual canonical mapping boundaries
+        run: python scripts/test_offline_45_boundaries.py
       - name: Create original-Pali 45-volume offline SQLite
         run: |
           python scripts/build_offline_45_volumes.py upstream-bilara/root/pli/ms --output app/src/main/assets/tipitaka_offline.sqlite --source-commit "$(cat bilara_source_commit.txt)" --report offline_45_volume_mapping_report.json
