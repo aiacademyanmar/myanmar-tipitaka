@@ -7,10 +7,8 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
 import android.webkit.DownloadListener;
-import android.webkit.SafeBrowsingResponse;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
@@ -18,7 +16,7 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.webkit.SslError;
+import android.net.http.SslError;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -46,6 +44,9 @@ public final class OnlineBookReaderActivity extends Activity {
   private String startUrl="",pageTitle="";
   private int restoredScroll=0;
   private boolean firstPage=true;
+  private android.widget.Button pageBack,pageNext;
+  private android.widget.EditText pageInput;
+  private int pdfPage=1,pdfPageCount=0;
 
   private int dp(int n){return (int)(n*getResources().getDisplayMetrics().density+.5f);}
   private TextView text(String value,int size,int color,boolean bold){
@@ -73,6 +74,12 @@ public final class OnlineBookReaderActivity extends Activity {
       .show();
   }
   private void updateStatus(String value){if(statusView!=null)statusView.setText(value);}
+  private void renderPdfControls(){
+    if(pageInput!=null)pageInput.setText(Integer.toString(pdfPage));
+    if(pageBack!=null)pageBack.setEnabled(pdfPage>1);
+    if(pageNext!=null)pageNext.setEnabled(pdfPageCount==0||pdfPage<pdfPageCount);
+    updateStatus("PDF Preview • Page "+pdfPage+(pdfPageCount>0?" / "+pdfPageCount:""));
+  }
   private void loadPublisherUrl(String url){
     Uri uri=Uri.parse(url);
     if(!isAllowed(uri)){updateStatus("ခွင့်ပြုထားသော Reference Website မဟုတ်ပါ။ Browser ဖြင့်ဖွင့်ပါ။");return;}
@@ -150,12 +157,15 @@ public final class OnlineBookReaderActivity extends Activity {
       @Override public void onReceivedTitle(WebView view,String title){if(title!=null&&!title.trim().isEmpty())titleView.setText(title);}
     });
     web.setDownloadListener((url,userAgent,contentDisposition,mimeType,contentLength)->showDownload(url,mimeType));
+    web.setFindListener((activeMatchOrdinal,numberOfMatches,isDoneCounting)->{if(isDoneCounting&&numberOfMatches>0)updateStatus("ရှာဖွေတွေ့ရှိမှု "+numberOfMatches+" ခု");});
     root.addView(web,new LinearLayout.LayoutParams(-1,0,1));
 
     LinearLayout controls=new LinearLayout(this);controls.setGravity(Gravity.CENTER);controls.setBackgroundColor(0xffeee6d3);
     Button back=new Button(this);back.setText("‹ Back");controls.addView(back,new LinearLayout.LayoutParams(0,-2,1));
     Button refresh=new Button(this);refresh.setText("↻ Reload");controls.addView(refresh,new LinearLayout.LayoutParams(0,-2,1));
     Button browser=new Button(this);browser.setText("Browser ↗");controls.addView(browser,new LinearLayout.LayoutParams(0,-2,1));
+    Button find=new Button(this);find.setText("Find");controls.addView(find,new LinearLayout.LayoutParams(0,-2,1));
+    find.setOnClickListener(v->{final EditText q=new EditText(this);q.setSingleLine(true);q.setHint("စာသားရှာရန်");new AlertDialog.Builder(this).setTitle("စာမျက်နှာအတွင်း ရှာရန်").setView(q).setNegativeButton("ပိတ်မည်",null).setPositiveButton("ရှာရန်",(d,w)->web.findAllAsync(q.getText().toString())).show();});
     root.addView(controls);setContentView(root);
     back.setOnClickListener(v->{if(web.canGoBack())web.goBack();else finish();});
     refresh.setOnClickListener(v->web.reload());
