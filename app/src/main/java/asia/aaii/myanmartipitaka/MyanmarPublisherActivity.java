@@ -36,7 +36,15 @@ public final class MyanmarPublisherActivity extends Activity {
     TextView title=new TextView(this);title.setText("☸ Standalone Publisher");title.setTextSize(23);title.setTextColor(-1);title.setPadding(dp(16),dp(18),dp(16),dp(18));title.setBackgroundColor(0xff144638);root.addView(title);
     EditText name=new EditText(this);name.setSingleLine(true);name.setHint("Publisher အမည်");root.addView(name);
     status=new TextView(this);status.setText("Local SQLite Publisher • Internet မလိုပါ");status.setTextSize(14);status.setPadding(0,dp(8),0,dp(8));root.addView(status);
-    add(root,"📥 Verified Candidate CSV Import",()->{publisher=name.getText().toString().trim();if(publisher.isEmpty()){name.setError("Publisher အမည်ဖြည့်ပါ");return;}pick(PICK_IMPORT,"text/csv");});
+    add(root,"✓ Reviewer နှစ်ဦး Approve ပြီးသော Draft များကို တိုက်ရိုက် Publish",()->{
+      publisher=name.getText().toString().trim();
+      if(publisher.isEmpty()){name.setError("Publisher အမည်ဖြည့်ပါ");return;}
+      new AlertDialog.Builder(this).setTitle("Local SQLite Publish")
+        .setMessage("သတ်မှတ်ထားသော Reviewer နှစ်ဦးလုံးက လက်ရှိ Draft version ကို Approve လုပ်ထားပြီး၊ Reject/Revision မရှိသော အကြောင်းအရာများကိုသာ Offline Reader ထဲသို့ ထည့်သွင်းပါမည်။ ဆက်လက်မလား။")
+        .setNegativeButton("မလုပ်တော့ပါ",null)
+        .setPositiveButton("Publish လုပ်မည်",(d,w)->publishApprovedDrafts()).show();
+    });
+    add(root,"📥 Verified Candidate CSV Import (Optional)",()->{publisher=name.getText().toString().trim();if(publisher.isEmpty()){name.setError("Publisher အမည်ဖြည့်ပါ");return;}pick(PICK_IMPORT,"text/csv");});
     add(root,"📊 Published Content Coverage",()->showCoverage());
     add(root,"📤 Published Content Backup",()->pick(PICK_BACKUP,"application/octet-stream"));
     add(root,"📥 Restore Published Content Backup",()->pick(PICK_RESTORE,"application/octet-stream"));
@@ -56,6 +64,92 @@ public final class MyanmarPublisherActivity extends Activity {
       else if(req==PICK_RESTORE){restoreBackup(uri);toast("Publisher Database Restore ပြီးပါပြီ။");}
     }catch(Exception e){toast("လုပ်ဆောင်မှု မအောင်မြင်ပါ: "+e.getMessage());}
   }
+  /**
+   * Publish directly from the on-device editorial review database.
+   * Every approval must belong to one of the two named reviewers and be
+   * newer than the submitted draft. Any reject/revision blocks publication.
+   */
+  private void publishApprovedDrafts(){
+    File corpus=null;SQLiteDatabase pali=null,drafts=null,local=null;
+    int[] totals={0,0};int publishedParagraphs=0;
+    try{
+      if(publisher.trim().isEmpty())throw new IOException("Publisher အမည်ဖြည့်ပါ။");
+      corpus=OfflineCorpusInstaller.prepare(getApplicationContext());
+      pali=SQLiteDatabase.openDatabase(corpus.getAbsolutePath(),null,SQLiteDatabase.OPEN_READONLY);
+      File draftFile=getDatabasePath("myanmar_editorial_drafts.db");
+      if(!draftFile.isFile())throw new IOException("Editorial Draft မရှိသေးပါ။");
+      drafts=SQLiteDatabase.openDatabase(draftFile.getAbsolutePath(),null,SQLiteDatabase.OPEN_READONLY);
+      local=store.getWritableDatabase();
+      local.beginTransaction();
+      try(Cursor rows=drafts.rawQuery(
+        "SELECT d.volume,d.paragraph_id,d.translation_my,d.explanation_my,d.source_ref,d.rights_evidence,"+
+        "d.reviewer_1,d.reviewer_2,d.review_reference,d.updated_at,"+
+        "(SELECT COUNT(DISTINCT r.reviewer_name) FROM editorial_reviews r "+
+        " WHERE r.volume=d.volume AND r.paragraph_id=d.paragraph_id AND r.decision='approve' "+
+        " AND (r.reviewer_name=d.reviewer_1 COLLATE NOCASE OR r.reviewer_name=d.reviewer_2 COLLATE NOCASE) "+
+        " AND r.reviewed_at>=d.updated_at),"+
+        "(SELECT COUNT(*) FROM editorial_reviews r WHERE r.volume=d.volume AND r.paragraph_id=d.paragraph_id "+
+        " AND r.decision IN ('revision','reject') AND r.reviewed_at>=d.updated_at) "+
+        "FROM editorial_drafts d WHERE d.status='submitted_for_review' ORDER BY d.volume,d.paragraph_id",null)){
+        while(rows.moveToNext()){
+          int volume=rows.getInt(0);String draftId=rows.getString(1);
+          String translation=rows.getString(2),explanation=rows.getString(3);
+          String source=rows.getString(4),rights=rows.getString(5);
+          String reviewer1=rows.getString(6),reviewer2=rows.getString(7),reviewRef=rows.getString(8);
+          String updated=rows.getString(9);
+          if(rows.getInt(10)!=2||rows.getInt(11)>0)continue;
+          if(reviewer1==null||reviewer2==null||reviewer1.trim().isEmpty()||reviewer2.trim().isEmpty()||
+             reviewer1.trim().equalsIgnoreCase(reviewer2.trim())||
+             source==null||source.trim().isEmpty()||rights==null||rights.trim().isEmpty()||
+             reviewRef==null||reviewRef.trim().isEmpty())continue;
+          String paliText=null,segment=null;long paragraphId=-1;
+          try(Cursor p=pali.rawQuery("SELECT id,segment_id,body FROM paragraphs WHERE volume=? AND (CAST(id AS TEXT)=? OR segment_id=?) LIMIT 1",
+              new String[]{Integer.toString(volume),draftId,draftId})){
+            if(p.moveToFirst()){paragraphId=p.getLong(0);segment=p.getString(1);paliText=p.getString(2);}
+          }
+          if(paliText==null||segment==null||paliText.trim().isEmpty())continue;
+          String hash=sha(paliText);
+          String reviewedAt="";
+          try(Cursor r=drafts.rawQuery("SELECT MAX(reviewed_at) FROM editorial_reviews WHERE volume=? AND paragraph_id=? AND decision='approve' AND reviewed_at>=?",
+              new String[]{Integer.toString(volume),draftId,updated})){
+            if(r.moveToFirst()&&r.getString(0)!=null)reviewedAt=r.getString(0);
+          }
+          if(reviewedAt.isEmpty())continue;
+          String[] kinds={"translation","explanation"},texts={translation,explanation};
+          int before=totals[0]+totals[1];
+          for(int i=0;i<2;i++){
+            String my=texts[i]==null?"":texts[i].trim();
+            if(my.isEmpty())continue;
+            if(!my.matches("(?s).*[\\u1000-\\u109F].*"))
+              throw new IOException("ကျမ်း "+volume+" / "+draftId+" တွင် Myanmar Unicode စာသားမမှန်ပါ။");
+            ContentValues cv=new ContentValues();
+            cv.put("paragraph_id",paragraphId);cv.put("segment_id",segment);cv.put("content_type",kinds[i]);
+            cv.put("text_my",my);cv.put("source_ref",source);cv.put("rights_evidence",rights);
+            cv.put("reviewer_1",reviewer1);cv.put("reviewer_2",reviewer2);cv.put("review_reference",reviewRef);
+            cv.put("reviewed_at",reviewedAt.substring(0,Math.min(10,reviewedAt.length())));
+            cv.put("source_pali_sha256",hash);cv.put("reviewed",1);
+            cv.put("publisher_name",publisher);cv.put("published_at",now());
+            local.insertWithOnConflict(MyanmarContentStore.TABLE,null,cv,SQLiteDatabase.CONFLICT_REPLACE);
+            totals[i]++;
+          }
+          if(before<totals[0]+totals[1])publishedParagraphs++;
+        }
+      }
+      if(publishedParagraphs==0)throw new IOException("လက်ရှိ Draft version အတွက် Reviewer နှစ်ဦး Approve မှတ်တမ်း၊ ရင်းမြစ်နှင့် Rights Evidence ပြည့်စုံသောစာပိုဒ် မရှိသေးပါ။");
+      ContentValues log=new ContentValues();log.put("source_type","local_editorial_review");
+      log.put("source_name","On-device Reviewer Queue");log.put("publisher_name",publisher);
+      log.put("imported_at",now());log.put("translation_rows",totals[0]);log.put("explanation_rows",totals[1]);
+      local.insert("publisher_import_log",null,log);
+      local.setTransactionSuccessful();
+      status.setText("Local Publish အောင်မြင် • ဘာသာပြန် "+totals[0]+" • ရှင်းလင်းချက် "+totals[1]);
+      toast("Offline Reader ထဲသို့ တိုက်ရိုက် Publish ပြီးပါပြီ။ စာပိုဒ် "+publishedParagraphs+" ပိုဒ် • ဘာသာပြန် "+totals[0]+" • ရှင်းလင်းချက် "+totals[1]);
+    }catch(Exception e){toast("Publish မအောင်မြင်ပါ: "+e.getMessage());}
+    finally{
+      if(local!=null&&local.inTransaction())local.endTransaction();
+      if(drafts!=null)drafts.close();if(pali!=null)pali.close();
+    }
+  }
+
   private int[] importCsv(Uri uri)throws Exception{
     File temp=new File(getCacheDir(),"publisher_import.csv");
     try(InputStream in=getContentResolver().openInputStream(uri);OutputStream out=new FileOutputStream(temp)){if(in==null)throw new IOException("CSV ဖိုင်ဖတ်မရပါ");byte[] b=new byte[32768];int n;while((n=in.read(b))!=-1)out.write(b,0,n);}
@@ -77,7 +171,7 @@ public final class MyanmarPublisherActivity extends Activity {
         String paliText=null;long pid=-1;
         try(Cursor p=pali.rawQuery("SELECT id,body FROM paragraphs WHERE CAST(id AS TEXT)=? OR segment_id=? LIMIT 1",new String[]{seg,seg})){if(p.moveToFirst()){pid=p.getLong(0);paliText=p.getString(1);}}
         if(paliText==null||!sha(paliText).equalsIgnoreCase(hash))throw new IOException("Row "+lineNo+": Pāli SHA-256 မကိုက်ညီပါ");
-        try{java.time.LocalDate.parse(date);}catch(Exception e){throw new IOException("Row "+lineNo+": review date မမှန်ပါ");}
+        try{SimpleDateFormat df=new SimpleDateFormat("yyyy-MM-dd",Locale.US);df.setLenient(false);if(df.parse(date)==null)throw new Exception();}catch(Exception e){throw new IOException("Row "+lineNo+": review date မမှန်ပါ");}
         ContentValues cv=new ContentValues();cv.put("paragraph_id",pid);cv.put("segment_id",seg);cv.put("content_type",kind);cv.put("text_my",text);cv.put("source_ref",src);cv.put("rights_evidence",rights);cv.put("reviewer_1",r1);cv.put("reviewer_2",r2);cv.put("review_reference",ref);cv.put("reviewed_at",date);cv.put("source_pali_sha256",hash.toLowerCase(Locale.US));cv.put("reviewed",1);cv.put("publisher_name",publisher);cv.put("published_at",now());
         local.insertWithOnConflict(MyanmarContentStore.TABLE,null,cv,SQLiteDatabase.CONFLICT_REPLACE);
         count[kind.equals("translation")?0:1]++;
