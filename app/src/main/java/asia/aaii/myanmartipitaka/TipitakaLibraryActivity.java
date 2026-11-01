@@ -72,14 +72,11 @@ public final class TipitakaLibraryActivity extends Activity {
   }
   private boolean openDb(){
     try{
-      File file=new File(getFilesDir(),"tipitaka_offline.sqlite");
-      if(!file.exists()){
-        try(InputStream in=getAssets().open("tipitaka_offline.sqlite");OutputStream out=new FileOutputStream(file)){
-          byte[] buf=new byte[8192];int n;while((n=in.read(buf))>0)out.write(buf,0,n);
-        }
-      }
+      File file=OfflineCorpusInstaller.prepare(this);
       db=SQLiteDatabase.openDatabase(file.getAbsolutePath(),null,SQLiteDatabase.OPEN_READONLY);
-      try(Cursor c=db.rawQuery("SELECT count(*) FROM paragraphs",null)){if(!c.moveToFirst()||c.getLong(0)==0)throw new IOException("Empty corpus");}
+      try(Cursor c=db.rawQuery("SELECT count(*) FROM paragraphs",null)){
+        if(!c.moveToFirst()||c.getLong(0)==0)throw new IOException("Empty corpus");
+      }
       return true;
     }catch(Exception e){return false;}
   }
@@ -89,22 +86,24 @@ public final class TipitakaLibraryActivity extends Activity {
     TextView header=text("☸  ပိဋကတ်သုံးပုံ · Offline Library",22);header.setTextColor(Color.WHITE);header.setBackgroundColor(GREEN);root.addView(header);
     ScrollView scroll=new ScrollView(this);content=new LinearLayout(this);content.setOrientation(LinearLayout.VERTICAL);
     scroll.addView(content);root.addView(scroll,new LinearLayout.LayoutParams(-1,0,1));
-    boolean ready=openDb();
-    content.addView(text(ready?"✓ Offline စာသားဒေတာ ရရှိပါပြီ":"၄၅ ကျမ်း စာရင်းနှင့် Offline Reader",19));
-    if(ready){
-      try {
-        long paragraphCount=0,explainedCount=0;int coveredVolumes=0;
+    content.addView(text("Offline ပါဠိကျမ်းဒေတာကို ဖွင့်နေပါသည်…",18));
+    new Thread(()->{
+      final boolean ready=openDb();
+      long[] counts=new long[3];
+      if(ready){
         try(Cursor c=db.rawQuery("SELECT COUNT(*),COUNT(DISTINCT volume) FROM paragraphs WHERE LENGTH(TRIM(body))>0",null)){
-          if(c.moveToFirst()){paragraphCount=c.getLong(0);coveredVolumes=c.getInt(1);}
+          if(c.moveToFirst()){counts[0]=c.getLong(0);counts[1]=c.getLong(1);}
+        }catch(Exception ignored){}
+      }
+      runOnUiThread(()->{
+        content.removeViewAt(0);
+        content.addView(text(ready?"✓ ပါဠိကျမ်းဒေတာ ဖွင့်ပြီး":"Offline ၄၅ ကျမ်း SQLite မပါသေးပါ",19),0);
+        if(ready){
+          String summary="Source-aligned Pāli • ကျမ်း "+counts[1]+"/45 • စာပိုဒ် "+counts[0]+"\\nMCU မူရင်းအုပ်ခွဲတိကျမှု အတည်မပြုရသေးပါ။";
+          content.addView(text(summary,16),1);
         }
-        try(Cursor c=db.rawQuery("SELECT COUNT(*) FROM paragraph_explanations WHERE language='my' AND reviewed=1 AND LENGTH(TRIM(explanation_my))>0",null)){
-          if(c.moveToFirst())explainedCount=c.getLong(0);
-        }
-        content.addView(text("Offline Data Coverage  •  ကျမ်း "+coveredVolumes+"/45\\nကျမ်းပိုဒ် "+paragraphCount+" ပိုဒ်\\nစိစစ်ပြီး မြန်မာရှင်းလင်းချက် "+explainedCount+" ပိုဒ်",18));
-        if(coveredVolumes<45||explainedCount<paragraphCount)content.addView(text("သတိပြုရန် — ပိဋကတ်တော် Offline Full Library မပြည့်စုံသေးပါ။",16));
-      }catch(Exception e){content.addView(text("Database Format / Explanation Coverage စစ်ဆေး၍ မရပါ။",16));}
-    }
-    if(!ready)content.addView(text("၄၅ ကျမ်း၏ စာအုပ်ခေါင်းစဉ်များကို အင်တာနက်မလိုဘဲ ကြည့်နိုင်ပါသည်။ မူရင်းစာသားဒေတာကို ပြန်လည်ဖြန့်ဝေခွင့်နှင့်တကွ ထည့်သွင်းထားခြင်းမရှိသေးပါ။ ကျမ်းဖတ်လိုပါက မိမိဖုန်းရှိ PDF/EPUB/TXT ဖိုင်ကို ရွေးချယ်နိုင်ပါသည်။",15));
+      });
+    },"tipitaka-install").start();
     for(int i=0;i<NAMES.length;i++){
       final int index=i;String group=i<8?"ဝိနည်း":i<33?"သုတ္တန်":"အဘိဓမ္မာ";
       row(String.format(Locale.US,"%02d  %s\n%s",i+1,NAMES[i],group),()->openVolume(index));
