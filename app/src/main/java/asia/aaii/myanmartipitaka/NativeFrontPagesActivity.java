@@ -312,6 +312,7 @@ public class NativeFrontPagesActivity extends Activity {
       addText("Tipiṭaka  ·  45 ကျမ်း  ·  အခမဲ့",16,GOLD,true);
       addText("ထေရဝါဒ ပါဠိဘာသာ ပိဋကတ်သုံးပုံ (တိပိဋကတ်) ကို အောက်ပါ Menu များမှတစ်ဆင့် ဖတ်ရှုနိုင်ပါသည်။ ဝိနည်းပိဋကတ်၊ သုတ္တပိဋကတ်နှင့် အဘိဓမ္မပိဋကတ်တို့ကို လေ့လာနိုင်ပါသည်။",15,INK,false);
       menuCard("📚","ကျမ်းဖတ်ခန်း (45 ကျမ်း)","ပိဋကတ် ၄၅ ကျမ်း • Native Offline Reader",()->startActivity(new Intent(this,TipitakaLibraryActivity.class)));
+      menuCard("📊","မြန်မာဘာသာပြန် တိုးတက်မှု","ကျမ်း ၄၅ ကျမ်း • အတည်ပြုဘာသာပြန်နှင့် ရှင်းလင်းချက် Coverage",()->startActivity(new Intent(this,MyanmarCoverageActivity.class)));
       menuCard("📖","Online ဖတ်ရှုရန်","Tipitaka.cloud • ပါဠိနှင့် ထိုင်းဘာသာ Edition",()->openLink("https://tipitaka.cloud/?panes=en_translation"));
       addText("အထူးလေ့လာရန်",19,GREEN,true);
       menuCard("📜","ဓမ္မပဒ (Dhammapada)","ဂါထာ ၄၂၃ ပါဒ  ·  ဝဂ် ၂၆ ခု",()->openLink("https://tipitaka.cloud/en/learn/suttas/dhammapada"));
