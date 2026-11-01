@@ -33,6 +33,7 @@ on:
       - 'corpus/dhammapada_draft_306_359.csv'
       - 'corpus/dhammapada_draft_360_423.csv'
       - 'app/src/main/java/asia/aaii/myanmartipitaka/DhammapadaYamakavaggaActivity.java'
+      - 'scripts/import_drive_ui.py'
       - 'scripts/compare_mcu_exact_45.py'
       - 'corpus/mcu_reference/**'
       - 'app/src/main/java/asia/aaii/myanmartipitaka/TipitakaLibraryActivity.java'
