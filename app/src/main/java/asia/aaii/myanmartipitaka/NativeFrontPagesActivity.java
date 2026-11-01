@@ -63,6 +63,7 @@ public class NativeFrontPagesActivity extends Activity {
     if(p==22){startActivity(new Intent(this,DhammapadaYamakavaggaActivity.class));return;}
     if(p==23){startActivity(new Intent(this,OfflineBookmarksActivity.class));return;}
     if(p==24){startActivity(new Intent(this,OfflineSearchActivity.class));return;}
+    if(p==25){startActivity(new Intent(this,ReaderStateBackupActivity.class));return;}
     if(p==3){toggleMenu();return;}
     if(p<=21){render(p);return;}
     Intent i=new Intent(this,ExactScreensActivity.class);i.putExtra("openPage",p);startActivity(i);
@@ -270,6 +271,7 @@ public class NativeFrontPagesActivity extends Activity {
       save.setOnClickListener(v->{getPreferences(MODE_PRIVATE).edit().putString("note",note.getText().toString()).apply();
         Toast.makeText(this,"မှတ်စု သိမ်းဆည်းပြီး",Toast.LENGTH_SHORT).show();});
       button("ကျမ်းပိုဒ် Bookmark စာရင်း",23);
+      button("⬆⬇ Reader Backup / Restore",25);
       button("စာအုပ်ဖတ်စက် (Reader Bookmark)",6);
       button("ဆက်လက်ဖတ်ရှုရန်",8);
       addText("စာမှတ်များကို Reader အတွင်း သိမ်းဆည်းထားနိုင်ပြီး စာမှတ်တစ်ခုချင်းကို Reader ၏ Go to → Bookmark ဖြင့် ဖွင့်နိုင်ပါသည်။",14,INK,false);
