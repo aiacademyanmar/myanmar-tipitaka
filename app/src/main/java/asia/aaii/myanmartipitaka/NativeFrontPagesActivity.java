@@ -37,6 +37,7 @@ public class NativeFrontPagesActivity extends Activity {
     i.putExtra("start_volume",start);i.putExtra("end_volume",end);startActivity(i);
   }
   private void go(int p){
+    if(p==22){startActivity(new Intent(this,DhammapadaYamakavaggaActivity.class));return;}
     if(p==21){startActivity(new Intent(this,MyanmarCoverageActivity.class));return;}
     if(p==3){toggleMenu();return;}
     if(p<=20){render(p);return;}
@@ -90,6 +91,7 @@ public class NativeFrontPagesActivity extends Activity {
       addText("မူရင်းမင်္ဂလသုတ် ပါဠိ/ဘာသာပြန် စာသားကို တရားဝင်အတည်ပြုထားသော ရင်းမြစ်မှ ထည့်သွင်းရန် လိုအပ်ပါသည်။",14,INK,false);
     }else if(n==19){
       addText("နိကာယ်ငါးရပ်",27,GREEN,true);
+      button("ဓမ္မပဒ — ယမကဝဂ် (ဂါထာ ၁–၂၀)",22);
       addText("Five Nikāyas",16,GOLD,true);
       sourceLink("နိကာယ်ငါးရပ် မူရင်းရင်းမြစ်","https://tipitaka.cloud/learn/structure/suttanta");
       String[] nikayas={"ဒီဃနိကာယ် — Dīgha Nikāya","မဇ္ဈိမနိကာယ် — Majjhima Nikāya",
@@ -296,6 +298,7 @@ public class NativeFrontPagesActivity extends Activity {
       button("◷   ဆက်လက်ဖတ်ရှုရန်",13);
       addText("သုတ် • ဝိနည်း • အဘိဓမ္မာ",18,GOLD,true);
       button("နိကာယ်ငါးရပ်",19);
+      button("☸ ဓမ္မပဒ ယမကဝဂ် (ဂါထာ ၁–၂၀)",22);
     }else{
       addText("လမ်းညွှန် မီနူး",27,GREEN,true);
       addText("Navigation Menu",16,GOLD,false);
