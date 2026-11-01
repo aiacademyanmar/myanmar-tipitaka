@@ -119,6 +119,7 @@ jobs:
           assert db.execute('SELECT COUNT(*) FROM mangala_pali_stanzas').fetchone()[0]==13
           assert db.execute("SELECT COUNT(*) FROM mangala_blessings WHERE translation_status='ai_draft_unreviewed'").fetchone()[0]==38
           assert db.execute('SELECT COUNT(DISTINCT group_no) FROM mangala_blessings').fetchone()[0]==10
+          assert db.execute("SELECT COUNT(*) FROM mangala_blessings b LEFT JOIN mangala_pali_stanzas p ON p.stanza=CAST(b.stanza_ref AS INTEGER) WHERE p.stanza IS NULL OR LENGTH(TRIM(p.pali_text))=0").fetchone()[0]==0
           print('Mangala Sutta offline verification: 38 blessings / 10 groups / 13 Pali stanzas')
           PY
       - name: Import Tipitaka Online CST source passages, references and clearly-labelled AI translations
