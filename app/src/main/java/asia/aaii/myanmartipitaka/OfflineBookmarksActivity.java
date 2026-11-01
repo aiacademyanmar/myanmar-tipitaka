@@ -47,7 +47,42 @@ public class OfflineBookmarksActivity extends Activity {
         shown++;
       }
     }
-    if(shown==0)notice("Filter နှင့် ကိုက်ညီသော Bookmark မတွေ့ပါ။ Bookmark ကို ကြာကြာနှိပ်၍ ဖယ်ရှားနိုင်ပါသည်။");
+    // Reading history and per-paragraph notes are stored locally in the same preferences.
+    int historyShown=0,notesShown=0;
+    TextView historyHeader=new TextView(this);historyHeader.setText("🕘 ဖတ်ရှုမှုမှတ်တမ်း");historyHeader.setTextSize(19);historyHeader.setTextColor(0xff144638);historyHeader.setPadding(18,18,18,10);list.addView(historyHeader);
+    for(Map.Entry<String,?> e:prefs.getAll().entrySet()){
+      if(!e.getKey().startsWith("history_")||!(e.getValue() instanceof String))continue;
+      String[] parts=((String)e.getValue()).split("\\|",3);if(parts.length<2)continue;
+      int vol;try{vol=Integer.parseInt(parts[0]);}catch(Exception ex){continue;}
+      if(filter!=null&&filter.getSelectedItemPosition()>0&&filter.getSelectedItemPosition()!=vol)continue;
+      String id=e.getKey().substring("history_".length());
+      try(Cursor c=db.rawQuery("SELECT body FROM paragraphs WHERE id=?",new String[]{id})){
+        if(!c.moveToFirst())continue;
+        String body=c.getString(0);String needle=query==null?"":query.getText().toString().trim();
+        if(!needle.isEmpty()&&!body.contains(needle)&&!id.contains(needle))continue;
+        TextView item=new TextView(this);item.setText("🕘 ကျမ်း "+vol+" · §"+parts[1]+"\\n"+(body.length()>130?body.substring(0,130)+"…":body));
+        item.setTextSize(16);item.setTextColor(0xff17493c);item.setPadding(22,14,22,14);list.addView(item);
+        item.setOnClickListener(v->{Intent i=new Intent(this,ParagraphExplanationActivity.class);i.putExtra("volume",vol);i.putExtra("paragraph_id",id);startActivity(i);});
+        historyShown++;
+      }
+    }
+    TextView notesHeader=new TextView(this);notesHeader.setText("📝 ကျမ်းပိုဒ်အလိုက် ကိုယ်ပိုင်မှတ်စု");notesHeader.setTextSize(19);notesHeader.setTextColor(0xff144638);notesHeader.setPadding(18,18,18,10);list.addView(notesHeader);
+    for(Map.Entry<String,?> e:prefs.getAll().entrySet()){
+      if(!e.getKey().startsWith("note_")||!(e.getValue() instanceof String)||((String)e.getValue()).trim().isEmpty())continue;
+      String id=e.getKey().substring("note_".length());
+      try(Cursor c=db.rawQuery("SELECT volume,body FROM paragraphs WHERE id=?",new String[]{id})){
+        if(!c.moveToFirst())continue;int vol=c.getInt(0);
+        if(filter!=null&&filter.getSelectedItemPosition()>0&&filter.getSelectedItemPosition()!=vol)continue;
+        String note=(String)e.getValue(),body=c.getString(1);String needle=query==null?"":query.getText().toString().trim();
+        if(!needle.isEmpty()&&!note.contains(needle)&&!body.contains(needle)&&!id.contains(needle))continue;
+        TextView item=new TextView(this);item.setText("📝 ကျမ်း "+vol+" · §"+id+"\\n"+(note.length()>180?note.substring(0,180)+"…":note));
+        item.setTextSize(16);item.setTextColor(0xff55422a);item.setPadding(22,14,22,14);list.addView(item);
+        item.setOnClickListener(v->{Intent i=new Intent(this,ParagraphExplanationActivity.class);i.putExtra("volume",vol);i.putExtra("paragraph_id",id);startActivity(i);});
+        notesShown++;
+      }
+    }
+    if(shown==0&&historyShown==0&&notesShown==0)notice("Bookmark၊ ဖတ်ရှုမှုမှတ်တမ်း သို့မဟုတ် မှတ်စု မတွေ့ပါ။");
+
   }catch(Exception e){notice("Bookmark အတွက် Offline Database ဖတ်၍မရပါ။");}
  }
  private void notice(String s){TextView t=new TextView(this);t.setText(s);t.setTextSize(17);t.setPadding(20,20,20,20);list.addView(t);}
