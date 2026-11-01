@@ -15,7 +15,6 @@ import java.util.Set;
 public final class OfflineCorpusInstaller {
   private static final String FILE="tipitaka_offline.sqlite";
   private static final String PREFS="tipitaka_offline_asset_installer";
-  private static final long EXPECTED_PARAGRAPHS=425953L;
   private OfflineCorpusInstaller(){}
 
   public static synchronized File prepare(Context context)throws Exception{
@@ -86,7 +85,17 @@ public final class OfflineCorpusInstaller {
         volumes=c.getLong(0);count=c.getLong(1);
       }
       if(volumes!=45)throw new IllegalStateException("Expected 45 volumes; found "+volumes);
-      if(count!=EXPECTED_PARAGRAPHS)throw new IllegalStateException("Expected "+EXPECTED_PARAGRAPHS+" paragraphs; found "+count);
+      if(count<=0)throw new IllegalStateException("Offline corpus has no paragraphs");
+      if(!tables.contains("volumes")||!tables.contains("build_info"))
+        throw new IllegalStateException("Native 45-volume corpus metadata is missing");
+      try(Cursor meta=db.rawQuery("SELECT value FROM build_info WHERE name='pali_paragraph_count'",null)){
+        if(!meta.moveToFirst()||Long.parseLong(meta.getString(0))!=count)
+          throw new IllegalStateException("Corpus paragraph count metadata mismatch");
+      }
+      try(Cursor meta=db.rawQuery("SELECT value FROM build_info WHERE name='edition_mapping'",null)){
+        if(!meta.moveToFirst()||!"45-volume human-reviewed crosswalk".equals(meta.getString(0)))
+          throw new IllegalStateException("Edition mapping is not approved");
+      }
       try(Cursor c=db.rawQuery("SELECT COUNT(*) FROM paragraphs WHERE body IS NULL OR trim(body)='' OR source_ref IS NULL OR trim(source_ref)=''",null)){
         if(!c.moveToFirst()||c.getLong(0)!=0)throw new IllegalStateException("Empty or unreferenced paragraphs exist");
       }
