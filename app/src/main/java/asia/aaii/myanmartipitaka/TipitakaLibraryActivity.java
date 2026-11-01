@@ -62,7 +62,8 @@ public final class TipitakaLibraryActivity extends Activity {
     "ပဋ္ဌာန်း ၆"
   };
   private SQLiteDatabase db;
-  private LinearLayout content;\n  private int filterStart=1,filterEnd=45;
+  private LinearLayout content;
+  private int filterStart=1,filterEnd=45;
   private int dp(int v){return (int)(getResources().getDisplayMetrics().density*v+.5);}
   private TextView text(String s,int size){TextView t=new TextView(this);t.setText(s);t.setTextColor(GREEN);t.setTextSize(size);t.setPadding(dp(14),dp(12),dp(14),dp(12));return t;}
   private void row(String title,Runnable fn){
@@ -81,12 +82,16 @@ public final class TipitakaLibraryActivity extends Activity {
     }catch(Exception e){return false;}
   }
   @Override public void onCreate(Bundle b){
-    super.onCreate(b);\n    filterStart=Math.max(1,getIntent().getIntExtra("start_volume",1));\n    filterEnd=Math.min(45,getIntent().getIntExtra("end_volume",45));\n    getWindow().setStatusBarColor(GREEN);getWindow().setNavigationBarColor(GREEN);
+    super.onCreate(b);
+    filterStart=Math.max(1,getIntent().getIntExtra("start_volume",1));
+    filterEnd=Math.min(45,getIntent().getIntExtra("end_volume",45));
+    getWindow().setStatusBarColor(GREEN);getWindow().setNavigationBarColor(GREEN);
     LinearLayout root=new LinearLayout(this);root.setOrientation(LinearLayout.VERTICAL);root.setBackgroundColor(CREAM);
     TextView header=text("☸  ပိဋကတ်သုံးပုံ · Offline Library",22);header.setTextColor(Color.WHITE);header.setBackgroundColor(GREEN);root.addView(header);
     ScrollView scroll=new ScrollView(this);content=new LinearLayout(this);content.setOrientation(LinearLayout.VERTICAL);
     scroll.addView(content);root.addView(scroll,new LinearLayout.LayoutParams(-1,0,1));
-    content.addView(text("Offline ပါဠိကျမ်းဒေတာကို ဖွင့်နေပါသည်…",18));\n    if(filterStart!=1 || filterEnd!=45) content.addView(text("ရွေးချယ်ထားသော ကျမ်းအုပ်စု • "+filterStart+"–"+filterEnd,16));
+    content.addView(text("Offline ပါဠိကျမ်းဒေတာကို ဖွင့်နေပါသည်…",18));
+    if(filterStart!=1 || filterEnd!=45) content.addView(text("ရွေးချယ်ထားသော ကျမ်းအုပ်စု • "+filterStart+"–"+filterEnd,16));
     new Thread(()->{
       final boolean ready=openDb();
       long[] counts=new long[3];
@@ -105,7 +110,7 @@ MCU မူရင်းအုပ်ခွဲတိကျမှု အတည်မ
         }
       });
     },"tipitaka-install").start();
-    for(int i=0;i<NAMES.length;i++){
+    for(int i=filterStart-1;i<Math.min(NAMES.length,filterEnd);i++){
       final int index=i;String group=i<8?"ဝိနည်း":i<33?"သုတ္တန်":"အဘိဓမ္မာ";
       row(String.format(Locale.US,"%02d  %s\n%s",i+1,NAMES[i],group),()->openVolume(index));
     }
