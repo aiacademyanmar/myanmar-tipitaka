@@ -101,14 +101,18 @@ public class NativeFrontPagesActivity extends Activity {
       addText("Myanmar Tipitaka",28,GREEN,true);
       addText("About • Help • App Information",16,GOLD,true);
       addText("မြန်မာ့ပိဋကတ်တော် လေ့လာရေး Native Android Application",17,INK,false);
-      addText("Version 2.2  •  by AAII",16,GREEN,true);
+      addText("Version 2.10  •  by AAII",16,GREEN,true);
       addText("ပါဝင်သောလုပ်ဆောင်ချက်များ",19,GREEN,true);
-      addText("• Native Screen Navigation\n• Offline PDF / EPUB / TXT Reader\n• Reader Bookmark နှင့် Continue Reading\n• App Search (ခေါင်းစဉ်များ)\n• Notes နှင့် Reading History",16,INK,false);
+      addText("• ၄၅ ကျမ်း Offline Pāli Reader\n• ကျမ်းပိုဒ်အလိုက် စာဖတ်ခြင်းနှင့် စာမျက်နှာပြောင်းခြင်း\n• Bookmark နှင့် Continue Reading\n• Offline PDF / EPUB / TXT Reader\n• မြန်မာဘာသာပြန်နှင့် ရှင်းလင်းချက် Popup",16,INK,false);
       TextView offlineHelp=text("☸  Offline ဓမ္မစာများ ဖတ်ရန်",18,Color.WHITE,true);offlineHelp.setBackground(bg(GREEN,16));content.addView(offlineHelp);offlineHelp.setOnClickListener(v->startActivity(new Intent(this,OfflineDhammaActivity.class)));
+      button("☸  ပိဋကတ် ၄၅ ကျမ်း Offline Library",4);
       button("စာအုပ်ဖွင့်ဖတ်ရန်",6);
       button("Advanced Search",14);
       button("Help — စာအုပ်ရွေးနည်း",7);
-      addText("ပိဋကတ်တော် Full-text Database၊ ပြည့်စုံသော စာအုပ် Catalog နှင့် Online Sync ကို မထည့်သွင်းရသေးပါ။",14,INK,false);
+      addText("Online Reference Edition — Chaṭṭha Saṅgāyana Tipiṭaka (CST), digitized by VRI.",14,INK,false);
+      addText("tipitakaonline.org ၏ မြန်မာဘာသာပြန်သည် AI-generated ဖြစ်ပြီး လူပညာရှင်များက မစိစစ်ရသေးပါ။ Offline APK ထဲသို့ အတည်ပြုပြီးသား မြန်မာရှင်းလင်းချက်အဖြစ် မထည့်သွင်းထားပါ။",14,INK,false);
+      TextView sourceLink=text("🌐  Tipiṭaka Online — CST / VRI Reference",16,Color.WHITE,true);sourceLink.setBackground(bg(GREEN,16));content.addView(sourceLink);
+      sourceLink.setOnClickListener(v->startActivity(new Intent(Intent.ACTION_VIEW,android.net.Uri.parse("https://tipitakaonline.org/"))));
     }else if(n==13){
       addText("ဖတ်ရှုမှုမှတ်တမ်း",26,GREEN,true);
       addText("Reading History & Continue",16,GOLD,true);
