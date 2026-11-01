@@ -7,6 +7,8 @@ on:
       - 'app/src/main/java/asia/aaii/myanmartipitaka/PaliSourceLibraryActivity.java'
       - 'corpus/PALI_ORIGINAL_SOURCE_LICENSE.md'
       - 'scripts/build_offline_45_volumes.py'
+      - 'scripts/merge_verified_myanmar.py'
+      - 'corpus/reviewed_myanmar.csv'
       - 'scripts/test_offline_45_boundaries.py'
       - 'scripts/compare_mcu_exact_45.py'
       - 'corpus/mcu_reference/**'
@@ -64,6 +66,8 @@ jobs:
             assert db.execute('SELECT COUNT(DISTINCT volume) FROM paragraphs').fetchone()[0]==45
             assert db.execute('SELECT COUNT(*) FROM paragraphs').fetchone()[0]>100000
           PY
+      - name: Import only independently reviewed Myanmar content
+        run: python scripts/merge_verified_myanmar.py --report myanmar_review_coverage.json
       - name: MCU 45-volume edition comparison (never fake verification)
         run: python scripts/compare_mcu_exact_45.py --out mcu_45_exact_comparison.json
       - name: Install UI image importer
@@ -100,5 +104,6 @@ jobs:
             corpus/PALI_ORIGINAL_SOURCE_LICENSE.md
             offline_coverage_report.json
             offline_45_volume_mapping_report.json
+            myanmar_review_coverage.json
             mcu_45_exact_comparison.json
           if-no-files-found: error
