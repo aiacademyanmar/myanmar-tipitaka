@@ -1,0 +1,256 @@
+{
+  "schema_version": 1,
+  "content_id": "nibbana",
+  "title": "နိဗ္ဗာန် (Nibbāna)",
+  "subtitle": "ဒုက္ခနိရောဓသစ္စာနှင့် အသင်္ခတဓာတ်",
+  "locale": "my-MM",
+  "description": "နိဗ္ဗာန်တရားကို ပါဠိမူရင်းကျမ်းကိုးကားချက်များ၊ မြန်မာဘာသာပြန်မူကြမ်းနှင့် လေ့လာရေးရှင်းလင်းချက်များဖြင့် လေ့လာရန်။",
+  "content_policy": "ဤဖိုင်ရှိ မြန်မာအဓိပ္ပာယ်ရှင်းလင်းချက်များသည် လေ့လာရေးမူကြမ်းများသာဖြစ်ပြီး ပညာရှင်အတည်ပြုချက် မရသေးပါ။",
+  "source_policy": {
+    "pali_primary": "SuttaCentral Pāli text based on the Mahāsaṅgīti Tipiṭaka / Chaṭṭha Saṅgāyana digital edition where stated on source pages.",
+    "myanmar_translation": "No existing Myanmar translation is represented as verified here. Myanmar explanations are editorial drafts for review.",
+    "approval": "Only a named qualified reviewer may change review_status to APPROVED."
+  },
+  "sources": [
+    {
+      "id": "ud81",
+      "ref": "Udāna 8.1",
+      "title": "Paṭhamanibbānapaṭisaṃyuttasutta",
+      "pali_url": "https://suttacentral.net/ud8.1/pli/ms",
+      "reference_url": "https://www.dhammatalks.net/suttacentral/sc2016/sc/pi/ud8.1.html",
+      "theme": "နိဗ္ဗာန်နှင့် အစိတ်အပိုင်း/သဘောတရားများဖြင့် မဖော်ပြနိုင်သော အသင်္ခတအာယတန"
+    },
+    {
+      "id": "ud82",
+      "ref": "Udāna 8.2",
+      "title": "Dutiyanibbānapaṭisaṃyuttasutta",
+      "pali_url": "https://suttacentral.net/ud8.2/pli/ms",
+      "theme": "နိဗ္ဗာန်နှင့် တဏှာ၏ ငြိမ်းအေးမှု"
+    },
+    {
+      "id": "ud83",
+      "ref": "Udāna 8.3",
+      "title": "Tatiyanibbānapaṭisaṃyuttasutta",
+      "pali_url": "https://suttacentral.net/ud8.3/pli/ms",
+      "reference_url": "https://dhammatalks.net/suttacentral/sc2016/sc/pi/ud8.3.html",
+      "theme": "အဇာတ၊ အဘူတ၊ အကတ၊ အသင်္ခတ"
+    },
+    {
+      "id": "ud84",
+      "ref": "Udāna 8.4",
+      "title": "Catutthanibbānapaṭisaṃyuttasutta",
+      "pali_url": "https://suttacentral.net/ud8.4/pli/ms",
+      "reference_url": "https://www.dhammatalks.net/suttacentral/sc2016/sc/pi/ud8.4.html",
+      "theme": "မှီတွယ်မှုကင်းခြင်း၊ မတုန်လှုပ်ခြင်းနှင့် ဒုက္ခ၏အဆုံး"
+    },
+    {
+      "id": "iti43",
+      "ref": "Itivuttaka 43",
+      "title": "Ajātasutta",
+      "pali_url": "https://suttacentral.net/iti43/pli/ms",
+      "reference_url": "https://mail.dhammatalks.net/suttacentral/sc2016/sc/pi/iti43.html",
+      "theme": "မမွေးဖွား၊ မဖြစ်ပေါ်၊ မပြုလုပ်၊ သင်္ခတမဟုတ်သော ဓာတ်"
+    },
+    {
+      "id": "sn5611",
+      "ref": "Saṃyutta Nikāya 56.11",
+      "title": "Dhammacakkappavattanasutta",
+      "pali_url": "https://suttacentral.net/sn56.11/pli/ms",
+      "reference_url": "https://dhammatalks.net/suttacentral/sc2016/sc/pi/sn56.11.html",
+      "theme": "အရိယသစ္စာလေးပါး၊ ဒုက္ခနိရောဓနှင့် အရိယမဂ္ဂင်ရှစ်ပါး"
+    }
+  ],
+  "topics": [
+    {
+      "topic_id": "meaning",
+      "order": 1,
+      "title": "နိဗ္ဗာန်၏ အဓိပ္ပာယ်",
+      "study_note_draft": "Nibbāna ဟူသော ဝေါဟာရနှင့် ပါဠိကျမ်းများတွင် အသုံးပြုပုံကို မူရင်းကျမ်းကိုးကားချက်များနှင့်အတူ လေ့လာရန်။",
+      "source_ids": [
+        "ud81",
+        "ud83",
+        "iti43"
+      ],
+      "translation_status": "NOT_REVIEWED",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "topic_id": "four_truths",
+      "order": 2,
+      "title": "အရိယသစ္စာ ၄ ပါး",
+      "study_note_draft": "ဒုက္ခ၊ ဒုက္ခသမုဒယ၊ ဒုက္ခနိရောဓ၊ ဒုက္ခနိရောဓဂါမိနီပဋိပဒါတို့၏ အဓိပ္ပာယ်နှင့် လုပ်ငန်းတာဝန်များ။",
+      "source_ids": [
+        "sn5611"
+      ],
+      "translation_status": "NOT_REVIEWED",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "topic_id": "dukkha_nirodha",
+      "order": 3,
+      "title": "ဒုက္ခနိရောဓသစ္စာ",
+      "study_note_draft": "တဏှာ၏ အကြွင်းမဲ့ ရာဂကင်းချုပ်ငြိမ်းခြင်း၊ စွန့်လွှတ်ခြင်း၊ လွတ်မြောက်ခြင်းဟူသော သုတ်တော်ဖော်ပြချက်ကို လေ့လာရန်။",
+      "source_ids": [
+        "sn5611"
+      ],
+      "translation_status": "NOT_REVIEWED",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "topic_id": "unconditioned",
+      "order": 4,
+      "title": "အသင်္ခတဓာတ်",
+      "study_note_draft": "အဇာတ၊ အဘူတ၊ အကတ၊ အသင်္ခတဟူသော Ud 8.3 နှင့် Iti 43 ၏ ဖော်ပြချက်။",
+      "source_ids": [
+        "ud83",
+        "iti43"
+      ],
+      "translation_status": "NOT_REVIEWED",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "topic_id": "udana_81",
+      "order": 5,
+      "title": "Udāna 8.1 — နိဗ္ဗာန်ဆိုင်ရာ ပထမသုတ်",
+      "study_note_draft": "နိဗ္ဗာန်ကို အာယတနအဖြစ် ဖော်ပြထားသည့် သုတ်တော်၏ ပါဠိမူရင်းနှင့် လေ့လာရေးအချက်များ။",
+      "source_ids": [
+        "ud81"
+      ],
+      "translation_status": "NOT_REVIEWED",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "topic_id": "udana_82",
+      "order": 6,
+      "title": "Udāna 8.2 — ဒုတိယသုတ်",
+      "study_note_draft": "နိဗ္ဗာန်ဆိုင်ရာ ဒုတိယ ဥဒါန်းသုတ်တော်ကို မူရင်းရင်းမြစ်နှင့်အတူ လေ့လာရန်။",
+      "source_ids": [
+        "ud82"
+      ],
+      "translation_status": "NOT_REVIEWED",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "topic_id": "udana_83",
+      "order": 7,
+      "title": "Udāna 8.3 — တတိယသုတ်",
+      "study_note_draft": "အဇာတ၊ အဘူတ၊ အကတ၊ အသင်္ခတဟူသော သဘောတရားကို လေ့လာရန်။",
+      "source_ids": [
+        "ud83"
+      ],
+      "translation_status": "NOT_REVIEWED",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "topic_id": "udana_84",
+      "order": 8,
+      "title": "Udāna 8.4 — စတုတ္ထသုတ်",
+      "study_note_draft": "မှီတွယ်မှု၊ တုန်လှုပ်မှု၊ ငြိမ်းအေးမှုနှင့် ဒုက္ခအဆုံးအကြောင်း လေ့လာရန်။",
+      "source_ids": [
+        "ud84"
+      ],
+      "translation_status": "NOT_REVIEWED",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "topic_id": "eightfold_path",
+      "order": 9,
+      "title": "အရိယမဂ္ဂင် ၈ ပါး",
+      "study_note_draft": "သမ္မာဒိဋ္ဌိမှ သမ္မာသမာဓိအထိ မဂ္ဂင်ရှစ်ပါးနှင့် နိဗ္ဗာန်သို့ ဦးတည်သော အလယ်အလတ်လမ်းစဉ်။",
+      "source_ids": [
+        "sn5611"
+      ],
+      "translation_status": "NOT_REVIEWED",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "topic_id": "practice",
+      "order": 10,
+      "title": "မဂ်ပဋိပဒါနှင့် လက်တွေ့ကျင့်စဉ်",
+      "study_note_draft": "သီလ၊ သမာဓိ၊ ပညာတို့ကို အရိယမဂ္ဂင်နှင့် ဆက်စပ်၍ လေ့လာရန်။",
+      "source_ids": [
+        "sn5611"
+      ],
+      "translation_status": "NOT_REVIEWED",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "topic_id": "two_elements",
+      "order": 11,
+      "title": "သောပါဒိသေသ / အနုပါဒိသေသ",
+      "study_note_draft": "ဤဝေါဟာရနှစ်ခု၏ ကျမ်းရင်းမြစ်၊ အဋ္ဌကထာရှင်းလင်းချက်နှင့် အဓိပ္ပာယ်ကွဲပြားမှုကို သီးခြားသုတေသနပြုရန်။",
+      "source_ids": [],
+      "translation_status": "NOT_REVIEWED",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "topic_id": "misconceptions",
+      "order": 12,
+      "title": "နိဗ္ဗာန်နှင့်ပတ်သက်သော အယူမှားများ",
+      "study_note_draft": "နိဗ္ဗာန်ကို နေရာတစ်ခု၊ ပျောက်ကွယ်သွားခြင်း၊ သာမန်သုခခံစားမှုဟု တစ်ဖက်သတ်မယူဆဘဲ ကျမ်းကိုးကားချက်ဖြင့် စိစစ်ရန်။",
+      "source_ids": [
+        "ud81",
+        "ud83",
+        "iti43"
+      ],
+      "translation_status": "NOT_REVIEWED",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    }
+  ],
+  "pali_excerpts": [
+    {
+      "source_id": "ud83",
+      "pali": "Atthi, bhikkhave, ajātaṃ abhūtaṃ akataṃ asaṅkhataṃ.",
+      "myanmar_gloss_draft": "ရဟန်းတို့၊ မမွေးဖွား၊ မဖြစ်ပေါ်၊ မပြုလုပ်၊ သင်္ခတမဟုတ်သော ဓာတ်ရှိ၏။",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "source_id": "iti43",
+      "pali": "Tassa nissaraṇaṃ santaṃ, atakkāvacaraṃ dhuvaṃ. Ajātaṃ asamuppannaṃ, asokaṃ virajaṃ padaṃ; Nirodho dukkhadhammānaṃ, saṅkhārūpasamo sukho.",
+      "myanmar_gloss_draft": "ဤဂါထာတွင် သင်္ခတဒုက္ခသဘောများမှ လွတ်မြောက်ရာ ငြိမ်းအေးမှုကို ဖော်ပြထားသည်။ စကားလုံးချင်း အတည်ပြုဘာသာပြန်ရန် လိုအပ်သည်။",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "source_id": "sn5611",
+      "pali": "Idaṃ kho pana, bhikkhave, dukkhanirodhaṃ ariyasaccaṃ—yo tassāyeva taṇhāya asesa-virāga-nirodho cāgo paṭinissaggo mutti anālayo.",
+      "myanmar_gloss_draft": "ဒုက္ခနိရောဓသစ္စာကို တဏှာ၏ အကြွင်းမဲ့ ရာဂကင်းချုပ်ငြိမ်းမှု၊ စွန့်လွှတ်မှု၊ လွှတ်မြောက်မှု၊ မမှီတွယ်မှုဟူ၍ ဖော်ပြထားသည်။",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    }
+  ],
+  "counts": {
+    "topic_count": 12,
+    "source_count": 6,
+    "pali_excerpt_count": 3
+  },
+  "storage": {
+    "target": "SQLite offline",
+    "suggested_tables": [
+      "content_sources",
+      "nibbana_topics",
+      "passages",
+      "passage_translations",
+      "passage_explanations",
+      "content_review_events"
+    ],
+    "stable_ids": true
+  },
+  "release_gates": [
+    "All source Pāli text must be checked against selected canonical edition.",
+    "Myanmar translation must be separately authored or licensed and reviewed.",
+    "Myanmar explanations remain DRAFT until a qualified reviewer approves.",
+    "Do not assert that the two Nibbāna elements are identical with or directly interchangeable with the four Udāna passages; explain their source contexts.",
+    "Do not mark offline-complete until the full intended text set is imported and airplane-mode tested."
+  ]
+}
