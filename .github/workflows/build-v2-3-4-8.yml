@@ -31,6 +31,8 @@ jobs:
           gradle-version: 8.9
       - name: Verify 45-volume offline corpus and Myanmar review data
         run: python3 scripts/verify_offline_corpus.py
+      - name: Import reviewed Myanmar translations and explanations (if supplied)
+        run: python3 scripts/merge_verified_myanmar.py --database app/src/main/assets/tipitaka_offline.sqlite --reviewed corpus/reviewed_myanmar.csv --report myanmar_review_coverage.json
       - name: Compile debug APK
         run: gradle --no-daemon assembleDebug
       - name: Upload APK artifact
