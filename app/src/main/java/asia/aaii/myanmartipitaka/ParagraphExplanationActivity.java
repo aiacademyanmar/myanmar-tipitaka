@@ -239,10 +239,29 @@ public class ParagraphExplanationActivity extends Activity {
     }
   }
 
+  private void saveHistory(String paraId,String segmentId){
+    long now=System.currentTimeMillis();
+    getSharedPreferences(PREF,MODE_PRIVATE).edit()
+      .putString("history_"+paraId,volume+"|"+segmentId+"|"+now).putInt("last_volume",volume)
+      .putString("last_paragraph_id",paraId).putLong("last_read_at",now).apply();
+  }
+  private void editNote(String paraId,String segmentId,String pali){
+    android.widget.EditText input=new android.widget.EditText(this);
+    input.setMinLines(4);input.setGravity(Gravity.TOP);
+    input.setText(getSharedPreferences(PREF,MODE_PRIVATE).getString("note_"+paraId,""));
+    input.setHint("ဤကျမ်းပိုဒ်အတွက် ကိုယ်ပိုင်မှတ်စုရေးရန်...");
+    new AlertDialog.Builder(this).setTitle("§ "+segmentId+" — မှတ်စု")
+      .setMessage(pali.length()>180?pali.substring(0,180)+"…":pali).setView(input)
+      .setNegativeButton("မသိမ်းပါ",null).setPositiveButton("သိမ်းမည်",(d,w)->{
+        String value=input.getText().toString().trim();
+        getSharedPreferences(PREF,MODE_PRIVATE).edit().putString("note_"+paraId,value).apply();
+        Toast.makeText(this,"ကျမ်းပိုဒ်မှတ်စု သိမ်းဆည်းပြီး",Toast.LENGTH_SHORT).show();
+      }).show();
+  }
   private void popup(String paraId,String segmentId,String pali,String translation,String explanation,String source,
       String trSource,String trReviewer1,String trReviewer2,String trReviewRef,String trReviewedAt,
       String reviewedExplanation,String exSource,String exReviewer1,String exReviewer2,String exReviewRef,String exReviewedAt){
-    ScrollView popupScroll=new ScrollView(this);
+    saveHistory(paraId,segmentId);\n    ScrollView popupScroll=new ScrollView(this);
     LinearLayout box=new LinearLayout(this);box.setOrientation(1);
     box.setPadding(dp(18),dp(16),dp(18),dp(16));box.setBackgroundColor(CREAM);
     TextView original=new TextView(this);
@@ -271,6 +290,7 @@ public class ParagraphExplanationActivity extends Activity {
     popupScroll.addView(box);
     new AlertDialog.Builder(this).setTitle("☸ ကျမ်းပိုဒ် အဓိပ္ပာယ်")
       .setView(popupScroll)
+      .setNegativeButton("📝 မှတ်စုရေး / ပြင်ရန်",(d,w)->editNote(paraId,segmentId,pali))
       .setNeutralButton(saved?"🔖 Bookmark ဖယ်ရန်":"🔖 Bookmark သိမ်းရန်",(d,w)->{
         getSharedPreferences(PREF,MODE_PRIVATE).edit().putBoolean("bookmark_"+paraId,!saved).apply();
         Toast.makeText(this,!saved?"Bookmark သိမ်းပြီး":"Bookmark ဖယ်ပြီး",Toast.LENGTH_SHORT).show();
