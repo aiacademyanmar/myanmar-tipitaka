@@ -9,6 +9,7 @@ on:
       - 'scripts/build_offline_45_volumes.py'
       - 'scripts/merge_verified_myanmar.py'
       - 'corpus/reviewed_myanmar.csv'
+      - 'app/src/main/java/asia/aaii/myanmartipitaka/ParagraphExplanationActivity.java'
       - 'scripts/test_offline_45_boundaries.py'
       - 'scripts/compare_mcu_exact_45.py'
       - 'corpus/mcu_reference/**'
