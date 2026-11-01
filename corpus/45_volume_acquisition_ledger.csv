@@ -1,0 +1,46 @@
+volume_id,book_title_my,source_id,source_book_url,source_filename,source_sha256,source_author,source_publisher,source_year,edition,license_reference,permission_document,rights_status,edition_match_status,first_pali_segment,last_pali_segment,reviewer_1,reviewer_2,review_reference,acquisition_status
+1,မဟာဝိဘင်္ဂ ၁,,,,,,,,,,,NOT_VERIFIED,NOT_VERIFIED,,,,,,SOURCE_PENDING
+2,မဟာဝိဘင်္ဂ ၂,,,,,,,,,,,NOT_VERIFIED,NOT_VERIFIED,,,,,,SOURCE_PENDING
+3,ဘိက္ခုနီဝိဘင်္ဂ,,,,,,,,,,,NOT_VERIFIED,NOT_VERIFIED,,,,,,SOURCE_PENDING
+4,မဟာဝဂ္ဂ ၁,,,,,,,,,,,NOT_VERIFIED,NOT_VERIFIED,,,,,,SOURCE_PENDING
+5,မဟာဝဂ္ဂ ၂,,,,,,,,,,,NOT_VERIFIED,NOT_VERIFIED,,,,,,SOURCE_PENDING
+6,စူဠဝဂ္ဂ ၁,,,,,,,,,,,NOT_VERIFIED,NOT_VERIFIED,,,,,,SOURCE_PENDING
+7,စူဠဝဂ္ဂ ၂,,,,,,,,,,,NOT_VERIFIED,NOT_VERIFIED,,,,,,SOURCE_PENDING
+8,ပရိဝါရ,,,,,,,,,,,NOT_VERIFIED,NOT_VERIFIED,,,,,,SOURCE_PENDING
+9,သီလက္ခန္ဓဝဂ္ဂ,,,,,,,,,,,NOT_VERIFIED,NOT_VERIFIED,,,,,,SOURCE_PENDING
+10,မဟာဝဂ္ဂ (ဒီဃ),,,,,,,,,,,NOT_VERIFIED,NOT_VERIFIED,,,,,,SOURCE_PENDING
+11,ပါထိကဝဂ္ဂ,,,,,,,,,,,NOT_VERIFIED,NOT_VERIFIED,,,,,,SOURCE_PENDING
+12,မူလပဏ္ဏာသ,,,,,,,,,,,NOT_VERIFIED,NOT_VERIFIED,,,,,,SOURCE_PENDING
+13,မဇ္ဈိမပဏ္ဏာသ,,,,,,,,,,,NOT_VERIFIED,NOT_VERIFIED,,,,,,SOURCE_PENDING
+14,ဥပရိပဏ္ဏာသ,,,,,,,,,,,NOT_VERIFIED,NOT_VERIFIED,,,,,,SOURCE_PENDING
+15,သဂါထာဝဂ္ဂ,,,,,,,,,,,NOT_VERIFIED,NOT_VERIFIED,,,,,,SOURCE_PENDING
+16,နိဒါနဝဂ္ဂ,,,,,,,,,,,NOT_VERIFIED,NOT_VERIFIED,,,,,,SOURCE_PENDING
+17,ခန္ဓဝဂ္ဂ,,,,,,,,,,,NOT_VERIFIED,NOT_VERIFIED,,,,,,SOURCE_PENDING
+18,သဠာယတနဝဂ္ဂ,,,,,,,,,,,NOT_VERIFIED,NOT_VERIFIED,,,,,,SOURCE_PENDING
+19,မဟာဝဂ္ဂ (သံယုတ္တ),,,,,,,,,,,NOT_VERIFIED,NOT_VERIFIED,,,,,,SOURCE_PENDING
+20,ဧက၊ ဒုက၊ တိကနိပါတ,,,,,,,,,,,NOT_VERIFIED,NOT_VERIFIED,,,,,,SOURCE_PENDING
+21,စတုက္ကနိပါတ,,,,,,,,,,,NOT_VERIFIED,NOT_VERIFIED,,,,,,SOURCE_PENDING
+22,ပဉ္စက၊ ဆက္ကနိပါတ,,,,,,,,,,,NOT_VERIFIED,NOT_VERIFIED,,,,,,SOURCE_PENDING
+23,သတ္တက၊ အဋ္ဌက၊ နဝကနိပါတ,,,,,,,,,,,NOT_VERIFIED,NOT_VERIFIED,,,,,,SOURCE_PENDING
+24,ဒသက၊ ဧကာဒသကနိပါတ,,,,,,,,,,,NOT_VERIFIED,NOT_VERIFIED,,,,,,SOURCE_PENDING
+25,ခုဒ္ဒကပါဌ၊ ဓမ္မပဒ၊ ဥဒါန၊ ဣတိဝုတ္တက၊ သုတ္တနိပါတ,,,,,,,,,,,NOT_VERIFIED,NOT_VERIFIED,,,,,,SOURCE_PENDING
+26,ဝိမာနဝတ္ထု၊ ပေတဝတ္ထု၊ ထေရဂါထာ၊ ထေရီဂါထာ,,,,,,,,,,,NOT_VERIFIED,NOT_VERIFIED,,,,,,SOURCE_PENDING
+27,ဇာတက ၁,,,,,,,,,,,NOT_VERIFIED,NOT_VERIFIED,,,,,,SOURCE_PENDING
+28,ဇာတက ၂,,,,,,,,,,,NOT_VERIFIED,NOT_VERIFIED,,,,,,SOURCE_PENDING
+29,မဟာနိဒ္ဒေသ,,,,,,,,,,,NOT_VERIFIED,NOT_VERIFIED,,,,,,SOURCE_PENDING
+30,စူဠနိဒ္ဒေသ,,,,,,,,,,,NOT_VERIFIED,NOT_VERIFIED,,,,,,SOURCE_PENDING
+31,ပဋိသမ္ဘိဒါမဂ္ဂ,,,,,,,,,,,NOT_VERIFIED,NOT_VERIFIED,,,,,,SOURCE_PENDING
+32,အပဒါန် ၁,,,,,,,,,,,NOT_VERIFIED,NOT_VERIFIED,,,,,,SOURCE_PENDING
+33,အပဒါန် ၂၊ ဗုဒ္ဓဝံသ၊ စရိယာပိဋက,,,,,,,,,,,NOT_VERIFIED,NOT_VERIFIED,,,,,,SOURCE_PENDING
+34,ဓမ္မသင်္ဂဏီ,,,,,,,,,,,NOT_VERIFIED,NOT_VERIFIED,,,,,,SOURCE_PENDING
+35,ဝိဘင်္ဂ,,,,,,,,,,,NOT_VERIFIED,NOT_VERIFIED,,,,,,SOURCE_PENDING
+36,ဓာတုကထာ၊ ပုဂ္ဂလပညတ္တိ,,,,,,,,,,,NOT_VERIFIED,NOT_VERIFIED,,,,,,SOURCE_PENDING
+37,ကထာဝတ္ထု,,,,,,,,,,,NOT_VERIFIED,NOT_VERIFIED,,,,,,SOURCE_PENDING
+38,ယမက ၁,,,,,,,,,,,NOT_VERIFIED,NOT_VERIFIED,,,,,,SOURCE_PENDING
+39,ယမက ၂,,,,,,,,,,,NOT_VERIFIED,NOT_VERIFIED,,,,,,SOURCE_PENDING
+40,ပဋ္ဌာန်း ၁,,,,,,,,,,,NOT_VERIFIED,NOT_VERIFIED,,,,,,SOURCE_PENDING
+41,ပဋ္ဌာန်း ၂,,,,,,,,,,,NOT_VERIFIED,NOT_VERIFIED,,,,,,SOURCE_PENDING
+42,ပဋ္ဌာန်း ၃,,,,,,,,,,,NOT_VERIFIED,NOT_VERIFIED,,,,,,SOURCE_PENDING
+43,ပဋ္ဌာန်း ၄,,,,,,,,,,,NOT_VERIFIED,NOT_VERIFIED,,,,,,SOURCE_PENDING
+44,ပဋ္ဌာန်း ၅,,,,,,,,,,,NOT_VERIFIED,NOT_VERIFIED,,,,,,SOURCE_PENDING
+45,ပဋ္ဌာန်း ၆,,,,,,,,,,,NOT_VERIFIED,NOT_VERIFIED,,,,,,SOURCE_PENDING
