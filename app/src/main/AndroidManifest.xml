@@ -9,6 +9,7 @@
     <activity android:name=".DhammapadaYamakavaggaActivity" android:exported="false"/>
     <activity android:name=".MyanmarCoverageActivity" android:exported="false"/>
     <activity android:name=".MyanmarEditorialActivity" android:exported="false"/>
+    <activity android:name=".MyanmarPublisherActivity" android:exported="false"/>
     <activity android:name=".ReaderStateBackupActivity" android:exported="false"/>
     <activity android:name=".OfflineBookmarksActivity" android:exported="false"/>
     <activity android:name=".OfflineSearchActivity" android:exported="false"/>
