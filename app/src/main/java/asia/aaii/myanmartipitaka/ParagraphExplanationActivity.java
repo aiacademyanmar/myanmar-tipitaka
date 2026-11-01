@@ -106,11 +106,11 @@ public class ParagraphExplanationActivity extends Activity {
       if(count==0)throw new IllegalStateException("ကျမ်း "+volume+" တွင် ပါဠိစာသား မရှိပါ။");
       boolean has=false;
       try(Cursor c=opened.rawQuery(
-          "SELECT 1 FROM sqlite_master WHERE type='table' AND name='paragraph_myanmar_content'",
+          "SELECT 1 FROM publisher.sqlite_master WHERE type='table' AND name='paragraph_myanmar_content'",
           null)){has=c.moveToFirst();}
       if(has){
         java.util.HashSet<String> columns=new java.util.HashSet<>();
-        try(Cursor c=opened.rawQuery("PRAGMA table_info(paragraph_myanmar_content)",null)){
+        try(Cursor c=opened.rawQuery("PRAGMA publisher.table_info(paragraph_myanmar_content)",null)){
           while(c.moveToNext())columns.add(c.getString(1));
         }
         has=columns.contains("segment_id")&&columns.contains("content_type")&&
@@ -125,8 +125,8 @@ public class ParagraphExplanationActivity extends Activity {
       final long segments=count;
       long approvedTranslations=0,approvedExplanations=0;
       if(canTranslate){
-        try(Cursor x=opened.rawQuery("SELECT COUNT(*) FROM paragraph_myanmar_content WHERE content_type='translation' AND reviewed=1",null)){if(x.moveToFirst())approvedTranslations=x.getLong(0);}
-        try(Cursor x=opened.rawQuery("SELECT COUNT(*) FROM paragraph_myanmar_content WHERE content_type='explanation' AND reviewed=1",null)){if(x.moveToFirst())approvedExplanations=x.getLong(0);}
+        try(Cursor x=opened.rawQuery("SELECT COUNT(*) FROM publisher.paragraph_myanmar_content WHERE content_type='translation' AND reviewed=1",null)){if(x.moveToFirst())approvedTranslations=x.getLong(0);}
+        try(Cursor x=opened.rawQuery("SELECT COUNT(*) FROM publisher.paragraph_myanmar_content WHERE content_type='explanation' AND reviewed=1",null)){if(x.moveToFirst())approvedExplanations=x.getLong(0);}
       }
       final long translationCount=approvedTranslations, explanationCount=approvedExplanations;
       runOnUiThread(()->{
