@@ -21,7 +21,7 @@ jobs:
         run: |
           git clone --depth 1 --branch published --filter=blob:none --sparse https://github.com/suttacentral/bilara-data.git upstream-bilara
           cd upstream-bilara
-          git sparse-checkout set root/pli/ms LICENSE.md
+          git sparse-checkout set root/pli/ms
           git rev-parse HEAD > ../bilara_source_commit.txt
       - name: Stage Pali root segments
         run: |
