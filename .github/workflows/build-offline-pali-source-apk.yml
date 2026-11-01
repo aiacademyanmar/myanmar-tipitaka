@@ -18,6 +18,9 @@ on:
       - 'app/src/main/AndroidManifest.xml'
       - 'app/src/main/java/asia/aaii/myanmartipitaka/NativeFrontPagesActivity.java'
       - 'scripts/test_offline_45_boundaries.py'
+      - 'scripts/build_dhammapada_yamakavagga.py'
+      - 'corpus/dhammapada_yamakavagga_my_drafts.csv'
+      - 'app/src/main/java/asia/aaii/myanmartipitaka/DhammapadaYamakavaggaActivity.java'
       - 'scripts/compare_mcu_exact_45.py'
       - 'corpus/mcu_reference/**'
       - 'app/src/main/java/asia/aaii/myanmartipitaka/TipitakaLibraryActivity.java'
@@ -73,6 +76,16 @@ jobs:
           with sqlite3.connect('app/src/main/assets/tipitaka_offline.sqlite') as db:
             assert db.execute('SELECT COUNT(DISTINCT volume) FROM paragraphs').fetchone()[0]==45
             assert db.execute('SELECT COUNT(*) FROM paragraphs').fetchone()[0]>100000
+          PY
+      - name: Build Dhammapada Yamakavagga offline Pali and unreviewed Myanmar draft popup
+        run: |
+          python scripts/build_dhammapada_yamakavagga.py
+          python - <<'PY'
+          import sqlite3
+          db=sqlite3.connect('app/src/main/assets/tipitaka_offline.sqlite')
+          rows=db.execute("SELECT verse,pali_text,my_draft,translation_status FROM dhammapada_yamakavagga").fetchall()
+          assert len(rows)==20 and all(p and m and s=='ai_draft_unreviewed' for _,p,m,s in rows)
+          print("Yamakavagga 20 Pali verses and 20 unreviewed Myanmar drafts verified")
           PY
       - name: Import Tipitaka Online CST source passages, references and clearly-labelled AI translations
         run: python scripts/import_tipitakaonline_cst.py --database app/src/main/assets/tipitaka_offline.sqlite --max-pages 1800 --report tipitakaonline_cst_import_report.json
