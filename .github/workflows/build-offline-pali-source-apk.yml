@@ -8,6 +8,7 @@ on:
       - 'corpus/PALI_ORIGINAL_SOURCE_LICENSE.md'
       - 'scripts/build_offline_45_volumes.py'
       - 'scripts/merge_verified_myanmar.py'
+      - 'scripts/import_tipitakaonline_cst.py'
       - 'corpus/reviewed_myanmar.csv'
       - 'app/src/main/java/asia/aaii/myanmartipitaka/ParagraphExplanationActivity.java'
       - 'app/src/main/java/asia/aaii/myanmartipitaka/NativeFrontPagesActivity.java'
@@ -68,6 +69,8 @@ jobs:
             assert db.execute('SELECT COUNT(DISTINCT volume) FROM paragraphs').fetchone()[0]==45
             assert db.execute('SELECT COUNT(*) FROM paragraphs').fetchone()[0]>100000
           PY
+      - name: Import Tipitaka Online CST source passages, references and clearly-labelled AI translations
+        run: python scripts/import_tipitakaonline_cst.py --database app/src/main/assets/tipitaka_offline.sqlite --max-pages 1800 --report tipitakaonline_cst_import_report.json
       - name: Import only independently reviewed Myanmar content
         run: python scripts/merge_verified_myanmar.py --report myanmar_review_coverage.json
       - name: MCU 45-volume edition comparison (never fake verification)
@@ -108,4 +111,5 @@ jobs:
             offline_45_volume_mapping_report.json
             myanmar_review_coverage.json
             mcu_45_exact_comparison.json
+            tipitakaonline_cst_import_report.json
           if-no-files-found: error
