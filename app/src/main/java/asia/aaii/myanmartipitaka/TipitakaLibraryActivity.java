@@ -104,8 +104,7 @@ public final class TipitakaLibraryActivity extends Activity {
         content.removeViewAt(0);
         content.addView(text(ready?"✓ ပါဠိကျမ်းဒေတာ ဖွင့်ပြီး":"Offline ၄၅ ကျမ်း SQLite မပါသေးပါ",19),0);
         if(ready){
-          String summary="Source-aligned Pāli • ကျမ်း "+counts[1]+"/45 • စာပိုဒ် "+counts[0]+"
-MCU မူရင်းအုပ်ခွဲတိကျမှု အတည်မပြုရသေးပါ။";
+          String summary="Source-aligned Pāli • ကျမ်း "+counts[1]+"/45 • စာပိုဒ် "+counts[0]+"\\nMCU မူရင်းအုပ်ခွဲတိကျမှု အတည်မပြုရသေးပါ။";
           content.addView(text(summary,16),1);
         }
       });
