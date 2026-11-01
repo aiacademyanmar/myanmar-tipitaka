@@ -1,0 +1,73 @@
+name: Myanmar Tipitaka V2.3.4.9.1 — Pali Source Acquisition
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - v2.3.4-offline-reader-critical-fix
+    paths:
+      - '.github/workflows/acquire-pali-v2-3-4-9-1.yml'
+      - 'scripts/stage_bilara_pali.py'
+      - 'scripts/build_bilara_source_sqlite.py'
+      - 'scripts/inventory_bilara_collections.py'
+      - 'scripts/audit_bilara_45_candidates.py'
+      - 'scripts/report_bilara_boundaries.py'
+      - 'corpus/45_volume_source_candidates.csv'
+      - 'corpus/45_volume_crosswalk.csv'
+permissions:
+  contents: read
+jobs:
+  acquire:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Fetch published Pali source and pin commit
+        run: |
+          git clone --depth 1 --branch published --filter=blob:none --sparse https://github.com/suttacentral/bilara-data.git upstream-bilara
+          cd upstream-bilara
+          git sparse-checkout set root/pli/ms
+          git rev-parse HEAD > ../bilara_source_commit.txt
+          cp LICENSE.md ../bilara_source_LICENSE.md
+      - name: Stage Pali segments with source references
+        run: |
+          python scripts/stage_bilara_pali.py upstream-bilara/root/pli/ms --output bilara_pali_staging.csv
+          python scripts/build_bilara_source_sqlite.py upstream-bilara/root/pli/ms --output pali_root_source.sqlite --source-commit "$(cat bilara_source_commit.txt)"
+      - name: Inventory canonical collections and candidate volume families
+        run: |
+          python scripts/inventory_bilara_collections.py pali_root_source.sqlite --output bilara_collection_inventory.csv
+          python scripts/audit_bilara_45_candidates.py pali_root_source.sqlite --output bilara_candidate_audit.csv
+          python scripts/report_bilara_boundaries.py pali_root_source.sqlite --details bilara_source_boundaries.csv --manifest bilara_source_file_manifest.csv --report bilara_mapping_review.json
+      - name: Verify staged source database integrity and provenance
+        run: |
+          python - <<'PY'
+          import json, sqlite3, pathlib
+          p=pathlib.Path("pali_root_source.sqlite")
+          db=sqlite3.connect(f"file:{p.resolve()}?mode=ro",uri=True)
+          assert db.execute("PRAGMA integrity_check").fetchone()[0]=="ok"
+          n=db.execute("SELECT COUNT(*) FROM source_segments").fetchone()[0]
+          files=db.execute("SELECT COUNT(DISTINCT source_file) FROM source_segments").fetchone()[0]
+          commits=db.execute("SELECT COUNT(DISTINCT source_commit) FROM source_segments").fetchone()[0]
+          assert n>0 and files>0 and commits==1
+          report={"source_segments":n,"source_files":files,"pinned_source_commits":commits,"edition_mapped_volumes":0,"status":"STAGED_UNMAPPED_NOT_FOR_APK"}
+          pathlib.Path("pali_source_acquisition_report.json").write_text(json.dumps(report,indent=2)+"\n")
+          print(json.dumps(report,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Myanmar-Tipitaka-V2.3.4.9.1-Pali-Source-Staging-UNMAPPED
+          path: |
+            pali_root_source.sqlite
+            bilara_source_commit.txt
+            bilara_source_LICENSE.md
+            bilara_pali_staging.csv
+            bilara_collection_inventory.csv
+            bilara_candidate_audit.csv
+            bilara_source_boundaries.csv
+            bilara_source_file_manifest.csv
+            bilara_mapping_review.json
+            pali_source_acquisition_report.json
+            corpus/45_volume_crosswalk.csv
+          if-no-files-found: error
+          retention-days: 30
