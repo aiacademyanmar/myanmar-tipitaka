@@ -14,6 +14,7 @@ on:
       - 'app/src/main/java/asia/aaii/myanmartipitaka/ParagraphExplanationActivity.java'
       - 'app/src/main/java/asia/aaii/myanmartipitaka/OfflineSearchActivity.java'
       - 'app/src/main/java/asia/aaii/myanmartipitaka/MyanmarCoverageActivity.java'
+      - 'app/src/main/java/asia/aaii/myanmartipitaka/PaliReferenceActivity.java'
       - 'app/src/main/AndroidManifest.xml'
       - 'app/src/main/java/asia/aaii/myanmartipitaka/NativeFrontPagesActivity.java'
       - 'scripts/test_offline_45_boundaries.py'
