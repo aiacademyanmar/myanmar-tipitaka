@@ -60,6 +60,7 @@ public class ParagraphExplanationActivity extends Activity {
     volume=Math.max(1,Math.min(45,getIntent().getIntExtra("volume",1)));
     fontSize=Math.max(16,Math.min(32,getSharedPreferences(PREF,MODE_PRIVATE).getInt("reader_font",21)));
     selected=getIntent().getStringExtra("paragraph_id");
+    if(selected!=null)page=0;
     if(selected==null){
       page=Math.max(0,getSharedPreferences(PREF,MODE_PRIVATE).getInt("volume_"+volume+"_page",0));
     }
@@ -105,15 +106,34 @@ public class ParagraphExplanationActivity extends Activity {
       try(Cursor c=opened.rawQuery(
           "SELECT 1 FROM sqlite_master WHERE type='table' AND name='paragraph_myanmar_content'",
           null)){has=c.moveToFirst();}
+      if(has){
+        java.util.HashSet<String> columns=new java.util.HashSet<>();
+        try(Cursor c=opened.rawQuery("PRAGMA table_info(paragraph_myanmar_content)",null)){
+          while(c.moveToNext())columns.add(c.getString(1));
+        }
+        has=columns.contains("segment_id")&&columns.contains("content_type")&&
+            columns.contains("text_my")&&columns.contains("reviewed")&&
+            columns.contains("source_ref")&&columns.contains("reviewer_1")&&
+            columns.contains("reviewer_2")&&columns.contains("review_reference")&&
+            columns.contains("reviewed_at");
+      }
       if(destroyed){opened.close();return;}
       db=opened;
       final boolean canTranslate=has;
       final long segments=count;
+      long approvedTranslations=0,approvedExplanations=0;
+      if(canTranslate){
+        try(Cursor x=opened.rawQuery("SELECT COUNT(*) FROM paragraph_myanmar_content WHERE content_type='translation' AND reviewed=1",null)){if(x.moveToFirst())approvedTranslations=x.getLong(0);}
+        try(Cursor x=opened.rawQuery("SELECT COUNT(*) FROM paragraph_myanmar_content WHERE content_type='explanation' AND reviewed=1",null)){if(x.moveToFirst())approvedExplanations=x.getLong(0);}
+      }
+      final long translationCount=approvedTranslations, explanationCount=approvedExplanations;
       runOnUiThread(()->{
         if(destroyed)return;
         hasMyanmarContent=canTranslate;
         rows.removeAllViews();
         notice("✓ Offline ကျမ်း "+volume+" — စာပိုဒ် "+segments+" ပိုဒ်။");
+        if(canTranslate)notice("မြန်မာအတည်ပြုဘာသာပြန် "+translationCount+" ခု • ရှင်းလင်းချက် "+explanationCount+" ခု");
+        else notice("မြန်မာအတည်ပြုဘာသာပြန် / ရှင်းလင်းချက် Database မချိတ်ဆက်ရသေးပါ။");
         loadPage();
       });
     }catch(Exception err){
