@@ -41,14 +41,15 @@ public final class BookReaderActivity extends Activity {
     boolean selectFile=getIntent().getBooleanExtra("select_file",false);
     try {
       if(requested!=null&&!requested.trim().isEmpty())openFile(new File(requested));
-      else if(savedPath!=null&&new File(savedPath).isFile())openFile(new File(savedPath));
-      else if(savedUri!=null&&!selectFile) {
+      else if(selectFile) {
+        // Explicit import requests must win over the previous reading session.
+        status("PDF / EPUB / UTF-8 TXT ဖိုင်ကို ရွေးချယ်ပါ");
+        choose();
+      } else if(savedPath!=null&&new File(savedPath).isFile())openFile(new File(savedPath));
+      else if(savedUri!=null) {
         Uri uri=Uri.parse(savedUri);
         if("file".equalsIgnoreCase(uri.getScheme()))openFile(new File(uri.getPath()));
         else copyPickedUri(uri);
-      } else if(selectFile) {
-        status("PDF / EPUB / UTF-8 TXT ဖိုင်ကို ရွေးချယ်ပါ");
-        choose();
       } else {
         startActivity(new Intent(this,TipitakaLibraryActivity.class));
         finish();
@@ -126,7 +127,7 @@ public final class BookReaderActivity extends Activity {
     String safe=name.replaceAll("[^\\p{L}\\p{N}._-]+","_");
     if(safe.length()>110)safe=safe.substring(safe.length()-110);
     File destination=new File(dir,System.currentTimeMillis()+"_"+safe);
-    File temp=File.createTempFile("import_"," .part".trim(),dir);
+    File temp=File.createTempFile("import_",".part",dir);
     long total=0;
     try(InputStream in=getContentResolver().openInputStream(uri);FileOutputStream out=new FileOutputStream(temp)){
       if(in==null)throw new IOException("ရွေးချယ်ထားသော ဖိုင်ကို ဖတ်၍မရပါ။");
