@@ -31,16 +31,31 @@ public class OfflineSearchActivity extends Activity {
   String[] options=new String[46];options[0]="ကျမ်းအားလုံး";for(int i=1;i<=45;i++)options[i]="ကျမ်း "+i;
   volume=new Spinner(this);volume.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item,options));root.addView(volume);
   filterName=getIntent().getStringExtra("pitaka_filter");
+  String requestedFilter=filterName==null?"":filterName;
+  if(requestedFilter.contains("ဝိနည်း"))volume.setSelection(1);
+  else if(requestedFilter.contains("သုတ္တန်"))volume.setSelection(9);
+  else if(requestedFilter.contains("အဘိဓမ္မာ"))volume.setSelection(34);
 
   Button find=new Button(this);find.setText("Offline ရှာဖွေမည်");root.addView(find);
   TextView scope=new TextView(this);scope.setText("ရှာဖွေမည့်အမျိုးအစား — ပါဠိမူရင်း + စိစစ်အတည်ပြုထားသော မြန်မာစာသားများ");scope.setTextColor(0xff66553b);scope.setPadding(16,8,16,8);root.addView(scope);
   ScrollView scroll=new ScrollView(this);results=new LinearLayout(this);results.setOrientation(1);scroll.addView(results);root.addView(scroll,new LinearLayout.LayoutParams(-1,0,1));
   setContentView(root);
   try{
-   File f=new File(getFilesDir(),"tipitaka_offline.sqlite");
-   if(f.exists()){
+   File f=OfflineCorpusInstaller.prepare(getApplicationContext());
+   if(f!=null&&f.exists()){
     db=SQLiteDatabase.openDatabase(f.getAbsolutePath(),null,SQLiteDatabase.OPEN_READONLY);
-    try(Cursor c=db.rawQuery("SELECT 1 FROM sqlite_master WHERE type='table' AND name='paragraph_myanmar_content'",null)){hasReviewedMyanmar=c.moveToFirst();}
+    try(Cursor c=db.rawQuery("PRAGMA table_info(paragraphs)",null)){
+     boolean hasId=false,hasBody=false,hasVolume=false;
+     while(c.moveToNext()){String col=c.getString(1);if("id".equals(col))hasId=true;if("body".equals(col))hasBody=true;if("volume".equals(col))hasVolume=true;}
+     if(!hasId||!hasBody||!hasVolume)throw new IllegalStateException("paragraphs schema incomplete");
+    }
+    try(Cursor c=db.rawQuery("SELECT 1 FROM sqlite_master WHERE type='table' AND name='paragraph_myanmar_content'",null)){
+     if(c.moveToFirst()){
+      java.util.HashSet<String> cols=new java.util.HashSet<>();
+      try(Cursor x=db.rawQuery("PRAGMA table_info(paragraph_myanmar_content)",null)){while(x.moveToNext())cols.add(x.getString(1));}
+      hasReviewedMyanmar=cols.contains("segment_id")&&cols.contains("content_type")&&cols.contains("text_my")&&cols.contains("reviewed");
+     }
+    }
    }
   }catch(Exception ignored){if(db!=null){db.close();db=null;}}
   if(db==null)notice("မူရင်းစာသား Database မပါသေးပါ။ ရှာဖွေမှုကို အသုံးမပြုနိုင်သေးပါ။");
@@ -57,27 +72,31 @@ public class OfflineSearchActivity extends Activity {
   if(db==null){notice("Offline ကျမ်းစာ Database မရှိသေးပါ။");return;}
   String q=term.getText().toString().trim();if(q.isEmpty()){term.setError("ရှာဖွေစာသားထည့်ပါ");return;}
   int chosen=volume.getSelectedItemPosition();
+  boolean exact=getIntent().getBooleanExtra("exact_match",false);
   String groupFilter=filterName!=null&&filterName.contains("ဝိနည်း")?" AND p.volume BETWEEN 1 AND 8":
     filterName!=null&&filterName.contains("သုတ္တန်")?" AND p.volume BETWEEN 9 AND 33":
     filterName!=null&&filterName.contains("အဘိဓမ္မာ")?" AND p.volume BETWEEN 34 AND 45":"";
   String filter=(chosen>0?" AND p.volume=?":"")+groupFilter;
   String sql;
   String[] args;
+  String matchPali=exact?"p.body=?":"instr(p.body,?)>0";
+  String matchTranslation=exact?"m.text_my=?":"instr(m.text_my,?)>0";
+  String matchExplanation=exact?"x.text_my=?":"instr(x.text_my,?)>0";
   if(hasReviewedMyanmar){
-   sql="SELECT p.id,p.volume,p.segment_id,p.body,"+
+   sql="SELECT p.id,p.volume,COALESCE(p.segment_id,CAST(p.id AS TEXT)),p.body,"+
      "(SELECT text_my FROM paragraph_myanmar_content m WHERE m.segment_id=p.segment_id AND m.content_type='translation' AND m.reviewed=1 LIMIT 1),"+
      "(SELECT text_my FROM paragraph_myanmar_content x WHERE x.segment_id=p.segment_id AND x.content_type='explanation' AND x.reviewed=1 LIMIT 1),"+
-     "CASE WHEN instr(p.body,?)>0 THEN 'ပါဠိမူရင်း' "+
+     "CASE WHEN "+matchPali+" THEN 'ပါဠိမူရင်း' "+
      "WHEN EXISTS(SELECT 1 FROM paragraph_myanmar_content m WHERE m.segment_id=p.segment_id AND m.content_type='translation' AND m.reviewed=1 AND instr(m.text_my,?)>0) THEN 'မြန်မာအတည်ပြုဘာသာပြန်' "+
      "WHEN EXISTS(SELECT 1 FROM paragraph_myanmar_content x WHERE x.segment_id=p.segment_id AND x.content_type='explanation' AND x.reviewed=1 AND instr(x.text_my,?)>0) THEN 'မြန်မာအတည်ပြုရှင်းလင်းချက်' "+
      "ELSE 'ကိုက်ညီသောစာသား' END "+
-     "FROM paragraphs p WHERE (instr(p.body,?)>0 OR "+
+     "FROM paragraphs p WHERE ("+matchPali+" OR "+
      "EXISTS(SELECT 1 FROM paragraph_myanmar_content m WHERE m.segment_id=p.segment_id AND m.content_type='translation' AND m.reviewed=1 AND instr(m.text_my,?)>0) OR "+
      "EXISTS(SELECT 1 FROM paragraph_myanmar_content x WHERE x.segment_id=p.segment_id AND x.content_type='explanation' AND x.reviewed=1 AND instr(x.text_my,?)>0))"+
      filter+" ORDER BY p.volume,p.id LIMIT 100";
-   args=chosen>0?new String[]{q,q,q,q,q,q,String.valueOf(chosen)}:new String[]{q,q,q,q,q,q};
+   args=chosen>0?new String[]{exact?q:q,exact?q:q,exact?q:q,exact?q:q,exact?q:q,exact?q:q,String.valueOf(chosen)}:new String[]{q,q,q,q,q,q};
   }else{
-   sql="SELECT p.id,p.volume,p.segment_id,p.body,NULL,NULL,'ပါဠိမူရင်း' FROM paragraphs p WHERE instr(p.body,?)>0"+
+   sql="SELECT p.id,p.volume,COALESCE(p.segment_id,CAST(p.id AS TEXT)),p.body,NULL,NULL,'ပါဠိမူရင်း' FROM paragraphs p WHERE "+matchPali+" "+
      filter+" ORDER BY p.volume,p.id LIMIT 100";
    args=chosen>0?new String[]{q,String.valueOf(chosen)}:new String[]{q};
   }
