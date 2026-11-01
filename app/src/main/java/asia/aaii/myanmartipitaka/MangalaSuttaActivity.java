@@ -2,84 +2,121 @@ package asia.aaii.myanmartipitaka;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.widget.*;
-import java.io.File;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 
-/** Standalone offline Maṅgala Sutta: canonical Pali stanzas + clearly-labelled Myanmar study drafts. */
+/** Native offline Maṅgala Sutta reader. Myanmar text is visibly marked as an unapproved study draft. */
 public final class MangalaSuttaActivity extends Activity {
   private static final int GREEN=0xff144638, CREAM=0xfffaf6eb, INK=0xff193b30, GOLD=0xff96702b;
-  private SQLiteDatabase db;
-  private LinearLayout list;
+  private JSONObject corpus;
+  private JSONArray items;
+  private LinearLayout body;
+  private ScrollView scroll;
+  private int selected=-1;
+  private boolean showPali=true,showMyanmar=true;
   private int dp(int n){return (int)(n*getResources().getDisplayMetrics().density+.5f);}
   private GradientDrawable bg(int color,int radius){GradientDrawable d=new GradientDrawable();d.setColor(color);d.setCornerRadius(dp(radius));return d;}
-  private TextView text(String value,int size,int color,boolean bold){
-    TextView t=new TextView(this);t.setText(value);t.setTextSize(size);t.setTextColor(color);
+  private TextView text(String s,int size,int color,boolean bold){
+    TextView t=new TextView(this);t.setText(s);t.setTextSize(size);t.setTextColor(color);
     if(bold)t.setTypeface(Typeface.DEFAULT,Typeface.BOLD);
-    t.setPadding(dp(15),dp(13),dp(15),dp(13));return t;
+    t.setPadding(dp(14),dp(11),dp(14),dp(11));t.setLineSpacing(dp(4),1.05f);return t;
+  }
+  private String asset(String name)throws Exception{
+    try(InputStream in=getAssets().open(name);ByteArrayOutputStream out=new ByteArrayOutputStream()){
+      byte[] b=new byte[8192];int n;while((n=in.read(b))!=-1)out.write(b,0,n);
+      return out.toString("UTF-8");
+    }
   }
   @Override public void onCreate(Bundle state){
     super.onCreate(state);getWindow().setStatusBarColor(GREEN);getWindow().setNavigationBarColor(GREEN);
-    LinearLayout root=new LinearLayout(this);root.setOrientation(LinearLayout.VERTICAL);root.setBackgroundColor(CREAM);
-    TextView header=text("☸  မင်္ဂလသုတ် — မင်္ဂလာ ၃၈ ပါး\nMaṅgala Sutta · Sutta Nipāta 2.4",21,Color.WHITE,true);
-    header.setBackgroundColor(GREEN);root.addView(header);
-    TextView status=text("ပါဠိမူရင်းနှင့် မြန်မာလေ့လာရေးမူကြမ်း • Offline",14,GOLD,true);root.addView(status);
-    ScrollView scroll=new ScrollView(this);list=new LinearLayout(this);list.setOrientation(LinearLayout.VERTICAL);list.setPadding(dp(10),dp(6),dp(10),dp(20));scroll.addView(list);
-    root.addView(scroll,new LinearLayout.LayoutParams(-1,0,1));
-    TextView back=text("‹  စာအုပ်တိုက်သို့ ပြန်ရန်",16,Color.WHITE,true);back.setBackgroundColor(GREEN);root.addView(back);back.setOnClickListener(v->finish());
-    setContentView(root);
-    TextView loading=text("Offline မင်္ဂလသုတ်ကို ဖွင့်နေပါသည်…",18,INK,false);list.addView(loading);
-    new Thread(()->openDb(status), "mangala-offline").start();
-  }
-  private void openDb(TextView status){
-    SQLiteDatabase opened=null;
     try{
-      File f=OfflineCorpusInstaller.prepare(getApplicationContext());
-      opened=SQLiteDatabase.openDatabase(f.getAbsolutePath(),null,SQLiteDatabase.OPEN_READONLY);
-      try(Cursor c=opened.rawQuery("SELECT COUNT(*) FROM mangala_blessings",null)){
-        if(!c.moveToFirst()||c.getInt(0)!=38)throw new IllegalStateException("မင်္ဂလာ ၃၈ ပါး ဒေတာ မပြည့်စုံပါ။");
-      }
-      db=opened;
-      runOnUiThread(()->{status.setText("✓ Offline • မင်္ဂလာ ၃၈ ပါး • ပါဠိ ၁၃ ဂါထာ");load();});
+      corpus=new JSONObject(asset("mangala_sutta_my.json"));
+      items=corpus.getJSONArray("blessings");
+      if(items.length()!=38)throw new IllegalStateException("မင်္ဂလာ ၃၈ ပါး မပြည့်စုံပါ");
     }catch(Exception e){
-      if(opened!=null)try{opened.close();}catch(Exception ignored){}
-      String msg=e.getMessage()==null?"Offline Database error":e.getMessage();
-      runOnUiThread(()->{list.removeAllViews();list.addView(text("မင်္ဂလသုတ်ဒေတာ ဖွင့်မရပါ။\n"+msg,17,INK,false));});
+      new AlertDialog.Builder(this).setTitle("Offline မင်္ဂလသုတ် မဖွင့်နိုင်ပါ")
+        .setMessage(e.getMessage()).setPositiveButton("ပြန်သွားရန်",(d,w)->finish()).show();return;
     }
+    selected=state==null?-1:state.getInt("selected",-1);
+    render();
   }
-  private void load(){
-    if(db==null)return;list.removeAllViews();
-    list.addView(text("ဤစာအုပ်တွင် မင်္ဂလာတရား ၃၈ ပါးကို အုပ်စု ၁၀ စုဖြင့် ဖတ်ရှုနိုင်ပါသည်။ အကြောင်းအရာကို နှိပ်၍ ပါဠိမူရင်းနှင့် မြန်မာရှင်းလင်းချက်ကို ဖွင့်ပါ။",16,INK,false));
-    int lastGroup=-1;
-    try(Cursor c=db.rawQuery("SELECT number,group_no,group_title_my,stanza_ref,title_my,explanation_my,translation_status FROM mangala_blessings ORDER BY number",null)){
-      while(c.moveToNext()){
-        int no=c.getInt(0),group=c.getInt(1);String groupTitle=c.getString(2),stanza=c.getString(3),title=c.getString(4),ex=c.getString(5),state=c.getString(6);
-        if(group!=lastGroup){TextView gh=text("အုပ်စု "+group+"  ·  "+groupTitle,16,GREEN,true);list.addView(gh);lastGroup=group;}
-        TextView card=text(String.format(java.util.Locale.ROOT,"%02d   %s\nပါဠိနှင့် မြန်မာရှင်းလင်းချက် ဖတ်ရန်  ›",no,title),17,INK,true);
-        card.setBackground(bg(Color.WHITE,14));LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(-1,-2);lp.setMargins(dp(2),dp(4),dp(2),dp(6));list.addView(card,lp);
-        card.setOnClickListener(v->showBlessing(no,stanza,title,ex,state));
+  @Override protected void onSaveInstanceState(Bundle out){super.onSaveInstanceState(out);out.putInt("selected",selected);}
+  private void render(){
+    LinearLayout root=new LinearLayout(this);root.setOrientation(LinearLayout.VERTICAL);root.setBackgroundColor(CREAM);
+    LinearLayout header=new LinearLayout(this);header.setGravity(Gravity.CENTER_VERTICAL);header.setBackgroundColor(GREEN);
+    TextView back=text("‹",29,Color.WHITE,true);back.setOnClickListener(v->finish());header.addView(back);
+    TextView title=text("☸  မင်္ဂလသုတ်",20,Color.WHITE,true);header.addView(title,new LinearLayout.LayoutParams(0,-2,1));
+    header.addView(text("၃၈ ပါး",14,0xffffdf9a,true));root.addView(header);
+    scroll=new ScrollView(this);body=new LinearLayout(this);body.setOrientation(LinearLayout.VERTICAL);
+    body.setPadding(dp(15),dp(12),dp(15),dp(20));scroll.addView(body);
+    root.addView(scroll,new LinearLayout.LayoutParams(-1,0,1));
+    LinearLayout footer=new LinearLayout(this);footer.setGravity(Gravity.CENTER);footer.setBackgroundColor(GREEN);
+    footer.addView(footerItem("⌂\nပင်မ",()->{Intent i=new Intent(this,NativeFrontPagesActivity.class);i.putExtra("openPage",2);i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);startActivity(i);finish();}),new LinearLayout.LayoutParams(0,dp(58),1));
+    footer.addView(footerItem("☷\nမာတိကာ",()->{selected=-1;renderBody();}),new LinearLayout.LayoutParams(0,dp(58),1));
+    footer.addView(footerItem("★\nမှတ်သား",()->bookmark()),new LinearLayout.LayoutParams(0,dp(58),1));
+    footer.addView(footerItem("Aa\nစာသား",()->toggleText()),new LinearLayout.LayoutParams(0,dp(58),1));
+    root.addView(footer);setContentView(root);renderBody();
+  }
+  private TextView footerItem(String s,Runnable action){TextView t=text(s,12,Color.WHITE,true);t.setGravity(Gravity.CENTER);t.setOnClickListener(v->action.run());return t;}
+  private void renderBody(){
+    body.removeAllViews();
+    body.addView(text("Maṅgala Sutta · Sutta Nipāta 2.4 (Sn 258–269)",13,GOLD,true));
+    body.addView(text("မင်္ဂလာတရား ၃၈ ပါး",25,GREEN,true));
+    TextView warning=text("အရေးကြီးချက် — မြန်မာစာသားများသည် လေ့လာရေးမူကြမ်းဖြစ်ပြီး ပညာရှင်အတည်ပြုချက် မရသေးပါ။",13,0xff80551c,true);
+    warning.setBackground(bg(0xffffedc2,12));body.addView(warning);
+    if(selected<0){
+      body.addView(text("အောက်ပါ မင်္ဂလာတစ်ပါးချင်းကို နှိပ်၍ လေ့လာနိုင်ပါသည်။",15,INK,false));
+      for(int i=0;i<items.length();i++){
+        JSONObject item=items.optJSONObject(i);final int ix=i;
+        TextView card=text(String.format(java.util.Locale.ROOT,"%02d  %s\n%s\nဖတ်ရှုရန်  ›",i+1,item.optString("myanmar_title"),item.optString("pali_term")),16,INK,true);
+        card.setBackground(bg(Color.WHITE,14));LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(-1,-2);lp.setMargins(0,dp(4),0,dp(5));body.addView(card,lp);
+        card.setOnClickListener(v->{selected=ix;renderBody();scroll.post(()->scroll.smoothScrollTo(0,0));});
       }
-    }catch(Exception e){list.addView(text("စာရင်းဖတ်ရှုမှု အမှား: "+e.getMessage(),16,INK,false));}
-  }
-  private void showBlessing(int number,String stanza,String title,String explanation,String state){
-    String pali="";
-    try(Cursor c=db.rawQuery("SELECT pali_text FROM mangala_pali_stanzas WHERE stanza=?",new String[]{stanza})){
-      if(c.moveToFirst())pali=c.getString(0);
+      TextView pali=text("📜  ပါဠိသုတ်တော် အပြည့်အစုံ ဖတ်ရန်",16,GREEN,true);pali.setBackground(bg(Color.WHITE,14));body.addView(pali);
+      pali.setOnClickListener(v->{selected=38;renderBody();scroll.post(()->scroll.smoothScrollTo(0,0));});
+    }else if(selected==38){
+      body.addView(text("ပါဠိမူရင်း — Sutta Nipāta 2.4",18,GREEN,true));
+      body.addView(text(corpus.optString("pali_text"),17,INK,false));
+      body.addView(text("ရင်းမြစ်: "+corpus.optJSONObject("source").optString("url"),12,GOLD,false));
+      addBackToIndex();
+    }else{
+      JSONObject item=items.optJSONObject(selected);
+      body.addView(text("မင်္ဂလာ "+(selected+1)+" / ၃၈",14,GOLD,true));
+      body.addView(text(item.optString("myanmar_title"),23,GREEN,true));
+      body.addView(text(item.optString("pali_term"),18,INK,true));
+      if(showMyanmar){
+        TextView draft=text("မြန်မာရှင်းလင်းချက် (မူကြမ်း)\n"+item.optString("myanmar_explanation_draft"),17,INK,false);
+        draft.setBackground(bg(Color.WHITE,14));body.addView(draft);
+        body.addView(text("အတည်ပြုမှု: ပညာရှင်စစ်ဆေးရန် ကျန်ရှိသည်",12,GOLD,true));
+      }
+      if(showPali){
+        body.addView(text("ပါဠိမူရင်း သုတ်တော်",18,GREEN,true));
+        body.addView(text(corpus.optString("pali_text"),16,INK,false));
+        body.addView(text("မှတ်ချက် — သုတ်တော်အပြည့်အစုံကို ဖော်ပြထားခြင်းဖြစ်ပြီး မင်္ဂလာတစ်ပါးချင်းနှင့် ပါဠိစာပိုဒ်အလိုက် တိကျသော mapping ကို ပညာရှင်ဖြင့် ထပ်မံစစ်ဆေးရန် လိုအပ်သည်။",13,GOLD,false));
+      }
+      LinearLayout nav=new LinearLayout(this);
+      TextView prev=text("← ယခင်",15,GREEN,true);prev.setGravity(Gravity.CENTER);
+      TextView next=text("နောက် →",15,GREEN,true);next.setGravity(Gravity.CENTER);
+      nav.addView(prev,new LinearLayout.LayoutParams(0,-2,1));nav.addView(next,new LinearLayout.LayoutParams(0,-2,1));body.addView(nav);
+      prev.setOnClickListener(v->{selected=Math.max(0,selected-1);renderBody();scroll.post(()->scroll.smoothScrollTo(0,0));});
+      next.setOnClickListener(v->{selected=Math.min(37,selected+1);renderBody();scroll.post(()->scroll.smoothScrollTo(0,0));});
+      addBackToIndex();
     }
-    LinearLayout box=new LinearLayout(this);box.setOrientation(LinearLayout.VERTICAL);box.setPadding(dp(8),dp(4),dp(8),dp(4));
-    TextView label=text("ပါဠိမူရင်း ဂါထာ — "+stanza,14,GOLD,true);box.addView(label);
-    TextView paliText=text(pali,19,INK,false);paliText.setLineSpacing(dp(5),1.1f);box.addView(paliText);
-    TextView myLabel=text("မင်္ဂလာ "+number+" — မြန်မာအဓိပ္ပာယ်",15,GREEN,true);box.addView(myLabel);
-    TextView myText=text(title+"\n\n"+explanation,18,INK,false);myText.setLineSpacing(dp(5),1.12f);box.addView(myText);
-    TextView draft=text("မှတ်ချက် — မြန်မာဘာသာပြန်နှင့် ရှင်းလင်းချက်သည် AI လေ့လာရေးမူကြမ်းဖြစ်ပြီး ပညာရှင်အတည်ပြုချက် မရသေးပါ။",13,GOLD,false);box.addView(draft);
-    ScrollView scroll=new ScrollView(this);scroll.addView(box);
-    new AlertDialog.Builder(this).setTitle("☸  မင်္ဂလာ "+number).setView(scroll).setPositiveButton("ဖတ်ပြီးပါပြီ",null).show();
   }
-  @Override protected void onDestroy(){if(db!=null&&db.isOpen())db.close();super.onDestroy();}
+  private void addBackToIndex(){TextView t=text("☷  မင်္ဂလာ ၃၈ ပါး မာတိကာသို့",15,GREEN,true);t.setGravity(Gravity.CENTER);body.addView(t);t.setOnClickListener(v->{selected=-1;renderBody();scroll.post(()->scroll.smoothScrollTo(0,0));});}
+  private void bookmark(){
+    String key="mangala_bookmark_"+selected;boolean old=getPreferences(MODE_PRIVATE).getBoolean(key,false);
+    getPreferences(MODE_PRIVATE).edit().putBoolean(key,!old).apply();
+    Toast.makeText(this,!old?"မှတ်သားပြီး":"မှတ်သားမှု ဖယ်ရှားပြီး",Toast.LENGTH_SHORT).show();
+  }
+  private void toggleText(){showPali=!showPali;showMyanmar=!showMyanmar;renderBody();}
 }
