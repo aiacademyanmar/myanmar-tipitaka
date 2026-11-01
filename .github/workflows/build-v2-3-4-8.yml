@@ -1,4 +1,4 @@
-name: Myanmar Tipitaka V2.3.5.4 Native SQLite Foundation + APK
+name: Myanmar Tipitaka V2.3.5.5 Native SQLite Foundation + APK
 
 on:
   workflow_dispatch:
@@ -44,12 +44,18 @@ jobs:
         id: special_content
         continue-on-error: true
         run: python3 scripts/validate_special_content.py
+      - name: Verify in-app online reader integration
+        run: |
+          grep -q 'class OnlineBookReaderActivity' app/src/main/java/asia/aaii/myanmartipitaka/OnlineBookReaderActivity.java
+          grep -q 'OnlineBookReaderActivity' app/src/main/AndroidManifest.xml
+          grep -q 'uses-permission android:name="android.permission.INTERNET"' app/src/main/AndroidManifest.xml
+          grep -q 'new Intent(this,OnlineBookReaderActivity.class)' app/src/main/java/asia/aaii/myanmartipitaka/ReferenceLibraryActivity.java
       - name: Verify online reference library screen
         run: |
           grep -q 'class ReferenceLibraryActivity' app/src/main/java/asia/aaii/myanmartipitaka/ReferenceLibraryActivity.java
           grep -q 'ReferenceLibraryActivity' app/src/main/AndroidManifest.xml
           grep -q 'ReferenceLibraryActivity' app/src/main/java/asia/aaii/myanmartipitaka/NativeFrontPagesActivity.java
-      - name: Validate V2.3.5.4 Myanmar source inventory
+      - name: Validate V2.3.5.5 Myanmar source inventory
         run: python3 scripts/validate_myanmar_source_inventory.py
       - name: Test 45-volume editorial batch planner
         run: python3 -m unittest scripts/test_myanmar_editorial_batches.py -v
@@ -84,7 +90,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: Myanmar-Tipitaka-V2.3.5.4-Corpus-QA-Reports
+          name: Myanmar-Tipitaka-V2.3.5.5-Corpus-QA-Reports
           path: |
             corpus/offline_corpus_audit.json
             corpus/myanmar_editorial_batch_audit.json
@@ -98,7 +104,7 @@ jobs:
         if: steps.corpus_gate.outcome == 'success' && steps.crosswalk_gate.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
-          name: Myanmar-Tipitaka-V2.3.5.4-debug-APK
+          name: Myanmar-Tipitaka-V2.3.5.5-debug-APK
           path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 14
