@@ -95,9 +95,15 @@ public class NativeFrontPagesActivity extends Activity {
         TextView row=text("☸  "+name+"\n      ဖိုင်ရွေးဖတ်ရန်",17,INK,true);
         row.setBackground(bg(Color.WHITE,16));LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(-1,-2);
         lp.setMargins(dp(4),dp(6),dp(4),dp(6));content.addView(row,lp);
-        row.setOnClickListener(v->startActivity(new Intent(this,BookReaderActivity.class)));
+        row.setOnClickListener(v->{
+          if(name.startsWith("ဒီဃ"))openVolumes(9,11);
+          else if(name.startsWith("မဇ္ဈိမ"))openVolumes(12,14);
+          else if(name.startsWith("သံယုတ္တ"))openVolumes(15,19);
+          else if(name.startsWith("အင်္ဂုတ္တရ"))openVolumes(20,24);
+          else openVolumes(25,33);
+        });
       }
-      addText("နိကာယ်စာအုပ်များ APK အတွင်း ကြိုတင်မပါသေးပါ။ Reader မှ မိမိ၏ဖိုင်ကို ရွေးချယ်နိုင်သည်။",14,INK,false);
+      addText("နိကာယ်အလိုက် Offline ပါဠိကျမ်းစာရင်းကို ဖွင့်နိုင်ပါသည်။",14,INK,false);
     }else if(n==20){
       addText("Myanmar Tipitaka",28,GREEN,true);
       addText("About • Help • App Information",16,GOLD,true);
@@ -164,9 +170,9 @@ public class NativeFrontPagesActivity extends Activity {
         row.setBackground(bg(Color.WHITE,16));
         LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(-1,-2);lp.setMargins(dp(4),dp(5),dp(4),dp(5));
         content.addView(row,lp);
-        row.setOnClickListener(v->startActivity(new Intent(this,BookReaderActivity.class)));
+        row.setOnClickListener(v->openVolumes(34,45));
       }
-      addText("မူရင်း အဘိဓမ္မာစာအုပ် ဖိုင်များကို ကြိုတင်ထည့်မထားသေးပါ။ ကိုယ့်ဖုန်းရှိ PDF/EPUB/TXT ဖိုင်ကို Reader မှ ရွေးဖတ်နိုင်ပါသည်။",14,INK,false);
+      addText("အဘိဓမ္မာ ၇ ကျမ်း၏ Offline ပါဠိစာပိုဒ်များကို ရွေးဖတ်နိုင်ပါသည်။",14,INK,false);
       button("အဘိဓမ္မာ Native Reader",16);
     }else if(n==10){
       addText("ပိဋကတ်တော် ရှာဖွေရန်",26,GREEN,true);
