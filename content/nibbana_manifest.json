@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "id": "nibbana",
+  "title": "နိဗ္ဗာန် (Nibbāna)",
+  "description": "ဒုက္ခနိရောဓသစ္စာနှင့် နိဗ္ဗာန်ဆိုင်ရာ လေ့လာရေး",
+  "source_url": "https://tipitaka.cloud/en/learn/topics/nibbana",
+  "content_status": "FOUNDATION_DRAFT",
+  "offline_content_imported": false,
+  "expected_topic_count": 12,
+  "translation_status": "NOT_REVIEWED",
+  "explanation_status": "DRAFT",
+  "review_status": "PENDING_SCHOLAR_REVIEW",
+  "reader_requirements": {
+    "pali_original": true,
+    "myanmar_translation_approved_only": true,
+    "myanmar_explanation_approved_only": true,
+    "source_citations": true,
+    "offline_access": true
+  }
+}
