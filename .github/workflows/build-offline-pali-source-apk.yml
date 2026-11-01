@@ -1,7 +1,7 @@
 name: Build Offline Pali Source APK (License-Gated)
 on:
   push:
-    branches: [v2.2-exact-20-screens]
+    branches: [v2.2-exact-20-screens, v2.3-myanmar-review-integration]
     paths:
       - '.github/workflows/build-offline-pali-source-apk.yml'
       - 'app/src/main/java/asia/aaii/myanmartipitaka/PaliSourceLibraryActivity.java'
