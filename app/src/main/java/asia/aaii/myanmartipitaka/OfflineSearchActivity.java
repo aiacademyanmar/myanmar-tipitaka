@@ -20,6 +20,7 @@ public class OfflineSearchActivity extends Activity {
  private EditText term;
  private Spinner volume;
  private boolean hasReviewedMyanmar=false;
+ private String filterName;
 
  @Override public void onCreate(Bundle b){
   super.onCreate(b);
@@ -29,7 +30,7 @@ public class OfflineSearchActivity extends Activity {
   term.setText(getIntent().getStringExtra("query")==null?"":getIntent().getStringExtra("query"));root.addView(term);
   String[] options=new String[46];options[0]="ကျမ်းအားလုံး";for(int i=1;i<=45;i++)options[i]="ကျမ်း "+i;
   volume=new Spinner(this);volume.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item,options));root.addView(volume);
-  String filterName=getIntent().getStringExtra("pitaka_filter");
+  filterName=getIntent().getStringExtra("pitaka_filter");
 
   Button find=new Button(this);find.setText("Offline ရှာဖွေမည်");root.addView(find);
   TextView scope=new TextView(this);scope.setText("ရှာဖွေမည့်အမျိုးအစား — ပါဠိမူရင်း + စိစစ်အတည်ပြုထားသော မြန်မာစာသားများ");scope.setTextColor(0xff66553b);scope.setPadding(16,8,16,8);root.addView(scope);
@@ -68,11 +69,13 @@ public class OfflineSearchActivity extends Activity {
      "(SELECT text_my FROM paragraph_myanmar_content x WHERE x.segment_id=p.segment_id AND x.content_type='explanation' AND x.reviewed=1 LIMIT 1),"+
      "CASE WHEN instr(p.body,?)>0 THEN 'ပါဠိမူရင်း' "+
      "WHEN EXISTS(SELECT 1 FROM paragraph_myanmar_content m WHERE m.segment_id=p.segment_id AND m.content_type='translation' AND m.reviewed=1 AND instr(m.text_my,?)>0) THEN 'မြန်မာအတည်ပြုဘာသာပြန်' "+
-     "ELSE 'မြန်မာအတည်ပြုရှင်းလင်းချက်' END "+
+     "WHEN EXISTS(SELECT 1 FROM paragraph_myanmar_content x WHERE x.segment_id=p.segment_id AND x.content_type='explanation' AND x.reviewed=1 AND instr(x.text_my,?)>0) THEN 'မြန်မာအတည်ပြုရှင်းလင်းချက်' "+
+     "ELSE 'ကိုက်ညီသောစာသား' END "+
      "FROM paragraphs p WHERE (instr(p.body,?)>0 OR "+
-     "EXISTS(SELECT 1 FROM paragraph_myanmar_content m WHERE m.segment_id=p.segment_id AND m.reviewed=1 AND instr(m.text_my,?)>0))"+
+     "EXISTS(SELECT 1 FROM paragraph_myanmar_content m WHERE m.segment_id=p.segment_id AND m.content_type='translation' AND m.reviewed=1 AND instr(m.text_my,?)>0) OR "+
+     "EXISTS(SELECT 1 FROM paragraph_myanmar_content x WHERE x.segment_id=p.segment_id AND x.content_type='explanation' AND x.reviewed=1 AND instr(x.text_my,?)>0))"+
      filter+" ORDER BY p.volume,p.id LIMIT 100";
-   args=chosen>0?new String[]{q,q,q,q,String.valueOf(chosen)}:new String[]{q,q,q,q};
+   args=chosen>0?new String[]{q,q,q,q,q,q,String.valueOf(chosen)}:new String[]{q,q,q,q,q,q};
   }else{
    sql="SELECT p.id,p.volume,p.segment_id,p.body,NULL,NULL,'ပါဠိမူရင်း' FROM paragraphs p WHERE instr(p.body,?)>0"+
      filter+" ORDER BY p.volume,p.id LIMIT 100";
