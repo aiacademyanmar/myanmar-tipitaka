@@ -176,12 +176,9 @@ public final class MyanmarEditorialActivity extends Activity {
       try(Cursor c=db.rawQuery("SELECT decision,COUNT(*) FROM editorial_reviews WHERE volume=? AND paragraph_id=? GROUP BY decision",new String[]{Integer.toString(vol),pid})){
         while(c.moveToNext()){String d=c.getString(0);if(d.equals("approve"))approvals=c.getInt(1);else if(d.equals("revision"))revisions=c.getInt(1);else if(d.equals("reject"))rejects=c.getInt(1);}
       }
-      String status=rejects>0?"rejected":revisions>0?"revision_requested":approvals>=2?"reviewed_locally":"submitted_for_review";
-      ContentValues update=new ContentValues();update.put("status",status);
-      update.put("updated_at",new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.US).format(new Date()));
-      db.update("editorial_drafts",update,"volume=? AND paragraph_id=?",new String[]{Integer.toString(vol),pid});
+      String reviewState=rejects>0?"Reject ရှိ":revisions>0?"Revision လိုအပ်":approvals>=2?"Reviewer နှစ်ဦး Approve (Local)": "စိစစ်မှု ဆက်လက်လိုအပ်";
       db.setTransactionSuccessful();
-      toast("Review သိမ်းပြီး — "+status+" • Approve "+approvals+" ဦး။");
+      toast("Review သိမ်းပြီး — "+reviewState+" • Approve "+approvals+" ဦး။ Draft ကို မူရင်း Submitted အခြေအနေတွင်သာ ထားရှိသည်။");
     }catch(Exception e){toast("Review သိမ်းမရပါ: "+e.getMessage());}
     finally{db.endTransaction();}
   }
