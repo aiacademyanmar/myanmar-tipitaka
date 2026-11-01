@@ -32,7 +32,11 @@ public class NativeFrontPagesActivity extends Activity {
     item.setBackground(bg(Color.WHITE,14));content.addView(item);
     item.setOnClickListener(v->{try{startActivity(new Intent(Intent.ACTION_VIEW,android.net.Uri.parse(url)));}catch(Exception e){Toast.makeText(this,"Browser ဖွင့်၍မရပါ",Toast.LENGTH_SHORT).show();}});
   }
-  private void openVolumes(int start,int end){\n    Intent i=new Intent(this,TipitakaLibraryActivity.class);\n    i.putExtra("start_volume",start);i.putExtra("end_volume",end);startActivity(i);\n  }\n  private void go(int p){
+  private void openVolumes(int start,int end){
+    Intent i=new Intent(this,TipitakaLibraryActivity.class);
+    i.putExtra("start_volume",start);i.putExtra("end_volume",end);startActivity(i);
+  }
+  private void go(int p){
     if(p==21){startActivity(new Intent(this,MyanmarCoverageActivity.class));return;}
     if(p==3){toggleMenu();return;}
     if(p<=20){render(p);return;}
