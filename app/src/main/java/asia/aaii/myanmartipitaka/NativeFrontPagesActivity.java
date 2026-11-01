@@ -314,6 +314,7 @@ public class NativeFrontPagesActivity extends Activity {
       menuCard("📚","ကျမ်းဖတ်ခန်း (45 ကျမ်း)","ပိဋကတ် ၄၅ ကျမ်း • Native Offline Reader",()->startActivity(new Intent(this,TipitakaLibraryActivity.class)));
       menuCard("📊","မြန်မာဘာသာပြန် တိုးတက်မှု","ကျမ်း ၄၅ ကျမ်း • အတည်ပြုဘာသာပြန်နှင့် ရှင်းလင်းချက် Coverage",()->startActivity(new Intent(this,MyanmarCoverageActivity.class)));
       menuCard("✍","မြန်မာစာတည်းဖြတ်ရေးခန်း","ဘာသာပြန်နှင့် ရှင်းလင်းချက် Draft • Reviewer Workflow",()->startActivity(new Intent(this,MyanmarEditorialActivity.class)));
+      menuCard("📦","Standalone Publisher","CSV Import • SQLite Publish • Backup / Restore",()->startActivity(new Intent(this,MyanmarPublisherActivity.class)));
       menuCard("📖","Online ဖတ်ရှုရန်","Tipitaka.cloud • ပါဠိနှင့် ထိုင်းဘာသာ Edition",()->openLink("https://tipitaka.cloud/?panes=en_translation"));
       addText("အထူးလေ့လာရန်",19,GREEN,true);
       menuCard("📜","ဓမ္မပဒ (Dhammapada)","ဂါထာ ၄၂၃ ပါဒ  ·  ဝဂ် ၂၆ ခု",()->openLink("https://tipitaka.cloud/en/learn/suttas/dhammapada"));
