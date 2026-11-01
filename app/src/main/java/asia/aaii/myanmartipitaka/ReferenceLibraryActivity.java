@@ -78,6 +78,10 @@ public final class ReferenceLibraryActivity extends Activity {
       "ဆဋ္ဌမူ ပိဋကတ်သုံးပုံ ပါဠိမြန်မာပြန် Catalog • စာအုပ် ၃၁ ခု စာရင်းပြထားပြီး စာအုပ်စာမျက်နှာတွင် Download လင့်ခ်များရှိသည်။",
       "University Library • Catalog / Download • Permission စစ်ဆေးရန်",
       "https://spsuygn.edu.mm/book/reference/2");
+    TextView catalog=label("📚 KBRL မြန်မာပြန်စာအုပ်များကို App အတွင်းရှာရန်",15,Color.WHITE,true);
+    catalog.setGravity(Gravity.CENTER);catalog.setBackground(bg(GREEN,12));
+    catalog.setOnClickListener(v->startActivity(new Intent(this,KbrlBookCatalogActivity.class)));
+    list.addView(catalog,new LinearLayout.LayoutParams(-1,-2));
     section("၂။ မြန်မာပြန် PDF / Online Text","စာအုပ်အလိုက် ရင်းမြစ်ကို ရှာဖွေဖတ်ရှုရန်");
     source("Sariputta — Myanmar Tipitaka PDF",
       "ဝိနည်း၊ သုတ္တန်၊ အဘိဓမ္မာနှင့် ဓမ္မပဒ အပါအဝင် မြန်မာ PDF စာအုပ်များကို တစ်အုပ်ချင်း ရွေးချယ်နိုင်သည်။",
