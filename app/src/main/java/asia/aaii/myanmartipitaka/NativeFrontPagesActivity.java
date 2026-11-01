@@ -32,6 +32,29 @@ public class NativeFrontPagesActivity extends Activity {
     item.setBackground(bg(Color.WHITE,14));content.addView(item);
     item.setOnClickListener(v->{try{startActivity(new Intent(Intent.ACTION_VIEW,android.net.Uri.parse(url)));}catch(Exception e){Toast.makeText(this,"Browser ဖွင့်၍မရပါ",Toast.LENGTH_SHORT).show();}});
   }
+  private void openLink(String url){
+    try{startActivity(new Intent(Intent.ACTION_VIEW,android.net.Uri.parse(url)));}
+    catch(Exception e){Toast.makeText(this,"Link ဖွင့်၍မရပါ",Toast.LENGTH_SHORT).show();}
+  }
+  private void menuCard(String icon,String title,String subtitle,Runnable action){
+    LinearLayout card=new LinearLayout(this);card.setOrientation(LinearLayout.HORIZONTAL);
+    card.setGravity(Gravity.CENTER_VERTICAL);card.setPadding(dp(12),dp(9),dp(12),dp(9));
+    card.setBackground(bg(Color.WHITE,18));card.setElevation(dp(2));
+    LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(-1,-2);lp.setMargins(0,dp(6),0,dp(6));
+    TextView symbol=text(icon,23,GREEN,true);symbol.setGravity(Gravity.CENTER);
+    symbol.setBackground(bg(0xfff3ead4,14));
+    card.addView(symbol,new LinearLayout.LayoutParams(dp(52),dp(52)));
+    LinearLayout labels=new LinearLayout(this);labels.setOrientation(LinearLayout.VERTICAL);
+    labels.setPadding(dp(12),0,dp(6),0);
+    TextView heading=text(title,17,GREEN,true);heading.setPadding(0,0,0,dp(3));
+    TextView detail=text(subtitle,13,INK,false);detail.setPadding(0,0,0,0);
+    detail.setLineSpacing(dp(2),1.0f);
+    labels.addView(heading);labels.addView(detail);
+    card.addView(labels,new LinearLayout.LayoutParams(0,-2,1));
+    TextView arrow=text("→",25,GOLD,true);arrow.setGravity(Gravity.CENTER);
+    card.addView(arrow,new LinearLayout.LayoutParams(dp(28),-2));
+    content.addView(card,lp);card.setOnClickListener(v->action.run());
+  }
   private void openVolumes(int start,int end){
     Intent i=new Intent(this,TipitakaLibraryActivity.class);
     i.putExtra("start_volume",start);i.putExtra("end_volume",end);startActivity(i);
@@ -256,13 +279,18 @@ public class NativeFrontPagesActivity extends Activity {
       button("၅။ မိမိစာအုပ်ကို ဖွင့်ဖတ်ရန်",6);
       addText("သင်ခန်းစာစာသား၊ မေးခွန်းနှင့် အဖြေဒေတာကို နောက်ဆက်တွဲ ထည့်သွင်းရန် လိုအပ်ပါသည်။",14,INK,false);
     }else if(n==4){
-      addText("ပိဋကတ်တော် အမျိုးအစားများ",26,GREEN,true);
-      addText("သုံးပုံပိဋကတ် • Tipitaka Collections",16,GOLD,false);
-      TextView catalog=text("☸  ပိဋကတ် ၄၅ ကျမ်း Offline Library",19,Color.WHITE,true);catalog.setBackground(bg(GREEN,16));content.addView(catalog);catalog.setOnClickListener(v->startActivity(new Intent(this,TipitakaLibraryActivity.class)));
-      button("☸  ဝိနည်းပိဋကတ် — Vinaya Pitaka",5);
-      button("☸  သုတ္တန်ပိဋကတ် — Sutta Pitaka",5);
-      button("☸  အဘိဓမ္မာပိဋကတ် — Abhidhamma Pitaka",15);
-      addText("စာအုပ်အုပ်စုတစ်ခုကို ရွေးပြီး ဖတ်ရှုနိုင်ပါသည်။",15,INK,false);
+      addText("ပိဋကတ်သုံးပုံ",28,GREEN,true);
+      addText("Tipiṭaka  ·  45 ကျမ်း  ·  အခမဲ့",16,GOLD,true);
+      addText("ထေရဝါဒ ပါဠိဘာသာ ပိဋကတ်သုံးပုံ (တိပိဋကတ်) ကို အောက်ပါ Menu များမှတစ်ဆင့် ဖတ်ရှုနိုင်ပါသည်။ ဝိနည်းပိဋကတ်၊ သုတ္တပိဋကတ်နှင့် အဘိဓမ္မပိဋကတ်တို့ကို လေ့လာနိုင်ပါသည်။",15,INK,false);
+      menuCard("📚","ကျမ်းဖတ်ခန်း (45 ကျမ်း)","ပိဋကတ် ၄၅ ကျမ်း • Native Offline Reader",()->startActivity(new Intent(this,TipitakaLibraryActivity.class)));
+      menuCard("📖","Online ဖတ်ရှုရန်","Tipitaka.cloud • ပါဠိနှင့် ထိုင်းဘာသာ Edition",()->openLink("https://tipitaka.cloud/?panes=en_translation"));
+      addText("အထူးလေ့လာရန်",19,GREEN,true);
+      menuCard("📜","ဓမ္မပဒ (Dhammapada)","ဂါထာ ၄၂၃ ပါဒ  ·  ဝဂ် ၂၆ ခု",()->openLink("https://tipitaka.cloud/en/learn/suttas/dhammapada"));
+      menuCard("☸","မင်္ဂလသုတ် (Maṅgala Sutta)","မင်္ဂလာ ၃၈ ပါး  ·  Offline စာအုပ်",()->startActivity(new Intent(this,MangalaSuttaActivity.class)));
+      menuCard("🪷","နိဗ္ဗာန် (Nibbāna)","နိဗ္ဗာန်ဆိုင်ရာ ဓမ္မလေ့လာရေး",()->openLink("https://tipitaka.cloud/en/learn/topics/nibbana"));
+      menuCard("🧘","သတိပဋ္ဌာန် (Satipaṭṭhāna)","သတိပဋ္ဌာန် ၄ ပါး",()->openLink("https://tipitaka.cloud/en/learn/topics/satipatthana"));
+      menuCard("📚","နိကာယ် ၅ မျိုး","ဒီဃ · မဇ္ဈိမ · သံယုတ္တ · အင်္ဂုတ္တရ · ခုဒ္ဒက",()->render(19));
+      addText("ရင်းမြစ် — Tipitaka.cloud  |  Offline ဖတ်ရှုမှုအတွက် ကျမ်းဖတ်ခန်းကို ရွေးချယ်ပါ။",13,GOLD,false);
     }else if(n==5){
       addText("ပိဋကတ်တော် စာအုပ်များ",26,GREEN,true);
       addText("ပိဋကတ် ၄၅ ကျမ်း Offline Library နှင့် ကိုယ်ပိုင်စာအုပ်ဖိုင်များ",16,GOLD,false);
@@ -292,7 +320,7 @@ public class NativeFrontPagesActivity extends Activity {
     }else if(n==2){
       addText("ကြိုဆိုပါသည်",27,GREEN,true);
       addText("ပိဋကတ်တော် လေ့လာရေး",18,INK,false);
-      button("☸   ပိဋကတ်တော် အမျိုးအစားများ",4);
+      button("☸   ပိဋကတ်သုံးပုံ Menu",4);
       button("▤   စာအုပ်များ",5);button("📖   စာအုပ်ဖတ်စက်",6);
       button("⌕   အကြောင်းအရာ ရှာဖွေရန်",10);
       button("🔖   စာမှတ်များနှင့် မှတ်စု",12);
