@@ -33,6 +33,7 @@ public class NativeFrontPagesActivity extends Activity {
     item.setOnClickListener(v->{try{startActivity(new Intent(Intent.ACTION_VIEW,android.net.Uri.parse(url)));}catch(Exception e){Toast.makeText(this,"Browser ဖွင့်၍မရပါ",Toast.LENGTH_SHORT).show();}});
   }
   private void go(int p){
+    if(p==21){startActivity(new Intent(this,MyanmarCoverageActivity.class));return;}
     if(p==3){toggleMenu();return;}
     if(p<=20){render(p);return;}
     Intent i=new Intent(this,ExactScreensActivity.class);i.putExtra("openPage",p);startActivity(i);
@@ -108,6 +109,7 @@ public class NativeFrontPagesActivity extends Activity {
       button("☸  ပိဋကတ် ၄၅ ကျမ်း Offline Library",4);
       button("စာအုပ်ဖွင့်ဖတ်ရန်",6);
       button("Advanced Search",14);
+      button("Myanmar Translation Coverage",21);
       button("Help — စာအုပ်ရွေးနည်း",7);
       addText("Online Reference Edition — Chaṭṭha Saṅgāyana Tipiṭaka (CST), digitized by VRI.",14,INK,false);
       addText("tipitakaonline.org ၏ မြန်မာဘာသာပြန်သည် AI-generated ဖြစ်ပြီး လူပညာရှင်များက မစိစစ်ရသေးပါ။ Offline APK ထဲသို့ အတည်ပြုပြီးသား မြန်မာရှင်းလင်းချက်အဖြစ် မထည့်သွင်းထားပါ။",14,INK,false);
