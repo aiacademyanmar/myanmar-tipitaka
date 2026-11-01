@@ -60,7 +60,7 @@ def import_rows(db, csv_path):
             v={k:(row.get(k) or "").strip() for k in COLUMNS}
             if any(not x for x in v.values()):
                 raise ValueError(f"Row {line}: missing required review, rights, text or source field")
-            if not re.search(r"[\\u1000-\\u109F]",v["text_my"]):
+            if not re.search(r"[\u1000-\u109F]",v["text_my"]):
                 raise ValueError(f"Row {line}: text_my must contain Myanmar Unicode")
             if not re.fullmatch(r"[0-9a-fA-F]{64}",v["source_pali_sha256"]):
                 raise ValueError(f"Row {line}: source_pali_sha256 must be a 64-character SHA-256 hex digest")
