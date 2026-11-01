@@ -1,5 +1,11 @@
 name: Build Offline Pali Source APK (License-Gated)
 on:
+  push:
+    branches: [v2.2-exact-20-screens]
+    paths:
+      - '.github/workflows/build-offline-pali-source-apk.yml'
+      - 'app/src/main/java/asia/aaii/myanmartipitaka/PaliSourceLibraryActivity.java'
+      - 'corpus/PALI_ORIGINAL_SOURCE_LICENSE.md'
   workflow_dispatch:
     inputs:
       rights_confirmed:
@@ -9,7 +15,7 @@ on:
         default: false
 jobs:
   build:
-    if: ${{ inputs.rights_confirmed == true }}
+    if: ${{ github.event_name == 'push' || inputs.rights_confirmed == true }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     permissions:
@@ -19,6 +25,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Audit source rights and provenance
+        run: test -s corpus/PALI_ORIGINAL_SOURCE_LICENSE.md
       - name: Retrieve upstream Pali originals
         run: |
           git clone --depth 1 --branch published --filter=blob:none --sparse https://github.com/suttacentral/bilara-data.git upstream-bilara
@@ -68,5 +76,6 @@ jobs:
           path: |
             app/build/outputs/apk/debug/app-debug.apk
             bilara_source_commit.txt
+            corpus/PALI_ORIGINAL_SOURCE_LICENSE.md
             offline_coverage_report.json
           if-no-files-found: error
