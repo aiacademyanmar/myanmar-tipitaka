@@ -31,10 +31,14 @@ def build(dbpath,data_path):
    for s in stanzas:
     db.execute("INSERT INTO mangala_pali_stanzas VALUES(?,?,?)",(s["stanza"],"".join(x["text"] for x in s["segments"]),json.dumps([x["segment"] for x in s["segments"]],ensure_ascii=False)))
    for group,title,stanza,item in items:
-    db.execute("INSERT INTO mangala_blessings VALUES(?,?,?,?,?,?,?,?)",(item["number"],group,title,stanza,item["title"],item["explanation"],item["status"],"Sutta Nipata 2.4 / "+stanza))
+    # Snp 2.4 opening is numbered 1–2; the ten blessing stanzas are 3–12.
+    source_stanza=group+2
+    db.execute("INSERT INTO mangala_blessings VALUES(?,?,?,?,?,?,?,?)",(item["number"],group,title,str(source_stanza),item["title"],item["explanation"],item["status"],f"Sutta Nipata 2.4:{source_stanza}"))
   counts=db.execute("SELECT COUNT(*),COUNT(DISTINCT group_no) FROM mangala_blessings").fetchone()
   pcount=db.execute("SELECT COUNT(*) FROM mangala_pali_stanzas").fetchone()[0]
   if counts!=(38,10) or pcount!=13:raise ValueError((counts,pcount))
+  unmapped=db.execute("SELECT COUNT(*) FROM mangala_blessings b LEFT JOIN mangala_pali_stanzas p ON p.stanza=CAST(b.stanza_ref AS INTEGER) WHERE p.stanza IS NULL OR LENGTH(TRIM(p.pali_text))=0").fetchone()[0]
+  if unmapped:raise ValueError(f"{unmapped} blessings do not map to a Pali stanza")
  return {"blessings":38,"groups":10,"pali_stanzas":13}
 def main():
  p=argparse.ArgumentParser();p.add_argument("--database",type=pathlib.Path,default=ROOT/"app/src/main/assets/tipitaka_offline.sqlite");p.add_argument("--source",type=pathlib.Path,default=ROOT/"corpus/mangala_sutta_38_my_drafts.json");a=p.parse_args()
