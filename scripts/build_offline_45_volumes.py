@@ -56,7 +56,7 @@ def pick_volume(path):
     if path.startswith("sutta/kn/cnd/"):return 30
     if path.startswith("sutta/kn/ps/"):return 31
     n=source_num(path,r"^sutta/kn/tha-ap/tha-ap(\d+)_")
-    if n is not None:return 32 if n<=410 else 33
+    if n is not None:return 32 if n<=412 else 33
     if path.startswith("sutta/kn/thi-ap/") or path.startswith("sutta/kn/bv/") or path.startswith("sutta/kn/cp/"):return 33
     if path.startswith("abhidhamma/ds/"):return 34
     if path.startswith("abhidhamma/vb/"):return 35
