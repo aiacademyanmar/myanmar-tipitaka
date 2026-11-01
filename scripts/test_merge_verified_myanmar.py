@@ -75,7 +75,7 @@ class ReviewedMyanmarImporterTests(unittest.TestCase):
         MODULE.create_table(self.db)
         row=dict(self.row,rights_evidence="")
         self.write(row)
-        with self.assertRaisesRegex(ValueError,"incomplete review"):
+        with self.assertRaisesRegex(ValueError,"missing required review, rights, text or source field"):
             MODULE.import_rows(self.db,self.csv)
 
 if __name__=="__main__":
