@@ -6,6 +6,9 @@ on:
       - '.github/workflows/build-offline-pali-source-apk.yml'
       - 'app/src/main/java/asia/aaii/myanmartipitaka/PaliSourceLibraryActivity.java'
       - 'corpus/PALI_ORIGINAL_SOURCE_LICENSE.md'
+      - 'scripts/build_offline_45_volumes.py'
+      - 'app/src/main/java/asia/aaii/myanmartipitaka/TipitakaLibraryActivity.java'
+      - 'app/src/main/java/asia/aaii/myanmartipitaka/OfflineCorpusInstaller.java'
   workflow_dispatch:
     inputs:
       rights_confirmed:
@@ -45,6 +48,17 @@ jobs:
             assert count>400000, f"Unexpectedly incomplete corpus: {count}"
             print(f"Offline original Pali segments in APK asset: {count}")
           PY
+      - name: Create original-Pali 45-volume offline SQLite
+        run: |
+          python scripts/build_offline_45_volumes.py upstream-bilara/root/pli/ms --output app/src/main/assets/tipitaka_offline.sqlite --source-commit "$(cat bilara_source_commit.txt)" --report offline_45_volume_mapping_report.json
+          python - <<'PY'
+          import json,sqlite3
+          r=json.load(open('offline_45_volume_mapping_report.json'))
+          assert r['volumes_with_source_text']==45,r
+          with sqlite3.connect('app/src/main/assets/tipitaka_offline.sqlite') as db:
+            assert db.execute('SELECT COUNT(DISTINCT volume) FROM paragraphs').fetchone()[0]==45
+            assert db.execute('SELECT COUNT(*) FROM paragraphs').fetchone()[0]>100000
+          PY
       - name: Install UI image importer
         run: python -m pip install 'Pillow>=10,<12' 'gdown>=5,<6'
       - name: Import original 20 UI screens
@@ -72,10 +86,11 @@ jobs:
           "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose app/build/outputs/apk/debug/app-debug.apk
       - uses: actions/upload-artifact@v4
         with:
-          name: Myanmar-Tipitaka-Offline-Pali-Source-APK-Not-MCU-45
+          name: Myanmar-Tipitaka-45-Offline-Pali-Reader-APK-Edition-Provisional
           path: |
             app/build/outputs/apk/debug/app-debug.apk
             bilara_source_commit.txt
             corpus/PALI_ORIGINAL_SOURCE_LICENSE.md
             offline_coverage_report.json
+            offline_45_volume_mapping_report.json
           if-no-files-found: error
