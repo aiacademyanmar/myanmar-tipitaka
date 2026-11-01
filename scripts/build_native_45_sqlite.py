@@ -53,11 +53,14 @@ try:
   v=int(r["volume_id"]);prefix=r["source_file_prefix"].strip().rstrip("/")
   start=r["start_segment_id"].strip();end=r["end_segment_id"].strip()
   # Require both endpoint segments to be inside the same exact source file.
-  endpoints=src.execute("SELECT segment_id,source_file FROM source_segments WHERE segment_id IN (?,?)",(start,end)).fetchall()
-  if len(endpoints)!=2 or endpoints[0][1]!=endpoints[1][1]:raise ValueError(f"Volume {v}: endpoints missing or not in same source file")
-  source_file=endpoints[0][1]
+  endpoints=src.execute("SELECT rowid,segment_id,source_file FROM source_segments WHERE segment_id IN (?,?)",(start,end)).fetchall()
+  if len(endpoints)!=2 or endpoints[0][2]!=endpoints[1][2]:raise ValueError(f"Volume {v}: endpoints missing or not in same source file")
+  source_file=endpoints[0][2]
+  endpoint_rows={x[1]:x[0] for x in endpoints}
+  start_row,end_row=endpoint_rows[start],endpoint_rows[end]
+  if start_row>end_row:raise ValueError(f"Volume {v}: start endpoint follows end endpoint in source order")
   if not (source_file.startswith(prefix+"/") or source_file.startswith(prefix+"_")):raise ValueError(f"Volume {v}: endpoint source file does not match approved prefix")
-  ordered=src.execute("SELECT segment_id,body,source_file,sha256 FROM source_segments WHERE source_file=? AND segment_id>=? AND segment_id<=? ORDER BY segment_id",(source_file,start,end)).fetchall()
+  ordered=src.execute("SELECT segment_id,body,source_file,sha256 FROM source_segments WHERE source_file=? AND rowid BETWEEN ? AND ? ORDER BY rowid",(source_file,start_row,end_row)).fetchall()
   ids=[x[0] for x in ordered]
   if not ids or ids[0]!=start or ids[-1]!=end:raise ValueError(f"Volume {v}: exact inclusive boundaries cannot be resolved")
   duplicate=used.intersection(ids)
