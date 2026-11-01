@@ -1,69 +1,80 @@
 package asia.aaii.myanmartipitaka;
 import android.app.*;
-import android.database.*;
-import android.database.sqlite.*;
-import android.graphics.*;
-import android.os.*;
+import android.content.*;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.graphics.Color;
 import android.view.*;
 import android.widget.*;
-import java.io.*;
+import java.io.File;
 
-/** Distraction-free offline Dhammapada Yamakavagga reader: Pali first, optional Myanmar draft popup. */
+/** Offline Dhammapada: 423 Pali verses / 26 chapters. Myanmar draft labels never claim review. */
 public final class DhammapadaYamakavaggaActivity extends Activity {
-  private SQLiteDatabase db; private LinearLayout list;
-  private final int GREEN=0xff144638,CREAM=0xfffaf6eb;
-  private volatile boolean closed=false;
+  private SQLiteDatabase db;
+  private LinearLayout list;
+  private Spinner chapters;
+  private int chapter=1;
+  private boolean destroyed=false;
+  private static final int GREEN=0xff144638,CREAM=0xfffaf6eb;
+  private final String[] names={"ယမကဝဂ်","အပ္ပမာဒဝဂ်","စိတ္တဝဂ်","ပုပ္ဖဝဂ်","ဗာလဝဂ်","ပဏ္ဍိတဝဂ်","အရဟန္တဝဂ်","သဟဿဝဂ်","ပါပဝဂ်","ဒဏ္ဍဝဂ်","ဇရာဝဂ်","အတ္တဝဂ်","လောကဝဂ်","ဗုဒ္ဓဝဂ်","သုခဝဂ်","ပိယဝဂ်","ကောဓဝဂ်","မလဝဂ်","ဓမ္မဋ္ဌဝဂ်","မဂ္ဂဝဂ်","ပကိဏ္ဏကဝဂ်","နိရယဝဂ်","နာဂဝဂ်","တဏှာဝဂ်","ဘိက္ခုဝဂ်","ဗြာဟ္မဏဝဂ်"};
   private int dp(int x){return (int)(x*getResources().getDisplayMetrics().density+.5f);}
-  private TextView text(String s,int sp){TextView t=new TextView(this);t.setText(s);t.setTextSize(sp);t.setTextColor(GREEN);
-    t.setPadding(dp(16),dp(13),dp(16),dp(13));return t;}
-  private void note(String s){list.addView(text(s,17));}
+  private TextView label(String s,int sp){TextView t=new TextView(this);t.setText(s);t.setTextSize(sp);t.setTextColor(GREEN);t.setPadding(dp(16),dp(12),dp(16),dp(12));return t;}
   @Override public void onCreate(Bundle b){
     super.onCreate(b);getWindow().setStatusBarColor(GREEN);
     LinearLayout root=new LinearLayout(this);root.setOrientation(1);root.setBackgroundColor(CREAM);
-    TextView header=text("☸ ဓမ္မပဒ — ယမကဝဂ်",22);header.setTextColor(-1);header.setBackgroundColor(GREEN);root.addView(header);
-    TextView description=text("Dhammapada • Yamakavagga • ဂါထာ ၁–၂၀\nပါဠိမူရင်းကိုဖတ်ရန် • ဂါထာကိုနှိပ်လျှင် မြန်မာဘာသာပြန် Draft Popup",15);
-    root.addView(description);
-    ScrollView scroll=new ScrollView(this);list=new LinearLayout(this);list.setOrientation(1);
-    scroll.addView(list);root.addView(scroll,new LinearLayout.LayoutParams(-1,0,1));
-    TextView close=text("‹ ပြန်ရန်",16);close.setTextColor(-1);close.setBackgroundColor(GREEN);
-    root.addView(close);close.setOnClickListener(v->finish());setContentView(root);
-    note("Offline ကျမ်းစာကို ဖွင့်နေပါသည်…");
+    TextView head=label("☸ ဓမ္မပဒ — ၂၆ ဝဂ်",22);head.setBackgroundColor(GREEN);head.setTextColor(Color.WHITE);root.addView(head);
+    root.addView(label("Dhammapada · 423 Pāli verses · Offline Reader",15));
+    chapters=new Spinner(this);chapters.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item,names));root.addView(chapters);
+    chapters.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener(){
+      public void onNothingSelected(android.widget.AdapterView<?> p){}
+      public void onItemSelected(android.widget.AdapterView<?> p,View v,int position,long id){chapter=position+1;if(db!=null)showChapter();}
+    });
+    ScrollView scroll=new ScrollView(this);list=new LinearLayout(this);list.setOrientation(1);scroll.addView(list);
+    root.addView(scroll,new LinearLayout.LayoutParams(-1,0,1));
+    TextView back=label("‹ ပြန်ရန်",16);back.setTextColor(Color.WHITE);back.setBackgroundColor(GREEN);root.addView(back);back.setOnClickListener(v->finish());
+    setContentView(root);list.addView(label("Offline ကျမ်းစာဒေတာကို ဖွင့်နေပါသည်…",17));
     new Thread(()->{
       SQLiteDatabase opened=null;
       try{
         File f=OfflineCorpusInstaller.prepare(getApplicationContext());
         opened=SQLiteDatabase.openDatabase(f.getAbsolutePath(),null,SQLiteDatabase.OPEN_READONLY);
-        final java.util.ArrayList<String[]> verses=new java.util.ArrayList<>();
-        try(Cursor c=opened.rawQuery("SELECT verse,pali_text,my_draft,translation_status FROM dhammapada_yamakavagga ORDER BY verse",null)){
-          while(c.moveToNext())verses.add(new String[]{c.getString(0),c.getString(1),c.getString(2),c.getString(3)});
+        try(Cursor c=opened.rawQuery("SELECT COUNT(*),COUNT(DISTINCT chapter) FROM dhammapada_verses",null)){
+          if(!c.moveToFirst()||c.getInt(0)!=423||c.getInt(1)!=26)throw new IllegalStateException("423 verses / 26 chapters incomplete");
         }
-        if(verses.size()!=20)throw new IOException("Incomplete Yamakavagga");
-        db=opened;
-        runOnUiThread(()->{if(closed)return;list.removeAllViews();
-          for(String[] verse:verses){
-            TextView t=text("ဂါထာ "+verse[0]+"\n\n"+verse[1],21);
-            t.setBackgroundColor(-1);LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(-1,-2);
-            lp.setMargins(dp(10),dp(5),dp(10),dp(5));list.addView(t,lp);
-            t.setOnClickListener(v->popup(verse));
-          }
-        });
+        if(destroyed){opened.close();return;}
+        db=opened;runOnUiThread(()->{if(!destroyed)showChapter();});
       }catch(Exception e){
-        if(opened!=null && opened!=db)opened.close();
-        String msg=e.getMessage();
-        runOnUiThread(()->{if(!closed){list.removeAllViews();note("စာသားဖွင့်မရပါ — "+msg);}});
+        if(opened!=null&&opened!=db)opened.close();
+        final String msg=e.getMessage();
+        runOnUiThread(()->{if(!destroyed){list.removeAllViews();list.addView(label("စာသားဖွင့်မရပါ — "+msg,17));}});
       }
-    },"dhammapada-offline-reader").start();
+    },"dhp-offline-init").start();
   }
-  private void popup(String[] verse){
+  private void showChapter(){
+    if(db==null||destroyed)return;
+    list.removeAllViews();
+    list.addView(label("ဝဂ် "+chapter+" — "+names[chapter-1],19));
+    try(Cursor c=db.rawQuery("SELECT verse,pali_text,my_draft FROM dhammapada_verses WHERE chapter=? ORDER BY verse",new String[]{Integer.toString(chapter)})){
+      while(c.moveToNext()){
+        final String verse=c.getString(0),pali=c.getString(1),draft=c.getString(2);
+        TextView row=label("ဂါထာ "+verse+"\n\n"+pali,21);
+        row.setBackgroundColor(Color.WHITE);
+        LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(-1,-2);lp.setMargins(dp(10),dp(5),dp(10),dp(5));list.addView(row,lp);
+        row.setOnClickListener(v->popup(verse,pali,draft));
+      }
+    }catch(Exception e){list.addView(label("ကျမ်းစာ SQL ဖတ်၍မရပါ — "+e.getMessage(),17));}
+  }
+  private void popup(String verse,String pali,String draft){
     ScrollView scroll=new ScrollView(this);
-    LinearLayout body=new LinearLayout(this);body.setOrientation(1);body.setPadding(dp(12),dp(12),dp(12),dp(18));
-    body.addView(text("ပါဠိမူရင်း\n"+verse[1],19));
-    TextView status=text("အတည်မပြုရသေးသော မြန်မာဘာသာပြန် Draft",14);status.setTextColor(0xffa15b20);body.addView(status);
-    body.addView(text(verse[2],19));
-    body.addView(text("ဤဘာသာပြန်သည် လေ့လာရေးမူကြမ်းဖြစ်သည်။ ဆရာတော်/ပါဠိပညာရှင်များ အတည်မပြုရသေးပါ။",14));
-    scroll.addView(body);
-    new AlertDialog.Builder(this).setTitle("ဓမ္မပဒ — ဂါထာ "+verse[0]).setView(scroll)
-       .setPositiveButton("ပိတ်မည်",null).show();
+    LinearLayout panel=new LinearLayout(this);panel.setOrientation(1);panel.setPadding(dp(14),dp(14),dp(14),dp(14));
+    panel.addView(label("ပါဠိမူရင်း\n"+pali,19));
+    TextView state=label(draft==null?"မြန်မာဘာသာပြန် မရှိသေးပါ":"မြန်မာဘာသာပြန် Draft · မစိစစ်ရသေးပါ",14);
+    state.setTextColor(0xffa25b21);panel.addView(state);
+    panel.addView(label(draft==null?"ဤဂါထာအတွက် မြန်မာဘာသာပြန် မရရှိသေးပါ။":draft,19));
+    panel.addView(label("ဘာသာပြန်မူကြမ်းများသည် ပါဠိပညာရှင် အတည်ပြုချက်မရသေးပါ။",13));
+    scroll.addView(panel);
+    new AlertDialog.Builder(this).setTitle("ဓမ္မပဒ ဂါထာ "+verse).setView(scroll).setPositiveButton("ပိတ်မည်",null).show();
   }
-  @Override protected void onDestroy(){closed=true;if(db!=null)db.close();super.onDestroy();}
+  @Override protected void onDestroy(){destroyed=true;if(db!=null)db.close();super.onDestroy();}
 }
