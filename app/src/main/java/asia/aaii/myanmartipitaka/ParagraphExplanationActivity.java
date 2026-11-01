@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
+import android.view.View;
 import android.view.Gravity;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -23,7 +26,23 @@ public class ParagraphExplanationActivity extends Activity {
   private static final int GREEN=0xff144638;
   private SQLiteDatabase db;
   private LinearLayout rows,pager;
-  private int volume,page=0;
+  private ScrollView readingScroll;
+  private int volume,page=0,fontSize=21;
+  private static final int CREAM=0xfffaf6eb, INK=0xff193b30, GOLD=0xff96702b;
+  private int dp(int v){return (int)(v*getResources().getDisplayMetrics().density+.5f);}
+  private GradientDrawable bg(int c,int radius){GradientDrawable d=new GradientDrawable();d.setColor(c);d.setCornerRadius(dp(radius));return d;}
+  private void adjustFont(int delta){
+    int target=Math.max(16,Math.min(32,fontSize+delta));
+    if(target==fontSize)return;
+    fontSize=target;
+    getSharedPreferences(PREF,MODE_PRIVATE).edit().putInt("reader_font",target).apply();
+    if(db!=null)loadPage();
+  }
+  private TextView tool(String text,Runnable action){
+    TextView button=new TextView(this);button.setText(text);button.setTextSize(17);button.setTextColor(GREEN);
+    button.setGravity(Gravity.CENTER);button.setPadding(dp(8),dp(11),dp(8),dp(11));
+    button.setOnClickListener(v->action.run());return button;
+  }
   private String selected;
   private boolean hasMyanmarContent=false;
   private volatile boolean destroyed=false;
@@ -39,6 +58,7 @@ public class ParagraphExplanationActivity extends Activity {
   @Override public void onCreate(Bundle state){
     super.onCreate(state);
     volume=Math.max(1,Math.min(45,getIntent().getIntExtra("volume",1)));
+    fontSize=Math.max(16,Math.min(32,getSharedPreferences(PREF,MODE_PRIVATE).getInt("reader_font",21)));
     selected=getIntent().getStringExtra("paragraph_id");
     if(selected==null){
       page=Math.max(0,getSharedPreferences(PREF,MODE_PRIVATE).getInt("volume_"+volume+"_page",0));
@@ -51,9 +71,16 @@ public class ParagraphExplanationActivity extends Activity {
     title.setTextSize(21);title.setTextColor(-1);
     title.setPadding(18,22,16,22);title.setBackgroundColor(GREEN);
     root.addView(title);
-    ScrollView scroll=new ScrollView(this);
+    LinearLayout tools=new LinearLayout(this);
+    tools.setBackground(bg(0xffe9e3d3,12));
+    tools.addView(tool("A−",()->adjustFont(-2)),new LinearLayout.LayoutParams(0,dp(48),1));
+    tools.addView(tool("A+",()->adjustFont(2)),new LinearLayout.LayoutParams(0,dp(48),1));
+    tools.addView(tool("↪ စာမျက်နှာထိပ်",()->readingScroll.smoothScrollTo(0,0)),new LinearLayout.LayoutParams(0,dp(48),2));
+    root.addView(tools);
+    readingScroll=new ScrollView(this);readingScroll.setFillViewport(true);
     rows=new LinearLayout(this);rows.setOrientation(LinearLayout.VERTICAL);
-    scroll.addView(rows);root.addView(scroll,new LinearLayout.LayoutParams(-1,0,1));
+    rows.setPadding(dp(10),dp(7),dp(10),dp(14));
+    readingScroll.addView(rows);root.addView(readingScroll,new LinearLayout.LayoutParams(-1,0,1));
     pager=new LinearLayout(this);root.addView(pager);
     setContentView(root);
     notice("Offline ကျမ်းစာဒေတာကို ဖွင့်နေပါသည်။ ပထမအကြိမ်တွင် SQLite Database ကို ဖုန်းထဲသို့ ကူးယူရပါမည်။");
@@ -105,6 +132,7 @@ public class ParagraphExplanationActivity extends Activity {
   private void loadPage(){
     if(db==null || destroyed)return;
     rows.removeAllViews();pager.removeAllViews();
+    if(readingScroll!=null)readingScroll.post(()->readingScroll.scrollTo(0,0));
     final String translationExpression=hasMyanmarContent?"tr.text_my":"NULL AS text_my";
     final String translationJoin=hasMyanmarContent?
         " LEFT JOIN paragraph_myanmar_content tr ON tr.segment_id=p.segment_id AND tr.content_type='translation' AND tr.reviewed=1 ":"";
@@ -141,12 +169,24 @@ public class ParagraphExplanationActivity extends Activity {
         final String exReviewer2=c.isNull(14)?"":c.getString(14);
         final String exReviewRef=c.isNull(15)?"":c.getString(15);
         final String exReviewedAt=c.isNull(16)?"":c.getString(16);
-        TextView t=new TextView(this);
-        t.setText("§ "+segmentId+"\n"+pali+"\n\n☸ မြန်မာဘာသာပြန်နှင့် ရှင်းလင်းချက်");
-        t.setTextSize(18);t.setTextColor(0xff17493c);
-        t.setPadding(22,18,22,18);
-        rows.addView(t);
-        t.setOnClickListener(v->popup(paraId,segmentId,pali,translation,explanation,source,
+        LinearLayout card=new LinearLayout(this);card.setOrientation(LinearLayout.VERTICAL);
+        card.setBackground(bg(Color.WHITE,14));
+        LinearLayout.LayoutParams cardParams=new LinearLayout.LayoutParams(-1,-2);
+        cardParams.setMargins(dp(2),dp(5),dp(2),dp(7));rows.addView(card,cardParams);
+        TextView ref=new TextView(this);ref.setText("§ "+segmentId);
+        ref.setTextSize(14);ref.setTextColor(GOLD);ref.setPadding(dp(16),dp(12),dp(16),0);card.addView(ref);
+        TextView paliText=new TextView(this);paliText.setText(pali);
+        paliText.setTextSize(fontSize);paliText.setTextColor(INK);
+        paliText.setLineSpacing(dp(5),1.08f);paliText.setTextIsSelectable(true);
+        paliText.setPadding(dp(16),dp(12),dp(16),dp(14));card.addView(paliText);
+        TextView explain=new TextView(this);
+        boolean available=(translation!=null&&!translation.trim().isEmpty()) ||
+          (explanation!=null&&!explanation.trim().isEmpty()) ||
+          (reviewedExplanation!=null&&!reviewedExplanation.trim().isEmpty());
+        explain.setText(available?"☸ မြန်မာဘာသာပြန် / ရှင်းလင်းချက် ဖွင့်ရန် ›":"☸ မြန်မာဘာသာပြန် မရသေးပါ • Popup ›");
+        explain.setTextSize(15);explain.setTextColor(GREEN);
+        explain.setPadding(dp(16),dp(14),dp(16),dp(16));card.addView(explain);
+        explain.setOnClickListener(v->popup(paraId,segmentId,pali,translation,explanation,source,
             trSource,trReviewer1,trReviewer2,trReviewRef,trReviewedAt,
             reviewedExplanation,exSource,exReviewer1,exReviewer2,exReviewRef,exReviewedAt));
         if(selected!=null)popup(paraId,segmentId,pali,translation,explanation,source,
@@ -182,21 +222,25 @@ public class ParagraphExplanationActivity extends Activity {
   private void popup(String paraId,String segmentId,String pali,String translation,String explanation,String source,
       String trSource,String trReviewer1,String trReviewer2,String trReviewRef,String trReviewedAt,
       String reviewedExplanation,String exSource,String exReviewer1,String exReviewer2,String exReviewRef,String exReviewedAt){
+    ScrollView popupScroll=new ScrollView(this);
     LinearLayout box=new LinearLayout(this);box.setOrientation(1);
-    box.setPadding(20,18,20,18);box.setBackgroundColor(0xfffaf6eb);
+    box.setPadding(dp(18),dp(16),dp(18),dp(16));box.setBackgroundColor(CREAM);
     TextView original=new TextView(this);
     original.setText("မူရင်းပါဠိ • "+segmentId+"\n"+pali);
-    original.setTextSize(18);original.setTextColor(0xff194b3d);box.addView(original);
+    original.setTextSize(fontSize);original.setTextColor(INK);
+    original.setLineSpacing(dp(4),1.08f);original.setTextIsSelectable(true);box.addView(original);
     TextView myTranslation=new TextView(this);
     myTranslation.setText((translation==null||translation.trim().isEmpty()?
         "မြန်မာဘာသာပြန် — မရရှိသေးပါ။":"✓ စိစစ်အတည်ပြုထားသော မြန်မာဘာသာပြန်\n"+translation));
-    myTranslation.setTextSize(18);myTranslation.setPadding(0,18,0,10);box.addView(myTranslation);
+    myTranslation.setTextSize(Math.max(17,fontSize-1));myTranslation.setLineSpacing(dp(4),1.07f);
+    myTranslation.setPadding(0,dp(18),0,dp(10));box.addView(myTranslation);
     TextView myExplanation=new TextView(this);
     String explanationText=reviewedExplanation!=null&&!reviewedExplanation.trim().isEmpty()?reviewedExplanation:explanation;
     myExplanation.setText((explanationText==null||explanationText.trim().isEmpty()?
         "မြန်မာရှင်းလင်းချက် — မရရှိသေးပါ။":"✓ စိစစ်အတည်ပြုထားသော မြန်မာရှင်းလင်းချက်\n"+explanationText));
     myExplanation.setTextColor(0xff55422a);
-    myExplanation.setTextSize(18);myExplanation.setPadding(0,16,0,10);box.addView(myExplanation);
+    myExplanation.setTextSize(Math.max(17,fontSize-1));myExplanation.setLineSpacing(dp(4),1.07f);
+    myExplanation.setPadding(0,dp(16),0,dp(10));box.addView(myExplanation);
     addReviewEvidence(box,"ဘာသာပြန်",trSource,trReviewer1,trReviewer2,trReviewRef,trReviewedAt);
     addReviewEvidence(box,"ရှင်းလင်းချက်",exSource,exReviewer1,exReviewer2,exReviewRef,exReviewedAt);
     if(!source.isEmpty()){
@@ -204,8 +248,9 @@ public class ParagraphExplanationActivity extends Activity {
       sourceView.setTextSize(13);box.addView(sourceView);
     }
     boolean saved=getSharedPreferences(PREF,MODE_PRIVATE).getBoolean("bookmark_"+paraId,false);
+    popupScroll.addView(box);
     new AlertDialog.Builder(this).setTitle("☸ ကျမ်းပိုဒ် အဓိပ္ပာယ်")
-      .setView(box)
+      .setView(popupScroll)
       .setNeutralButton(saved?"🔖 Bookmark ဖယ်ရန်":"🔖 Bookmark သိမ်းရန်",(d,w)->{
         getSharedPreferences(PREF,MODE_PRIVATE).edit().putBoolean("bookmark_"+paraId,!saved).apply();
         Toast.makeText(this,!saved?"Bookmark သိမ်းပြီး":"Bookmark ဖယ်ပြီး",Toast.LENGTH_SHORT).show();
