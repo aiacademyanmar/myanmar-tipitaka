@@ -21,6 +21,7 @@ on:
       - 'scripts/build_dhammapada_yamakavagga.py'
       - 'scripts/build_dhammapada_423.py'
       - 'corpus/dhammapada_yamakavagga_my_drafts.csv'
+      - 'corpus/dhammapada_draft_21_99.csv'
       - 'app/src/main/java/asia/aaii/myanmartipitaka/DhammapadaYamakavaggaActivity.java'
       - 'scripts/compare_mcu_exact_45.py'
       - 'corpus/mcu_reference/**'
@@ -96,7 +97,7 @@ jobs:
           db=sqlite3.connect('app/src/main/assets/tipitaka_offline.sqlite')
           verses,chapters=db.execute("SELECT COUNT(*),COUNT(DISTINCT chapter) FROM dhammapada_verses").fetchone()
           assert verses==423 and chapters==26
-          assert db.execute("SELECT COUNT(*) FROM dhammapada_verses WHERE my_draft IS NOT NULL").fetchone()[0]==20
+          assert db.execute("SELECT COUNT(*) FROM dhammapada_verses WHERE my_draft IS NOT NULL").fetchone()[0]==99
           PY
       - name: Import Tipitaka Online CST source passages, references and clearly-labelled AI translations
         run: python scripts/import_tipitakaonline_cst.py --database app/src/main/assets/tipitaka_offline.sqlite --max-pages 1800 --report tipitakaonline_cst_import_report.json
