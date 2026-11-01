@@ -115,7 +115,7 @@ public final class TipitakaLibraryActivity extends Activity {
     TextView close=text("‹ ပြန်ရန်",17);close.setTextColor(Color.WHITE);close.setBackgroundColor(GREEN);root.addView(close);close.setOnClickListener(v->finish());setContentView(root);
   }
   private void openVolume(int index){
-    if(db==null){startActivity(new Intent(this,BookReaderActivity.class));return;}
+    if(db==null){new AlertDialog.Builder(this).setTitle("Offline ကျမ်းဒေတာ ပြင်ဆင်နေဆဲ").setMessage("ပါဠိကျမ်းဒေတာကို ဖုန်းထဲသို့ ကူးယူနေဆဲ သို့မဟုတ် မဖွင့်နိုင်သေးပါ။ ခဏစောင့်ပြီး ပြန်စမ်းပါ။").setPositiveButton("ပြန်စစ်မည်",(d,w)->recreate()).setNegativeButton("ပိတ်မည်",null).show();return;}
     Intent popup=new Intent(this,ParagraphExplanationActivity.class);popup.putExtra("volume",index+1);startActivity(popup);return;
   }
   @Override protected void onDestroy(){if(db!=null)db.close();super.onDestroy();}
