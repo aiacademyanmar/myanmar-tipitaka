@@ -111,6 +111,7 @@ public final class TipitakaLibraryActivity extends Activity {
     }
     row("🔖  သိမ်းထားသော ကျမ်းပိုဒ် Bookmark များ",()->startActivity(new Intent(this,OfflineBookmarksActivity.class)));
     row("⌕  Offline ကျမ်းပိုဒ် စာသားရှာရန်",()->startActivity(new Intent(this,OfflineSearchActivity.class)));
+    row("☸  ပါဠိမူရင်း Source Library (Offline Dataset ရှိပါက)",()->startActivity(new Intent(this,PaliSourceLibraryActivity.class)));
     row("📖  မိမိစာအုပ်ဖိုင် ဖွင့်ဖတ်ရန်",()->startActivity(new Intent(this,BookReaderActivity.class)));
     TextView close=text("‹ ပြန်ရန်",17);close.setTextColor(Color.WHITE);close.setBackgroundColor(GREEN);root.addView(close);close.setOnClickListener(v->finish());setContentView(root);
   }
