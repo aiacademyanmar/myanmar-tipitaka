@@ -148,7 +148,7 @@ public class NativeFrontPagesActivity extends Activity {
       addText("Myanmar Tipitaka",28,GREEN,true);
       addText("About • Help • App Information",16,GOLD,true);
       addText("မြန်မာ့ပိဋကတ်တော် လေ့လာရေး Native Android Application",17,INK,false);
-      addText("Version 2.10  •  by AAII",16,GREEN,true);
+      addText("Version 2.3.4.8  •  by AAII",16,GREEN,true);
       addText("ပါဝင်သောလုပ်ဆောင်ချက်များ",19,GREEN,true);
       addText("• ၄၅ ကျမ်း Offline Pāli Reader\n• ကျမ်းပိုဒ်အလိုက် စာဖတ်ခြင်းနှင့် စာမျက်နှာပြောင်းခြင်း\n• Bookmark နှင့် Continue Reading\n• Offline PDF / EPUB / TXT Reader\n• မြန်မာဘာသာပြန်နှင့် ရှင်းလင်းချက် Popup",16,INK,false);
       TextView offlineHelp=text("☸  Offline ဓမ္မစာများ ဖတ်ရန်",18,Color.WHITE,true);offlineHelp.setBackground(bg(GREEN,16));content.addView(offlineHelp);offlineHelp.setOnClickListener(v->startActivity(new Intent(this,OfflineDhammaActivity.class)));
