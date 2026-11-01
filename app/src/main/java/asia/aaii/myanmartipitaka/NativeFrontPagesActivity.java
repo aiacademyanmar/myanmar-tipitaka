@@ -61,7 +61,6 @@ public class NativeFrontPagesActivity extends Activity {
   }
   private void go(int p){
     if(p==22){startActivity(new Intent(this,DhammapadaYamakavaggaActivity.class));return;}
-    if(p==21){startActivity(new Intent(this,MyanmarCoverageActivity.class));return;}
     if(p==3){toggleMenu();return;}
     if(p<=21){render(p);return;}
     Intent i=new Intent(this,ExactScreensActivity.class);i.putExtra("openPage",p);startActivity(i);
