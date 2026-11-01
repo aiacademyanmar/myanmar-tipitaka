@@ -64,6 +64,7 @@ public class NativeFrontPagesActivity extends Activity {
     if(p==23){startActivity(new Intent(this,OfflineBookmarksActivity.class));return;}
     if(p==24){startActivity(new Intent(this,OfflineSearchActivity.class));return;}
     if(p==25){startActivity(new Intent(this,ReaderStateBackupActivity.class));return;}
+    if(p==26){startActivity(new Intent(this,ReferenceLibraryActivity.class));return;}
     if(p==3){toggleMenu();return;}
     if(p<=21){render(p);return;}
     Intent i=new Intent(this,ExactScreensActivity.class);i.putExtra("openPage",p);startActivity(i);
@@ -312,6 +313,7 @@ public class NativeFrontPagesActivity extends Activity {
       addText("Tipiṭaka  ·  45 ကျမ်း  ·  အခမဲ့",16,GOLD,true);
       addText("ထေရဝါဒ ပါဠိဘာသာ ပိဋကတ်သုံးပုံ (တိပိဋကတ်) ကို အောက်ပါ Menu များမှတစ်ဆင့် ဖတ်ရှုနိုင်ပါသည်။ ဝိနည်းပိဋကတ်၊ သုတ္တပိဋကတ်နှင့် အဘိဓမ္မပိဋကတ်တို့ကို လေ့လာနိုင်ပါသည်။",15,INK,false);
       menuCard("📚","ကျမ်းဖတ်ခန်း (45 ကျမ်း)","ပိဋကတ် ၄၅ ကျမ်း • Native Offline Reader",()->startActivity(new Intent(this,TipitakaLibraryActivity.class)));
+      menuCard("🌐","Reference စာအုပ်များ Online ဖတ်ရန်","မြန်မာပြန်စာအုပ်များ • PDF • University Libraries",()->startActivity(new Intent(this,ReferenceLibraryActivity.class)));
       menuCard("📊","မြန်မာဘာသာပြန် တိုးတက်မှု","ကျမ်း ၄၅ ကျမ်း • အတည်ပြုဘာသာပြန်နှင့် ရှင်းလင်းချက် Coverage",()->startActivity(new Intent(this,MyanmarCoverageActivity.class)));
       menuCard("✍","မြန်မာစာတည်းဖြတ်ရေးခန်း","ဘာသာပြန်နှင့် ရှင်းလင်းချက် Draft • Reviewer Workflow",()->startActivity(new Intent(this,MyanmarEditorialActivity.class)));
       menuCard("📦","Standalone Publisher","Direct SQLite Publish • Coverage • Backup / Restore",()->startActivity(new Intent(this,MyanmarPublisherActivity.class)));
@@ -327,6 +329,7 @@ public class NativeFrontPagesActivity extends Activity {
       addText("ပိဋကတ်တော် စာအုပ်များ",26,GREEN,true);
       addText("ပိဋကတ် ၄၅ ကျမ်း Offline Library နှင့် ကိုယ်ပိုင်စာအုပ်ဖိုင်များ",16,GOLD,false);
       button("☸  ပိဋကတ် ၄၅ ကျမ်း Offline ဖတ်ရန်",4);
+      button("🌐  မြန်မာပြန် Reference စာအုပ်များ Online",26);
       button("📖  PDF / EPUB / TXT ဖိုင်ဖွင့်ရန်",6);
       button("သုတ္တန်ပိဋကတ် — နိကာယ်ငါးရပ်",19);
       button("ဝိနည်းပိဋကတ်",6);
@@ -368,7 +371,7 @@ public class NativeFrontPagesActivity extends Activity {
       for(int i=0;i<targets.length;i++)button(String.format(java.util.Locale.US,"%02d  %s",targets[i],names[i]),targets[i]);
     }
     menuPanel=new LinearLayout(this);menuPanel.setOrientation(LinearLayout.VERTICAL);menuPanel.setBackground(bg(Color.WHITE,18));menuPanel.setVisibility(View.GONE);
-    ScrollView menuScroll=new ScrollView(this);LinearLayout items=new LinearLayout(this);items.setOrientation(LinearLayout.VERTICAL);String[] menuTitles={"Home","Categories","Books","Native Reader","Library","Continue Reading","Learning","Search","Search Results","Bookmarks","Reading History","Advanced Search","Abhidhamma Books","Abhidhamma Reader","Dhamma Learning","Mangala Sutta","Five Nikayas","Satipaṭṭhāna","About"};int[] menuTargets={2,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21};
+    ScrollView menuScroll=new ScrollView(this);LinearLayout items=new LinearLayout(this);items.setOrientation(LinearLayout.VERTICAL);String[] menuTitles={"Home","Categories","Books","Online Reference Library","Native Reader","Library","Continue Reading","Learning","Search","Search Results","Bookmarks","Reading History","Advanced Search","Abhidhamma Books","Abhidhamma Reader","Dhamma Learning","Mangala Sutta","Five Nikayas","Satipaṭṭhāna","About"};int[] menuTargets={2,4,5,26,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21};
     for(int i=0;i<menuTitles.length;i++){final int target=menuTargets[i];TextView item=text(menuTitles[i],17,GREEN,true);items.addView(item);item.setOnClickListener(v->go(target));}
     menuScroll.addView(items);menuPanel.addView(menuScroll,new LinearLayout.LayoutParams(-1,dp(235)));
     root.addView(menuPanel);
