@@ -1,4 +1,4 @@
-name: Myanmar Tipitaka V2.3.4.8.6 Native Reader Integration + QA + APK
+name: Myanmar Tipitaka V2.3.4.8.7 Bookmarks Notes History + APK
 
 on:
   workflow_dispatch:
@@ -40,7 +40,7 @@ jobs:
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Myanmar-Tipitaka-V2.3.4.8.6-debug-APK
+          name: Myanmar-Tipitaka-V2.3.4.8.7-debug-APK
           path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 14
