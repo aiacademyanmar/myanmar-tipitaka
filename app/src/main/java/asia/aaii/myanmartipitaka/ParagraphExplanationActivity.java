@@ -212,6 +212,7 @@ public class ParagraphExplanationActivity extends Activity {
         if(selected!=null)popup(paraId,segmentId,pali,translation,explanation,source,
             trSource,trReviewer1,trReviewer2,trReviewRef,trReviewedAt,
             reviewedExplanation,exSource,exReviewer1,exReviewer2,exReviewRef,exReviewedAt);
+        if(count==0)saveHistory(paraId,segmentId);
         count++;
       }
       if(count==0 && page>0 && selected==null){
