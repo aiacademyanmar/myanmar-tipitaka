@@ -8,6 +8,7 @@
     <activity android:name=".PaliReferenceActivity" android:exported="false"/>
     <activity android:name=".DhammapadaYamakavaggaActivity" android:exported="false"/>
     <activity android:name=".MyanmarCoverageActivity" android:exported="false"/>
+    <activity android:name=".ReaderStateBackupActivity" android:exported="false"/>
     <activity android:name=".OfflineBookmarksActivity" android:exported="false"/>
     <activity android:name=".OfflineSearchActivity" android:exported="false"/>
     <activity android:name=".ParagraphExplanationActivity" android:exported="false"/>
