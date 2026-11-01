@@ -56,7 +56,7 @@ public final class MyanmarCoverageActivity extends Activity {
       if(has){
         translations=count(db,"SELECT COUNT(*) FROM paragraph_myanmar_content WHERE content_type='translation' AND reviewed=1 AND length(trim(text_my))>0");
         explanations=count(db,"SELECT COUNT(*) FROM paragraph_myanmar_content WHERE content_type='explanation' AND reviewed=1 AND length(trim(text_my))>0");
-        both=count(db,"SELECT COUNT(*) FROM paragraphs p WHERE EXISTS(SELECT 1 FROM paragraph_myanmar_content t WHERE t.segment_id=p.segment_id AND t.content_type='translation' AND t.reviewed=1 AND length(trim(t.text_my))>0) AND EXISTS(SELECT 1 FROM paragraph_myanmar_content e WHERE e.segment_id=p.segment_id AND e.content_type='explanation' AND e.reviewed=1 AND length(trim(e.text_my))>0)");
+        both=count(db,"SELECT COUNT(*) FROM paragraphs p WHERE EXISTS(SELECT 1 FROM paragraph_myanmar_content t WHERE t.paragraph_id=p.id AND t.content_type='translation' AND t.reviewed=1 AND length(trim(t.text_my))>0) AND EXISTS(SELECT 1 FROM paragraph_myanmar_content e WHERE e.paragraph_id=p.id AND e.content_type='explanation' AND e.reviewed=1 AND length(trim(e.text_my))>0)");
       }
       long missingTranslation=Math.max(0,pali-translations);
       long missingExplanation=Math.max(0,pali-explanations);
@@ -69,6 +69,34 @@ public final class MyanmarCoverageActivity extends Activity {
       card("နှစ်မျိုးလုံး ရရှိသောစာပိုဒ်",String.format(Locale.US,"%,d",both),"ဘာသာပြန်နှင့် ရှင်းလင်းချက် နှစ်မျိုးလုံးရှိခြင်း");
       card("ဘာသာပြန်ရန် ကျန်ရှိ",String.format(Locale.US,"%,d",missingTranslation),pct(missingTranslation,pali)+" မပြီးသေး");
       card("ရှင်းလင်းချက်ရေးရန် ကျန်ရှိ",String.format(Locale.US,"%,d",missingExplanation),pct(missingExplanation,pali)+" မပြီးသေး");
+      body.addView(label("ကျမ်းတစ်ကျမ်းချင်းစီ၏ အတည်ပြုအကြောင်းအရာ",18,GREEN,true));
+      if(has){
+        try(Cursor volumesCursor=db.rawQuery(
+          "SELECT p.volume,COUNT(p.id),"+
+          "SUM(CASE WHEN EXISTS(SELECT 1 FROM paragraph_myanmar_content t WHERE t.paragraph_id=p.id AND t.content_type='translation' AND t.reviewed=1 AND length(trim(t.text_my))>0) THEN 1 ELSE 0 END),"+
+          "SUM(CASE WHEN EXISTS(SELECT 1 FROM paragraph_myanmar_content e WHERE e.paragraph_id=p.id AND e.content_type='explanation' AND e.reviewed=1 AND length(trim(e.text_my))>0) THEN 1 ELSE 0 END) "+
+          "FROM paragraphs p WHERE length(trim(p.body))>0 GROUP BY p.volume ORDER BY p.volume",null)){
+          while(volumesCursor.moveToNext()){
+            int volume=volumesCursor.getInt(0);
+            long total=volumesCursor.getLong(1),tr=volumesCursor.getLong(2),ex=volumesCursor.getLong(3);
+            LinearLayout item=new LinearLayout(this);item.setOrientation(1);
+            GradientDrawable itemBg=new GradientDrawable();itemBg.setColor(Color.WHITE);itemBg.setCornerRadius(dp(14));item.setBackground(itemBg);
+            item.addView(label("ကျမ်း "+volume+"  •  ပါဠိ "+String.format(Locale.US,"%,d",total)+" ပိုဒ်",15,GREEN,true));
+            item.addView(label("ဘာသာပြန်  "+String.format(Locale.US,"%,d",tr)+" / "+String.format(Locale.US,"%,d",total)+"  ("+pct(tr,total)+")",13,0xff665b49,false));
+            ProgressBar trBar=new ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal);trBar.setMax(100);trBar.setProgress(total==0?0:(int)(100*tr/total));
+            item.addView(trBar,new LinearLayout.LayoutParams(-1,dp(8)));
+            item.addView(label("ရှင်းလင်းချက်  "+String.format(Locale.US,"%,d",ex)+" / "+String.format(Locale.US,"%,d",total)+"  ("+pct(ex,total)+")",13,0xff665b49,false));
+            ProgressBar exBar=new ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal);exBar.setMax(100);exBar.setProgress(total==0?0:(int)(100*ex/total));
+            item.addView(exBar,new LinearLayout.LayoutParams(-1,dp(8)));
+            Button open=new Button(this);open.setText("ဤကျမ်းကို ဖတ်ရှုရန်");
+            open.setOnClickListener(v->{Intent intent=new Intent(this,ParagraphExplanationActivity.class);intent.putExtra("volume",volume);startActivity(intent);});
+            item.addView(open);
+            LinearLayout.LayoutParams itemLp=new LinearLayout.LayoutParams(-1,-2);itemLp.setMargins(dp(4),dp(6),dp(4),dp(6));body.addView(item,itemLp);
+          }
+        }
+      }else{
+        body.addView(label("မြန်မာအတည်ပြုစာသား Database မရှိသေးပါ။ Import လုပ်ပြီးမှ ကျမ်းအလိုက် Coverage ပြသနိုင်ပါမည်။",14,0xff665b49,false));
+      }
       TextView note=label("အရေးကြီး — AI ထုတ်စာသား၊ မစိစစ်ရသေးသောစာသားနှင့် အတည်ပြုခွင့်မရှိသော ရင်းမြစ်များကို အတည်ပြုပြီးစာရင်းထဲ မထည့်ပါ။ ကျမ်း ၄၅ အုပ်လုံး၏ အရေအတွက်ပြည့်စုံမှုသည် မြန်မာဘာသာပြန် ၁၀၀% ပြည့်စုံသည်ဟု မဆိုလိုပါ။",14,0xff665b49,false);
       body.addView(note);
     }catch(Exception e){body.addView(label("Coverage အချက်အလက်ဖတ်၍မရပါ။ Database schema ကို စစ်ဆေးပါ။",16,GREEN,true));}
