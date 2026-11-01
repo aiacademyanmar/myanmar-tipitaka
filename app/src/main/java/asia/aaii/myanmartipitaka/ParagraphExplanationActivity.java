@@ -38,7 +38,7 @@ public class ParagraphExplanationActivity extends Activity {
         TextView t=new TextView(this);t.setText("§"+c.getString(0)+"\\n"+body+"\\n\\n☸ မြန်မာရှင်းလင်းချက် ကြည့်ရန်");
         t.setTextSize(18);t.setTextColor(0xff17493c);t.setPadding(22,18,22,18);rows.addView(t);
         t.setOnClickListener(v->popup(paraId,body,translation,explain,ref));
-        if(selected!=null)popup(paraId,body,explain,ref);
+        if(selected!=null)popup(paraId,body,translation,explain,ref);
         count++;
       }
     }
