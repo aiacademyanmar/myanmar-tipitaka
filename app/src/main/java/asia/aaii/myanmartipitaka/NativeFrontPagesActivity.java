@@ -246,16 +246,18 @@ public class NativeFrontPagesActivity extends Activity {
       addText("စာအုပ်အုပ်စုတစ်ခုကို ရွေးပြီး ဖတ်ရှုနိုင်ပါသည်။",15,INK,false);
     }else if(n==5){
       addText("ပိဋကတ်တော် စာအုပ်များ",26,GREEN,true);
-      addText("စာအုပ်ဖတ်စက်အတွက် ဖိုင်ရွေးချယ်ပါ",16,GOLD,false);
+      addText("ပိဋကတ် ၄၅ ကျမ်း Offline Library နှင့် ကိုယ်ပိုင်စာအုပ်ဖိုင်များ",16,GOLD,false);
+      button("☸  ပိဋကတ် ၄၅ ကျမ်း Offline ဖတ်ရန်",4);
       button("📖  PDF / EPUB / TXT ဖိုင်ဖွင့်ရန်",6);
       button("သုတ္တန်ပိဋကတ် — နိကာယ်ငါးရပ်",19);
       button("ဝိနည်းပိဋကတ်",6);
       button("အဘိဓမ္မာပိဋကတ်",16);
-      addText("မူရင်းစာအုပ်ဒေတာဘေ့စ် မထည့်သွင်းရသေးသဖြင့် မိမိဖုန်းရှိ စာအုပ်ဖိုင်များကို ဖွင့်ဖတ်နိုင်ပါသည်။",15,INK,false);
+      addText("Offline ကျမ်းစာသားများကို ၄၅ ကျမ်း Library မှ ရွေးချယ်ဖတ်ရှုနိုင်ပါသည်။",15,INK,false);
     }else if(n==6){
       addText("Native Book Reader",27,GREEN,true);
       addText("မြန်မာ • ပါဠိ စာဖတ်စက်",18,GOLD,true);
-      addText("Offline PDF / EPUB / TXT Reader",16,INK,false);
+      addText("၄၅ ကျမ်း ပါဠိ Offline Reader • PDF / EPUB / TXT Reader",16,INK,false);
+      button("☸  ပိဋကတ် ၄၅ ကျမ်း Offline Library ဖွင့်ရန်",4);
       TextView open=text("📖   စာအုပ်ဖိုင် ရွေးချယ်ဖွင့်ရန်",19,Color.WHITE,true);
       open.setBackground(bg(GREEN,18));content.addView(open);
       open.setOnClickListener(v->startActivity(new Intent(this,BookReaderActivity.class)));
