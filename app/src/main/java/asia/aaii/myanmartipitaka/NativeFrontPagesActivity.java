@@ -65,6 +65,7 @@ public class NativeFrontPagesActivity extends Activity {
     if(p==24){startActivity(new Intent(this,OfflineSearchActivity.class));return;}
     if(p==25){startActivity(new Intent(this,ReaderStateBackupActivity.class));return;}
     if(p==26){startActivity(new Intent(this,ReferenceLibraryActivity.class));return;}
+    if(p==27){startActivity(new Intent(this,OfflineBookLibraryActivity.class));return;}
     if(p==3){toggleMenu();return;}
     if(p<=21){render(p);return;}
     Intent i=new Intent(this,ExactScreensActivity.class);i.putExtra("openPage",p);startActivity(i);
@@ -280,6 +281,7 @@ public class NativeFrontPagesActivity extends Activity {
       addText("ဓမ္မစာအုပ်တိုက်",26,GREEN,true);
       addText("My Offline Library",16,GOLD,false);
       addText("ဖုန်းအတွင်းရှိ PDF, EPUB နှင့် UTF-8 TXT စာအုပ်များကို ရွေးချယ်ဖတ်ရှုနိုင်ပါသည်။",16,INK,false);
+      button("📚  Offline သိမ်းထားသော စာအုပ်များ",27);
       TextView open=text("＋  စာအုပ်ဖိုင်ရွေးပြီး ဖတ်ရန်",19,Color.WHITE,true);
       open.setBackground(bg(GREEN,18));content.addView(open);
       open.setOnClickListener(v->startActivity(new Intent(this,BookReaderActivity.class)));
