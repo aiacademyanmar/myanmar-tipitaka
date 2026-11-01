@@ -63,23 +63,32 @@ public final class TipitakaLibraryActivity extends Activity {
   };
   private SQLiteDatabase db;
   private LinearLayout content;
+  private final ArrayList<TextView> volumeRows=new ArrayList<>();
   private int filterStart=1,filterEnd=45;
   private int dp(int v){return (int)(getResources().getDisplayMetrics().density*v+.5);}
   private TextView text(String s,int size){TextView t=new TextView(this);t.setText(s);t.setTextColor(GREEN);t.setTextSize(size);t.setPadding(dp(14),dp(12),dp(14),dp(12));return t;}
-  private void row(String title,Runnable fn){
+  private TextView row(String title,Runnable fn){
     TextView t=text(title,17);GradientDrawable b=new GradientDrawable();b.setColor(Color.WHITE);b.setCornerRadius(dp(12));t.setBackground(b);
     LinearLayout.LayoutParams p=new LinearLayout.LayoutParams(-1,-2);p.setMargins(dp(12),dp(5),dp(12),dp(5));
-    content.addView(t,p);t.setOnClickListener(v->fn.run());
+    content.addView(t,p);t.setOnClickListener(v->fn.run());return t;
   }
   private boolean openDb(){
+    SQLiteDatabase opened=null;
     try{
-      File file=OfflineCorpusInstaller.prepare(this);
-      db=SQLiteDatabase.openDatabase(file.getAbsolutePath(),null,SQLiteDatabase.OPEN_READONLY);
-      try(Cursor c=db.rawQuery("SELECT count(*) FROM paragraphs",null)){
-        if(!c.moveToFirst()||c.getLong(0)==0)throw new IOException("Empty corpus");
+      File file=OfflineCorpusInstaller.prepare(getApplicationContext());
+      opened=SQLiteDatabase.openDatabase(file.getAbsolutePath(),null,SQLiteDatabase.OPEN_READONLY);
+      try(Cursor c=opened.rawQuery(
+          "SELECT COUNT(*),COUNT(DISTINCT volume),MIN(volume),MAX(volume) FROM paragraphs WHERE LENGTH(TRIM(body))>0",null)){
+        if(!c.moveToFirst() || c.getLong(0)<100000 || c.getLong(1)!=45 || c.getLong(2)!=1 || c.getLong(3)!=45)
+          throw new IOException("Incomplete offline corpus: expected readable text in all 45 volumes");
       }
+      db=opened;
       return true;
-    }catch(Exception e){return false;}
+    }catch(Exception e){
+      if(opened!=null)try{opened.close();}catch(Exception ignored){}
+      db=null;
+      return false;
+    }
   }
   @Override public void onCreate(Bundle b){
     super.onCreate(b);
@@ -106,12 +115,18 @@ public final class TipitakaLibraryActivity extends Activity {
         if(ready){
           String summary="Source-aligned Pāli • ကျမ်း "+counts[1]+"/45 • စာပိုဒ် "+counts[0]+"\\nMCU မူရင်းအုပ်ခွဲတိကျမှု အတည်မပြုရသေးပါ။";
           content.addView(text(summary,16),1);
+          for(TextView item:volumeRows)item.setEnabled(true);
+        }else{
+          Button retry=new Button(this);retry.setText("Offline Database ပြန်ဖွင့်မည်");
+          content.addView(retry,1);retry.setOnClickListener(v->recreate());
         }
       });
     },"tipitaka-install").start();
     for(int i=filterStart-1;i<Math.min(NAMES.length,filterEnd);i++){
       final int index=i;String group=i<8?"ဝိနည်း":i<33?"သုတ္တန်":"အဘိဓမ္မာ";
-      row(String.format(Locale.US,"%02d  %s\n%s",i+1,NAMES[i],group),()->openVolume(index));
+      TextView volumeRow=row(String.format(Locale.US,"%02d  %s\\n%s",i+1,NAMES[i],group),()->openVolume(index));
+      volumeRow.setEnabled(false);
+      volumeRows.add(volumeRow);
     }
     row("🔖  သိမ်းထားသော ကျမ်းပိုဒ် Bookmark များ",()->startActivity(new Intent(this,OfflineBookmarksActivity.class)));
     row("⌕  Offline ကျမ်းပိုဒ် စာသားရှာရန်",()->startActivity(new Intent(this,OfflineSearchActivity.class)));
