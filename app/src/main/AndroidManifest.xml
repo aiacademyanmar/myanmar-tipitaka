@@ -9,6 +9,7 @@
     <activity android:name=".PaliReferenceActivity" android:exported="false"/>
     <activity android:name=".ReferenceLibraryActivity" android:exported="false"/>
     <activity android:name=".OnlineBookReaderActivity" android:exported="false"/>
+    <activity android:name=".KbrlBookCatalogActivity" android:exported="false"/>
     <activity android:name=".DhammapadaYamakavaggaActivity" android:exported="false"/>
     <activity android:name=".MyanmarCoverageActivity" android:exported="false"/>
     <activity android:name=".MyanmarEditorialActivity" android:exported="false"/>
