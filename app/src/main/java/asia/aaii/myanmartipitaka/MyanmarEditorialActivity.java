@@ -120,7 +120,7 @@ public final class MyanmarEditorialActivity extends Activity {
   private void showDrafts(){
     String[] rows=new String[0];java.util.ArrayList<String> labels=new java.util.ArrayList<>();java.util.ArrayList<String> ids=new java.util.ArrayList<>();
     try(Cursor c=drafts.getReadableDatabase().rawQuery("SELECT volume,paragraph_id,status,updated_at FROM editorial_drafts ORDER BY updated_at DESC",null)){
-      while(c.moveToNext()){String id=c.getString(1);ids.add(id);labels.add("ကျမ်း "+c.getInt(0)+" • § "+id+"\n"+c.getString(2)+" • "+c.getString(3));}
+      while(c.moveToNext()){int vol=c.getInt(0);String id=c.getString(1);ids.add(vol+"|"+id);labels.add("ကျမ်း "+vol+" • § "+id+"\n"+c.getString(2)+" • "+c.getString(3));}
     }
     if(labels.isEmpty()){toast("သိမ်းထားသော Draft မရှိသေးပါ။");return;}
     new AlertDialog.Builder(this).setTitle("Editorial Drafts ("+labels.size()+")")
@@ -141,7 +141,7 @@ public final class MyanmarEditorialActivity extends Activity {
 
 
   private void createReviewTable(SQLiteDatabase db){
-    db.execSQL("CREATE TABLE IF NOT EXISTS editorial_reviews(volume INTEGER NOT NULL,paragraph_id TEXT NOT NULL,reviewer_name TEXT NOT NULL,decision TEXT NOT NULL CHECK(decision IN ('approve','revision','reject')),notes TEXT NOT NULL,reviewed_at TEXT NOT NULL,PRIMARY KEY(volume,paragraph_id,reviewer_name))");
+    db.execSQL("CREATE TABLE IF NOT EXISTS editorial_reviews(volume INTEGER NOT NULL,paragraph_id TEXT NOT NULL,reviewer_name TEXT NOT NULL COLLATE NOCASE,decision TEXT NOT NULL CHECK(decision IN ('approve','revision','reject')),notes TEXT NOT NULL,reviewed_at TEXT NOT NULL,PRIMARY KEY(volume,paragraph_id,reviewer_name))");
   }
   private void showReviewQueue(){
     ArrayList<String> keys=new ArrayList<>(),labels=new ArrayList<>();
@@ -172,10 +172,16 @@ public final class MyanmarEditorialActivity extends Activity {
       ContentValues v=new ContentValues();v.put("volume",vol);v.put("paragraph_id",pid);v.put("reviewer_name",reviewer);v.put("decision",decision);v.put("notes",notes);
       v.put("reviewed_at",new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.US).format(new Date()));
       db.insertWithOnConflict("editorial_reviews",null,v,SQLiteDatabase.CONFLICT_REPLACE);
-      int approvals=0;
-      try(Cursor c=db.rawQuery("SELECT COUNT(*) FROM editorial_reviews WHERE volume=? AND paragraph_id=? AND decision='approve'",new String[]{Integer.toString(vol),pid})){if(c.moveToFirst())approvals=c.getInt(0);}
+      int approvals=0,revisions=0,rejects=0;
+      try(Cursor c=db.rawQuery("SELECT decision,COUNT(*) FROM editorial_reviews WHERE volume=? AND paragraph_id=? GROUP BY decision",new String[]{Integer.toString(vol),pid})){
+        while(c.moveToNext()){String d=c.getString(0);if(d.equals("approve"))approvals=c.getInt(1);else if(d.equals("revision"))revisions=c.getInt(1);else if(d.equals("reject"))rejects=c.getInt(1);}
+      }
+      String status=rejects>0?"rejected":revisions>0?"revision_requested":approvals>=2?"reviewed_locally":"submitted_for_review";
+      ContentValues update=new ContentValues();update.put("status",status);
+      update.put("updated_at",new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.US).format(new Date()));
+      db.update("editorial_drafts",update,"volume=? AND paragraph_id=?",new String[]{Integer.toString(vol),pid});
       db.setTransactionSuccessful();
-      toast("Review မှတ်တမ်း သိမ်းပြီး။ Approve မှတ်တမ်း "+approvals+" ဦး။");
+      toast("Review သိမ်းပြီး — "+status+" • Approve "+approvals+" ဦး။");
     }catch(Exception e){toast("Review သိမ်းမရပါ: "+e.getMessage());}
     finally{db.endTransaction();}
   }
