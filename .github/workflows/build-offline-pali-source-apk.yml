@@ -1,0 +1,72 @@
+name: Build Offline Pali Source APK (License-Gated)
+on:
+  workflow_dispatch:
+    inputs:
+      rights_confirmed:
+        description: 'I verified redistribution rights for the Bilara Pali source and permit bundling in this APK'
+        type: boolean
+        required: true
+        default: false
+jobs:
+  build:
+    if: ${{ inputs.rights_confirmed == true }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Retrieve upstream Pali originals
+        run: |
+          git clone --depth 1 --branch published --filter=blob:none --sparse https://github.com/suttacentral/bilara-data.git upstream-bilara
+          cd upstream-bilara
+          git sparse-checkout set root/pli/ms
+          git rev-parse HEAD > ../bilara_source_commit.txt
+      - name: Embed original Pali source database with provenance
+        run: |
+          mkdir -p app/src/main/assets
+          python scripts/build_bilara_source_sqlite.py upstream-bilara/root/pli/ms --output app/src/main/assets/pali_root_source.sqlite --source-commit "$(cat bilara_source_commit.txt)"
+          python - <<'PY'
+          import sqlite3
+          path="app/src/main/assets/pali_root_source.sqlite"
+          with sqlite3.connect(path) as db:
+            count=db.execute("SELECT count(*) FROM source_segments").fetchone()[0]
+            assert count>400000, f"Unexpectedly incomplete corpus: {count}"
+            print(f"Offline original Pali segments in APK asset: {count}")
+          PY
+      - name: Install UI image importer
+        run: python -m pip install 'Pillow>=10,<12' 'gdown>=5,<6'
+      - name: Import original 20 UI screens
+        run: python scripts/import_drive_ui.py
+      - name: Existing reviewed 45-volume corpus if supplied
+        run: |
+          python scripts/import_reviewed_corpus.py
+          python scripts/check_offline_coverage.py
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v4
+      - name: Install Android SDK
+        run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+      - name: Compile offline Pali APK
+        run: gradle --no-daemon :app:assembleDebug
+      - name: Verify APK and embedded real corpus
+        run: |
+          test -s app/build/outputs/apk/debug/app-debug.apk
+          unzip -l app/build/outputs/apk/debug/app-debug.apk | grep 'assets/pali_root_source.sqlite'
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose app/build/outputs/apk/debug/app-debug.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Myanmar-Tipitaka-Offline-Pali-Source-APK-Not-MCU-45
+          path: |
+            app/build/outputs/apk/debug/app-debug.apk
+            bilara_source_commit.txt
+            offline_coverage_report.json
+          if-no-files-found: error
