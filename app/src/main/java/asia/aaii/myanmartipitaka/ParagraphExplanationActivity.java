@@ -262,7 +262,8 @@ public class ParagraphExplanationActivity extends Activity {
   private void popup(String paraId,String segmentId,String pali,String translation,String explanation,String source,
       String trSource,String trReviewer1,String trReviewer2,String trReviewRef,String trReviewedAt,
       String reviewedExplanation,String exSource,String exReviewer1,String exReviewer2,String exReviewRef,String exReviewedAt){
-    saveHistory(paraId,segmentId);\n    ScrollView popupScroll=new ScrollView(this);
+    saveHistory(paraId,segmentId);
+    ScrollView popupScroll=new ScrollView(this);
     LinearLayout box=new LinearLayout(this);box.setOrientation(1);
     box.setPadding(dp(18),dp(16),dp(18),dp(16));box.setBackgroundColor(CREAM);
     TextView original=new TextView(this);
