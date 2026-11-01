@@ -212,7 +212,7 @@ public final class MyanmarEditorialActivity extends Activity {
       int exported=0;
       try(Cursor rows=reviewDb.rawQuery(
         "SELECT d.volume,d.paragraph_id,d.translation_my,d.explanation_my,d.source_ref,d.rights_evidence,d.reviewer_1,d.reviewer_2,d.review_reference,"+
-        "(SELECT COUNT(DISTINCT reviewer_name) FROM editorial_reviews r WHERE r.volume=d.volume AND r.paragraph_id=d.paragraph_id AND r.decision='approve') "+
+        "(SELECT COUNT(DISTINCT reviewer_name) FROM editorial_reviews r WHERE r.volume=d.volume AND r.paragraph_id=d.paragraph_id AND r.decision='approve' AND (r.reviewer_name=d.reviewer_1 OR r.reviewer_name=d.reviewer_2)) "+
         "FROM editorial_drafts d WHERE d.status='submitted_for_review' ORDER BY d.volume,d.paragraph_id",null)){
         while(rows.moveToNext()){
           int vol=rows.getInt(0);String pid=rows.getString(1);
