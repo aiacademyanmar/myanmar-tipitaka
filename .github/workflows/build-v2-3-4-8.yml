@@ -1,4 +1,4 @@
-name: Myanmar Tipitaka V2.3.5.1 Native SQLite Foundation + APK
+name: Myanmar Tipitaka V2.3.5.2 Native SQLite Foundation + APK
 
 on:
   workflow_dispatch:
@@ -34,6 +34,7 @@ jobs:
           grep -q 'class MyanmarPublisherActivity' app/src/main/java/asia/aaii/myanmartipitaka/MyanmarPublisherActivity.java
           grep -q 'class MyanmarContentStore' app/src/main/java/asia/aaii/myanmartipitaka/MyanmarContentStore.java
           grep -q 'publisher.paragraph_myanmar_content' app/src/main/java/asia/aaii/myanmartipitaka/ParagraphExplanationActivity.java
+          grep -q 'publishApprovedDrafts' app/src/main/java/asia/aaii/myanmartipitaka/MyanmarPublisherActivity.java
       - name: Verify candidate export implementation
         run: grep -q 'exportReviewedCandidates' app/src/main/java/asia/aaii/myanmartipitaka/MyanmarEditorialActivity.java
       - name: Compile native Myanmar editorial screen (covered by app build)
@@ -70,7 +71,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: Myanmar-Tipitaka-V2.3.5.1-Corpus-QA-Reports
+          name: Myanmar-Tipitaka-V2.3.5.2-Corpus-QA-Reports
           path: |
             corpus/offline_corpus_audit.json
             corpus/myanmar_editorial_batch_audit.json
@@ -82,7 +83,7 @@ jobs:
         if: steps.corpus_gate.outcome == 'success' && steps.crosswalk_gate.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
-          name: Myanmar-Tipitaka-V2.3.5.1-debug-APK
+          name: Myanmar-Tipitaka-V2.3.5.2-debug-APK
           path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 14
