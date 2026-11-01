@@ -117,6 +117,12 @@ def main():
         if not {"id","body"}.issubset(table_columns(db,"paragraphs")):
             sys.exit("Unsupported paragraphs schema: expected id and body columns.")
         create_table(db)
+        # The Android reader joins review rows by paragraphs.segment_id.
+        # Legacy schema uses integer paragraphs.id, so add a stable text alias.
+        pcols=table_columns(db,"paragraphs")
+        if "segment_id" not in pcols:
+            db.execute("ALTER TABLE paragraphs ADD COLUMN segment_id TEXT")
+        db.execute("UPDATE paragraphs SET segment_id=CAST(id AS TEXT) WHERE segment_id IS NULL OR trim(segment_id)=''")
         with db:
             imported=import_rows(db,args.reviewed)
         total=db.execute("SELECT COUNT(*) FROM paragraphs").fetchone()[0]
