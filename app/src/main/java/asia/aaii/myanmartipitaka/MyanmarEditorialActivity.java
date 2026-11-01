@@ -3,6 +3,8 @@ package asia.aaii.myanmartipitaka;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
+import android.content.Intent;
+import android.net.Uri;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -29,6 +31,7 @@ public final class MyanmarEditorialActivity extends Activity {
   private EditText sourceInput, rightsInput, reviewer1Input, reviewer2Input, reviewRefInput;
   private TextView paliPreview, statusView;
   private DraftDb drafts;
+  private String pendingCandidateCsv;
   private int dp(int n){return (int)(n*getResources().getDisplayMetrics().density+.5f);}
   private TextView text(String s,int size,int color,boolean bold){
     TextView t=new TextView(this);t.setText(s);t.setTextSize(size);t.setTextColor(color);
@@ -79,6 +82,7 @@ public final class MyanmarEditorialActivity extends Activity {
     Button submit=new Button(this);submit.setText("စိစစ်ရန် တင်သွင်းမည်");root.addView(submit);submit.setOnClickListener(v->saveDraft("submitted_for_review"));
     Button list=new Button(this);list.setText("သိမ်းထားသော Draft များ ကြည့်ရန်");root.addView(list);list.setOnClickListener(v->showDrafts());
     Button review=new Button(this);review.setText("Reviewer Queue ဖွင့်ရန်");root.addView(review);review.setOnClickListener(v->showReviewQueue());
+    Button export=new Button(this);export.setText("Reviewer နှစ်ဦးစိစစ်ပြီးသော Candidate CSV ထုတ်ရန်");root.addView(export);export.setOnClickListener(v->exportReviewedCandidates());
     root.addView(text("မှတ်ချက် — ဤ Version သည် Offline Reader database ကို မပြင်ဆင်ပါ။ Approve/Publish လုပ်ဆောင်ချက်ကိုလည်း မပေးထားပါ။ Approved CSV import သည် သီးခြား QA workflow ဖြင့်သာ လုပ်ဆောင်ရမည်။",13,0xff665b49,false));
     setContentView(scroll);
   }
@@ -181,6 +185,85 @@ public final class MyanmarEditorialActivity extends Activity {
       toast("Review သိမ်းပြီး — "+reviewState+" • Approve "+approvals+" ဦး။ Draft ကို မူရင်း Submitted အခြေအနေတွင်သာ ထားရှိသည်။");
     }catch(Exception e){toast("Review သိမ်းမရပါ: "+e.getMessage());}
     finally{db.endTransaction();}
+  }
+
+
+  private String csvCell(String value){
+    String s=value==null?"":value;
+    return "\"" + s.replace("\"","\"\"").replace("\r"," ").replace("\n"," ") + "\"";
+  }
+
+  private String sha256(String value)throws Exception{
+    java.security.MessageDigest md=java.security.MessageDigest.getInstance("SHA-256");
+    byte[] bytes=md.digest(value.getBytes("UTF-8"));
+    StringBuilder out=new StringBuilder();
+    for(byte b:bytes)out.append(String.format(Locale.US,"%02x",b&0xff));
+    return out.toString();
+  }
+
+  private void exportReviewedCandidates(){
+    SQLiteDatabase reviewDb=drafts.getReadableDatabase();
+    File corpus=null;SQLiteDatabase source=null;
+    try{
+      corpus=OfflineCorpusInstaller.prepare(getApplicationContext());
+      source=SQLiteDatabase.openDatabase(corpus.getAbsolutePath(),null,SQLiteDatabase.OPEN_READONLY);
+      StringBuilder csv=new StringBuilder();
+      csv.append("segment_id,content_type,text_my,source_ref,rights_evidence,reviewer_1,reviewer_2,review_reference,reviewed_at,source_pali_sha256\n");
+      int exported=0;
+      try(Cursor rows=reviewDb.rawQuery(
+        "SELECT d.volume,d.paragraph_id,d.translation_my,d.explanation_my,d.source_ref,d.rights_evidence,d.reviewer_1,d.reviewer_2,d.review_reference,"+
+        "(SELECT COUNT(DISTINCT reviewer_name) FROM editorial_reviews r WHERE r.volume=d.volume AND r.paragraph_id=d.paragraph_id AND r.decision='approve') "+
+        "FROM editorial_drafts d WHERE d.status='submitted_for_review' ORDER BY d.volume,d.paragraph_id",null)){
+        while(rows.moveToNext()){
+          int vol=rows.getInt(0);String pid=rows.getString(1);
+          String tr=rows.getString(2),ex=rows.getString(3),src=rows.getString(4),rights=rows.getString(5);
+          String r1=rows.getString(6),r2=rows.getString(7),ref=rows.getString(8);
+          if(rows.getInt(9)<2||r1==null||r2==null||r1.trim().isEmpty()||r2.trim().isEmpty()||r1.trim().equalsIgnoreCase(r2.trim()))continue;
+          if(src==null||src.trim().isEmpty()||rights==null||rights.trim().isEmpty()||ref==null||ref.trim().isEmpty())continue;
+          String pali=null,segment=pid;
+          try(Cursor pc=source.rawQuery("SELECT body,segment_id FROM paragraphs WHERE volume=? AND (CAST(id AS TEXT)=? OR segment_id=?) LIMIT 1",
+            new String[]{Integer.toString(vol),pid,pid})){
+            if(pc.moveToFirst()){pali=pc.getString(0);segment=pc.getString(1);}
+          }
+          if(pali==null||pali.isEmpty())continue;
+          String hash=sha256(pali),date="";
+          try(Cursor rc=reviewDb.rawQuery("SELECT MAX(reviewed_at) FROM editorial_reviews WHERE volume=? AND paragraph_id=? AND decision='approve'",
+            new String[]{Integer.toString(vol),pid})){
+            if(rc.moveToFirst()&&rc.getString(0)!=null)date=rc.getString(0).substring(0,10);
+          }
+          String[] types={"translation","explanation"},texts={tr,ex};
+          for(int i=0;i<2;i++){
+            String textMy=texts[i]==null?"":texts[i].trim();
+            if(textMy.isEmpty()||!textMy.matches("(?s).*[\u1000-\u109F].*"))continue;
+            csv.append(csvCell(segment)).append(',').append(csvCell(types[i])).append(',').append(csvCell(textMy)).append(',')
+              .append(csvCell(src)).append(',').append(csvCell(rights)).append(',').append(csvCell(r1)).append(',')
+              .append(csvCell(r2)).append(',').append(csvCell(ref)).append(',').append(csvCell(date)).append(',')
+              .append(csvCell(hash)).append('\n');
+            exported++;
+          }
+        }
+      }
+      if(exported==0){toast("သီးခြား Reviewer နှစ်ဦး Approve မှတ်တမ်းနှင့် လိုအပ်သော Evidence ပြည့်စုံသည့် Candidate မရှိသေးပါ။");return;}
+      pendingCandidateCsv=csv.toString();
+      Intent intent=new Intent(Intent.ACTION_CREATE_DOCUMENT);
+      intent.addCategory(Intent.CATEGORY_OPENABLE);
+      intent.setType("text/csv");
+      intent.putExtra(Intent.EXTRA_TITLE,"myanmar_tipitaka_reviewed_candidates.csv");
+      startActivityForResult(intent,9031);
+    }catch(Exception e){toast("Candidate CSV မထုတ်နိုင်ပါ: "+e.getMessage());}
+    finally{if(source!=null)source.close();}
+  }
+
+  @Override protected void onActivityResult(int requestCode,int resultCode,Intent data){
+    super.onActivityResult(requestCode,resultCode,data);
+    if(requestCode==9031&&resultCode==RESULT_OK&&data!=null&&data.getData()!=null&&pendingCandidateCsv!=null){
+      try(java.io.OutputStream out=getContentResolver().openOutputStream(data.getData(),"w")){
+        if(out==null)throw new IllegalStateException("ဖိုင်ရေးရန် မဖြစ်နိုင်ပါ။");
+        out.write(pendingCandidateCsv.getBytes(java.nio.charset.StandardCharsets.UTF_8));out.flush();
+        toast("Candidate CSV ကို ရွေးချယ်ထားသောနေရာတွင် သိမ်းဆည်းပြီးပါပြီ။ Publisher QA Import မပြီးမချင်း Approved content မဟုတ်ပါ။");
+      }catch(Exception e){toast("CSV သိမ်းဆည်းမှု မအောင်မြင်ပါ: "+e.getMessage());}
+      finally{pendingCandidateCsv=null;}
+    }else if(requestCode==9031){pendingCandidateCsv=null;}
   }
 
   private final class DraftDb extends SQLiteOpenHelper {
