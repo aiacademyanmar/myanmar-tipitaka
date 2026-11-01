@@ -73,11 +73,11 @@ public final class MangalaSuttaActivity extends Activity {
       if(c.moveToFirst())pali=c.getString(0);
     }
     LinearLayout box=new LinearLayout(this);box.setOrientation(LinearLayout.VERTICAL);box.setPadding(dp(8),dp(4),dp(8),dp(4));
-    TextView label=text("ပါဠိမူရင်း — "+stanza,14,GOLD,true);box.addView(label);
+    TextView label=text("ပါဠိမူရင်း ဂါထာ — "+stanza,14,GOLD,true);box.addView(label);
     TextView paliText=text(pali,19,INK,false);paliText.setLineSpacing(dp(5),1.1f);box.addView(paliText);
     TextView myLabel=text("မင်္ဂလာ "+number+" — မြန်မာအဓိပ္ပာယ်",15,GREEN,true);box.addView(myLabel);
     TextView myText=text(title+"\n\n"+explanation,18,INK,false);myText.setLineSpacing(dp(5),1.12f);box.addView(myText);
-    TextView draft=text("မှတ်ချက် — မြန်မာစာသည် လေ့လာရေးမူကြမ်းဖြစ်ပြီး ပညာရှင်နှစ်ဦး၏ အတည်ပြုချက် မရသေးပါ။",13,GOLD,false);box.addView(draft);
+    TextView draft=text("မှတ်ချက် — မြန်မာဘာသာပြန်နှင့် ရှင်းလင်းချက်သည် AI လေ့လာရေးမူကြမ်းဖြစ်ပြီး ပညာရှင်အတည်ပြုချက် မရသေးပါ။",13,GOLD,false);box.addView(draft);
     ScrollView scroll=new ScrollView(this);scroll.addView(box);
     new AlertDialog.Builder(this).setTitle("☸  မင်္ဂလာ "+number).setView(scroll).setPositiveButton("ဖတ်ပြီးပါပြီ",null).show();
   }
