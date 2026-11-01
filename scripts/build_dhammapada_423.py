@@ -96,6 +96,9 @@ def main():
  a=p.parse_args()
  if not a.database.is_file():raise SystemExit("Offline Pali SQLite must be built first")
  drafts=load_drafts(a.drafts)
+ extra=load_drafts(ROOT/"corpus/dhammapada_draft_21_99.csv")
+ if set(drafts)&set(extra):raise ValueError("Overlapping Myanmar draft verse numbers")
+ drafts.update(extra)
  with sqlite3.connect(a.database) as db:
   draft_count=build(db,drafts)
  print(f"Dhammapada: 423 original Pali verses / 26 chapters; {draft_count} unreviewed Myanmar draft translations; {423-draft_count} without translations")
