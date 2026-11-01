@@ -12,6 +12,8 @@ DB=ROOT/"app/src/main/assets/tipitaka_offline.sqlite"
 CROSSWALK=ROOT/"corpus/45_volume_crosswalk.csv"
 EXPECTED_PARAGRAPHS=425_953
 REQUIRED_TABLES={"paragraphs","paragraph_explanations"}
+REQUIRED_PARAGRAPH_COLUMNS={"id","volume","body","source_ref"}
+REQUIRED_EXPLANATION_COLUMNS={"paragraph_id","language","explanation_my","source_ref","provenance","reviewed"}
 report={"database":str(DB.relative_to(ROOT)),"exists":DB.is_file(),"expected_volumes":45,
         "expected_paragraphs":EXPECTED_PARAGRAPHS,"checks":{},"errors":[]}
 if not DB.is_file():
@@ -24,6 +26,13 @@ else:
         missing=sorted(REQUIRED_TABLES-tables)
         if missing: report["errors"].append("Missing required tables: "+", ".join(missing))
         if not missing:
+            paragraph_cols={r[1] for r in con.execute("PRAGMA table_info(paragraphs)")}
+            explanation_cols={r[1] for r in con.execute("PRAGMA table_info(paragraph_explanations)")}
+            missing_p=sorted(REQUIRED_PARAGRAPH_COLUMNS-paragraph_cols)
+            missing_e=sorted(REQUIRED_EXPLANATION_COLUMNS-explanation_cols)
+            if missing_p: report["errors"].append("paragraphs missing columns: "+", ".join(missing_p))
+            if missing_e: report["errors"].append("paragraph_explanations missing columns: "+", ".join(missing_e))
+            if missing_p or missing_e: raise ValueError("SQLite schema is incompatible with the native reader")
             volumes=con.execute("SELECT COUNT(DISTINCT volume) FROM paragraphs").fetchone()[0]
             count=con.execute("SELECT COUNT(*) FROM paragraphs").fetchone()[0]
             empty=con.execute("SELECT COUNT(*) FROM paragraphs WHERE body IS NULL OR trim(body)='' OR source_ref IS NULL OR trim(source_ref)=''").fetchone()[0]
@@ -56,7 +65,14 @@ if not CROSSWALK.is_file():
 else:
     with CROSSWALK.open(encoding="utf-8-sig",newline="") as f: rows=list(csv.DictReader(f))
     report["checks"]["crosswalk_rows"]=len(rows)
+    ids=[r.get("volume_id","").strip() for r in rows]
     report["checks"]["crosswalk_verified_rows"]=sum(1 for r in rows if r.get("mapping_status","").upper()=="VERIFIED")
+    report["checks"]["crosswalk_unique_volume_ids"]=len(set(ids))
+    report["checks"]["crosswalk_missing_source_prefix"]=sum(1 for r in rows if not r.get("source_file_prefix","").strip())
+    report["checks"]["crosswalk_missing_reviewer_reference"]=sum(1 for r in rows if r.get("mapping_status","").upper()=="VERIFIED" and not r.get("reviewer_reference","").strip())
+    if len(set(ids))!=45 or set(ids)!={str(i) for i in range(1,46)}: report["errors"].append("Crosswalk volume_id must contain each ID 1..45 exactly once.")
+    if report["checks"]["crosswalk_missing_source_prefix"]: report["errors"].append("Crosswalk has missing source_file_prefix values.")
+    if report["checks"]["crosswalk_missing_reviewer_reference"]: report["errors"].append("Verified crosswalk rows require reviewer_reference.")
     if len(rows)!=45:report["errors"].append(f"Expected 45 crosswalk rows, found {len(rows)}.")
     if report["checks"]["crosswalk_verified_rows"]!=45:
         report["errors"].append("45-volume crosswalk is not fully VERIFIED; do not claim MCU edition equivalence.")
