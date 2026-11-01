@@ -181,6 +181,17 @@ public class NativeFrontPagesActivity extends Activity {
         resume.setOnClickListener(v->startActivity(new Intent(this,BookReaderActivity.class)));
         button("စာအုပ်အသစ် ဖွင့်ရန်",7);
       }
+      android.content.SharedPreferences paliProgress=getSharedPreferences("tipitaka_paragraph_progress",MODE_PRIVATE);
+      String lastParagraph=paliProgress.getString("last_paragraph_id",null);
+      int lastVolume=paliProgress.getInt("last_volume",0);
+      if(lastParagraph!=null&&lastVolume>0){
+        addText("နောက်ဆုံးဖတ်ခဲ့သော ပိဋကတ်ကျမ်းပိုဒ်",18,GREEN,true);
+        addText("ကျမ်း "+lastVolume+" · §"+lastParagraph,16,GOLD,true);
+        TextView resumePali=text("☸  နောက်ဆုံးဖတ်ခဲ့သည့် ကျမ်းပိုဒ်သို့ ပြန်သွားရန်",17,Color.WHITE,true);
+        resumePali.setBackground(bg(GREEN,16));content.addView(resumePali);
+        resumePali.setOnClickListener(v->{Intent pi=new Intent(this,ParagraphExplanationActivity.class);pi.putExtra("volume",lastVolume);pi.putExtra("paragraph_id",lastParagraph);startActivity(pi);});
+      }
+      button("Bookmark / Notes / History စာရင်း",12);
       addText("ဖတ်ရှုမှုနေရာကို ဖုန်းအတွင်းတွင် အလိုအလျောက် သိမ်းဆည်းထားသည်။",14,INK,false);
     }else if(n==14){
       addText("အဆင့်မြင့် ရှာဖွေရန်",26,GREEN,true);
