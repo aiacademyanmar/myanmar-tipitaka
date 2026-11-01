@@ -75,6 +75,7 @@ public final class BookReaderActivity extends Activity {
     bar.addView(button("A+",()->resize(2)));
     bar.addView(button("🔖 Save",this::bookmark));
     bar.addView(button("Marks",this::showBookmarks));
+    bar.addView(button("Progress",this::showProgress));
     topScroll.addView(bar);root.addView(topScroll);
     label=new TextView(this);label.setTextColor(Color.rgb(41,72,58));label.setTextSize(14);label.setPadding(18,12,12,12);root.addView(label);
     scroll=new ScrollView(this);
@@ -231,6 +232,14 @@ public final class BookReaderActivity extends Activity {
     marks.add(Integer.toString(page));
     prefs.edit().putStringSet(marksKey(),marks).apply();
     Toast.makeText(this,"စာမျက်နှာ "+(page+1)+" Bookmark သိမ်းဆည်းပြီး",Toast.LENGTH_SHORT).show();
+  }
+  private void showProgress(){
+    if(bookId.isEmpty())return;
+    int total=pages(),current=Math.min(total,page+1);
+    int percent=total<=0?0:(int)Math.round(100d*current/total);
+    new AlertDialog.Builder(this).setTitle("Reading Progress")
+      .setMessage(new File(bookId).getName()+"\\nစာမျက်နှာ "+current+" / "+total+"\\nပြီးစီးမှု "+percent+"%")
+      .setPositiveButton("ဆက်ဖတ်ရန်",null).setNeutralButton("အစမှဖတ်ရန်",(d,w)->{page=0;showPage();}).show();
   }
   private void showBookmarks(){
     if(bookId.isEmpty())return;
