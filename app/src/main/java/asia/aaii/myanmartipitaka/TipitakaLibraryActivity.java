@@ -81,7 +81,7 @@ public final class TipitakaLibraryActivity extends Activity {
     }catch(Exception e){return false;}
   }
   @Override public void onCreate(Bundle b){
-    super.onCreate(b);getWindow().setStatusBarColor(GREEN);getWindow().setNavigationBarColor(GREEN);
+    super.onCreate(b);\n    filterStart=Math.max(1,getIntent().getIntExtra("start_volume",1));\n    filterEnd=Math.min(45,getIntent().getIntExtra("end_volume",45));\n    getWindow().setStatusBarColor(GREEN);getWindow().setNavigationBarColor(GREEN);
     LinearLayout root=new LinearLayout(this);root.setOrientation(LinearLayout.VERTICAL);root.setBackgroundColor(CREAM);
     TextView header=text("☸  ပိဋကတ်သုံးပုံ · Offline Library",22);header.setTextColor(Color.WHITE);header.setBackgroundColor(GREEN);root.addView(header);
     ScrollView scroll=new ScrollView(this);content=new LinearLayout(this);content.setOrientation(LinearLayout.VERTICAL);
