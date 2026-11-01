@@ -1,4 +1,4 @@
-package asia.aaii.myanmartipititaka;
+package asia.aaii.myanmartipitaka;
 
 import android.app.Activity;
 import android.content.Intent;
