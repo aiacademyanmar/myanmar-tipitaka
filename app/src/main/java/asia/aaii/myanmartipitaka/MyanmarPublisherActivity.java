@@ -187,9 +187,32 @@ public final class MyanmarPublisherActivity extends Activity {
     if(quoted)throw new IOException("CSV quote မပိတ်ထားပါ");out.add(cell.toString());return out;
   }
   private void showCoverage(){
-    SQLiteDatabase db=store.getReadableDatabase();long tr=0,ex=0;
-    try(Cursor c=db.rawQuery("SELECT content_type,COUNT(*) FROM paragraph_myanmar_content GROUP BY content_type",null)){while(c.moveToNext()){if(c.getString(0).equals("translation"))tr=c.getLong(1);else ex=c.getLong(1);}}
-    new AlertDialog.Builder(this).setTitle("Local Published Coverage").setMessage("မြန်မာဘာသာပြန်: "+tr+"\nမြန်မာရှင်းလင်းချက်: "+ex+"\n\nဤစာရင်းသည် ဤစက်၏ Publisher Database ကိုသာ ဖော်ပြသည်။").setPositiveButton("ပိတ်မည်",null).show();
+    SQLiteDatabase local=store.getReadableDatabase();
+    File corpus=null;SQLiteDatabase pali=null;
+    try{
+      corpus=OfflineCorpusInstaller.prepare(this);
+      pali=SQLiteDatabase.openDatabase(corpus.getAbsolutePath(),null,SQLiteDatabase.OPEN_READONLY);
+      StringBuilder message=new StringBuilder();
+      long total=0,allTr=0,allEx=0;
+      for(int volume=1;volume<=45;volume++){
+        long paragraphs=0,tr=0,ex=0;
+        try(Cursor p=pali.rawQuery("SELECT COUNT(*) FROM paragraphs WHERE volume=?",new String[]{Integer.toString(volume)})){if(p.moveToFirst())paragraphs=p.getLong(0);}
+        if(paragraphs==0){message.append("ကျမ်း ").append(volume).append(": Pāli data မရှိ\n");continue;}
+        try(Cursor p=pali.rawQuery("SELECT id FROM paragraphs WHERE volume=?",new String[]{Integer.toString(volume)})){
+          while(p.moveToNext()){
+            long id=p.getLong(0);
+            try(Cursor x=local.rawQuery("SELECT content_type FROM paragraph_myanmar_content WHERE paragraph_id=? AND reviewed=1 AND length(trim(text_my))>0",new String[]{Long.toString(id)})){
+              while(x.moveToNext()){if("translation".equals(x.getString(0)))tr++;else if("explanation".equals(x.getString(0)))ex++;}
+            }
+          }
+        }
+        total+=paragraphs;allTr+=tr;allEx+=ex;
+        message.append(String.format(Locale.US,"ကျမ်း %02d — Pāli %,d | ဘာသာပြန် %,d (%.1f%%) | ရှင်းလင်းချက် %,d (%.1f%%)\n",volume,paragraphs,tr,100.0*tr/paragraphs,ex,100.0*ex/paragraphs));
+      }
+      message.insert(0,String.format(Locale.US,"စုစုပေါင်း Pāli %,d ပိုဒ်\nဘာသာပြန် %,d (%.2f%%)\nရှင်းလင်းချက် %,d (%.2f%%)\n\n",total,allTr,total==0?0:100.0*allTr/total,allEx,total==0?0:100.0*allEx/total));
+      new AlertDialog.Builder(this).setTitle("45-Book Myanmar Coverage").setMessage(message.toString()).setPositiveButton("ပိတ်မည်",null).show();
+    }catch(Exception e){toast("Coverage မဖတ်နိုင်ပါ: "+e.getMessage());}
+    finally{if(pali!=null)pali.close();}
   }
   private void writeBackup(Uri uri)throws Exception{
     SQLiteDatabase db=store.getReadableDatabase();org.json.JSONArray rows=new org.json.JSONArray();
