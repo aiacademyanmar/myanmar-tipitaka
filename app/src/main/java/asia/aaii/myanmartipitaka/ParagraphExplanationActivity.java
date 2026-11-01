@@ -109,10 +109,16 @@ public class ParagraphExplanationActivity extends Activity {
     final String translationJoin=hasMyanmarContent?
         " LEFT JOIN paragraph_myanmar_content tr ON tr.segment_id=p.segment_id AND tr.content_type='translation' AND tr.reviewed=1 ":"";
     final String where=selected==null?" WHERE p.volume=? ":" WHERE p.volume=? AND p.id=? ";
+    final String reviewColumns=hasMyanmarContent?
+        ",tr.source_ref,tr.reviewer_1,tr.reviewer_2,tr.review_reference,tr.reviewed_at,"+
+        "ex.text_my,ex.source_ref,ex.reviewer_1,ex.reviewer_2,ex.review_reference,ex.reviewed_at":
+        ",NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL";
+    final String explanationJoin=hasMyanmarContent?
+        " LEFT JOIN paragraph_myanmar_content ex ON ex.segment_id=p.segment_id AND ex.content_type='explanation' AND ex.reviewed=1 ":"";
     final String sql="SELECT p.id,p.segment_id,p.body,e.explanation_my,e.source_ref,"+
-        translationExpression+" FROM paragraphs p "+
+        translationExpression+reviewColumns+" FROM paragraphs p "+
         " LEFT JOIN paragraph_explanations e ON e.paragraph_id=p.id AND e.language='my' AND e.reviewed=1 "+
-        translationJoin+where+" ORDER BY p.id LIMIT "+PAGE_SIZE+" OFFSET "+(page*PAGE_SIZE);
+        translationJoin+explanationJoin+where+" ORDER BY p.id LIMIT "+PAGE_SIZE+" OFFSET "+(page*PAGE_SIZE);
     final String[] args=selected==null?new String[]{Integer.toString(volume)}:
         new String[]{Integer.toString(volume),selected};
     try(Cursor c=db.rawQuery(sql,args)){
@@ -124,13 +130,28 @@ public class ParagraphExplanationActivity extends Activity {
         final String explanation=c.isNull(3)?null:c.getString(3);
         final String source=c.isNull(4)?"":c.getString(4);
         final String translation=c.isNull(5)?null:c.getString(5);
+        final String trSource=c.isNull(6)?"":c.getString(6);
+        final String trReviewer1=c.isNull(7)?"":c.getString(7);
+        final String trReviewer2=c.isNull(8)?"":c.getString(8);
+        final String trReviewRef=c.isNull(9)?"":c.getString(9);
+        final String trReviewedAt=c.isNull(10)?"":c.getString(10);
+        final String reviewedExplanation=c.isNull(11)?null:c.getString(11);
+        final String exSource=c.isNull(12)?"":c.getString(12);
+        final String exReviewer1=c.isNull(13)?"":c.getString(13);
+        final String exReviewer2=c.isNull(14)?"":c.getString(14);
+        final String exReviewRef=c.isNull(15)?"":c.getString(15);
+        final String exReviewedAt=c.isNull(16)?"":c.getString(16);
         TextView t=new TextView(this);
         t.setText("§ "+segmentId+"\n"+pali+"\n\n☸ မြန်မာဘာသာပြန်နှင့် ရှင်းလင်းချက်");
         t.setTextSize(18);t.setTextColor(0xff17493c);
         t.setPadding(22,18,22,18);
         rows.addView(t);
-        t.setOnClickListener(v->popup(paraId,segmentId,pali,translation,explanation,source));
-        if(selected!=null)popup(paraId,segmentId,pali,translation,explanation,source);
+        t.setOnClickListener(v->popup(paraId,segmentId,pali,translation,explanation,source,
+            trSource,trReviewer1,trReviewer2,trReviewRef,trReviewedAt,
+            reviewedExplanation,exSource,exReviewer1,exReviewer2,exReviewRef,exReviewedAt));
+        if(selected!=null)popup(paraId,segmentId,pali,translation,explanation,source,
+            trSource,trReviewer1,trReviewer2,trReviewRef,trReviewedAt,
+            reviewedExplanation,exSource,exReviewer1,exReviewer2,exReviewRef,exReviewedAt);
         count++;
       }
       if(count==0 && page>0 && selected==null){
@@ -158,23 +179,28 @@ public class ParagraphExplanationActivity extends Activity {
     }
   }
 
-  private void popup(String paraId,String segmentId,String pali,String translation,String explanation,String source){
+  private void popup(String paraId,String segmentId,String pali,String translation,String explanation,String source,
+      String trSource,String trReviewer1,String trReviewer2,String trReviewRef,String trReviewedAt,
+      String reviewedExplanation,String exSource,String exReviewer1,String exReviewer2,String exReviewRef,String exReviewedAt){
     LinearLayout box=new LinearLayout(this);box.setOrientation(1);
     box.setPadding(20,18,20,18);box.setBackgroundColor(0xfffaf6eb);
     TextView original=new TextView(this);
     original.setText("မူရင်းပါဠိ • "+segmentId+"\n"+pali);
     original.setTextSize(18);original.setTextColor(0xff194b3d);box.addView(original);
     TextView myTranslation=new TextView(this);
-    myTranslation.setText("မြန်မာဘာသာပြန်\n"+(translation==null||translation.trim().isEmpty()?
-        "စိစစ်အတည်ပြုထားသော မြန်မာဘာသာပြန် မရရှိသေးပါ။":translation));
+    myTranslation.setText((translation==null||translation.trim().isEmpty()?
+        "မြန်မာဘာသာပြန် — မရရှိသေးပါ။":"✓ စိစစ်အတည်ပြုထားသော မြန်မာဘာသာပြန်\n"+translation));
     myTranslation.setTextSize(18);myTranslation.setPadding(0,18,0,10);box.addView(myTranslation);
     TextView myExplanation=new TextView(this);
-    myExplanation.setText("မြန်မာရှင်းလင်းချက်\n"+(explanation==null||explanation.trim().isEmpty()?
-        "စိစစ်အတည်ပြုထားသော မြန်မာရှင်းလင်းချက် မရရှိသေးပါ။":explanation));
+    String explanationText=reviewedExplanation!=null&&!reviewedExplanation.trim().isEmpty()?reviewedExplanation:explanation;
+    myExplanation.setText((explanationText==null||explanationText.trim().isEmpty()?
+        "မြန်မာရှင်းလင်းချက် — မရရှိသေးပါ။":"✓ စိစစ်အတည်ပြုထားသော မြန်မာရှင်းလင်းချက်\n"+explanationText));
     myExplanation.setTextColor(0xff55422a);
     myExplanation.setTextSize(18);myExplanation.setPadding(0,16,0,10);box.addView(myExplanation);
+    addReviewEvidence(box,"ဘာသာပြန်",trSource,trReviewer1,trReviewer2,trReviewRef,trReviewedAt);
+    addReviewEvidence(box,"ရှင်းလင်းချက်",exSource,exReviewer1,exReviewer2,exReviewRef,exReviewedAt);
     if(!source.isEmpty()){
-      TextView sourceView=new TextView(this);sourceView.setText("ရင်းမြစ်: "+source);
+      TextView sourceView=new TextView(this);sourceView.setText("အဋ္ဌကထာ/ရှင်းလင်းချက် ရင်းမြစ်: "+source);
       sourceView.setTextSize(13);box.addView(sourceView);
     }
     boolean saved=getSharedPreferences(PREF,MODE_PRIVATE).getBoolean("bookmark_"+paraId,false);
@@ -184,6 +210,18 @@ public class ParagraphExplanationActivity extends Activity {
         getSharedPreferences(PREF,MODE_PRIVATE).edit().putBoolean("bookmark_"+paraId,!saved).apply();
         Toast.makeText(this,!saved?"Bookmark သိမ်းပြီး":"Bookmark ဖယ်ပြီး",Toast.LENGTH_SHORT).show();
       }).setPositiveButton("ပိတ်မည်",null).show();
+  }
+  private void addReviewEvidence(LinearLayout box,String label,String source,String r1,String r2,String ref,String date){
+    if(source.isEmpty()&&r1.isEmpty()&&r2.isEmpty()&&ref.isEmpty()&&date.isEmpty())return;
+    TextView evidence=new TextView(this);
+    evidence.setText("အတည်ပြုမှတ်တမ်း ("+label+")\n"+
+        (source.isEmpty()?"":"ရင်းမြစ်: "+source+"\n")+
+        (r1.isEmpty()?"":"စိစစ်သူ ၁: "+r1+"\n")+
+        (r2.isEmpty()?"":"စိစစ်သူ ၂: "+r2+"\n")+
+        (ref.isEmpty()?"":"စိစစ်မှတ်တမ်း: "+ref+"\n")+
+        (date.isEmpty()?"":"စိစစ်သည့်နေ့: "+date));
+    evidence.setTextSize(13);evidence.setTextColor(0xff66553b);
+    evidence.setPadding(0,10,0,8);box.addView(evidence);
   }
   @Override protected void onDestroy(){
     destroyed=true;
