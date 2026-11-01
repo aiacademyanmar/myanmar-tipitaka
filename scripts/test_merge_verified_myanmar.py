@@ -57,13 +57,19 @@ class ReviewedMyanmarImporterTests(unittest.TestCase):
         MODULE.create_table(self.db)
         row=dict(self.row,source_pali_sha256="0"*64)
         self.write(row)
-        with self.assertRaisesRegex(ValueError,"original Pali has changed"):
+        with self.assertRaisesRegex(ValueError,"Pali SHA-256 mismatch"):
             MODULE.import_rows(self.db,self.csv)
     def test_rejects_same_reviewer(self):
         MODULE.create_table(self.db)
         row=dict(self.row,reviewer_2="Reviewer A")
         self.write(row)
         with self.assertRaisesRegex(ValueError,"two distinct reviewers"):
+            MODULE.import_rows(self.db,self.csv)
+    def test_rejects_invalid_hash_format(self):
+        MODULE.create_table(self.db)
+        row=dict(self.row,source_pali_sha256="not-a-hash")
+        self.write(row)
+        with self.assertRaisesRegex(ValueError,"64-character SHA-256"):
             MODULE.import_rows(self.db,self.csv)
     def test_rejects_missing_rights_evidence(self):
         MODULE.create_table(self.db)
