@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "source": "Kaba Aye Buddha Research Library (KBRL)",
+  "catalog_url": "https://www.kbrl.gov.mm/old/catalog/index/5",
+  "catalog_declared_count": 32,
+  "verified_detail_records": 9,
+  "notice": "Only exact detail pages surfaced in KBRL-indexed search results are included. PDF preview URLs are not guessed; use Preview on the publisher detail page. KBRL site notice states non-commercial use; APK redistribution permission is not granted by this index.",
+  "books": [
+    {
+      "book_id": "000127",
+      "title_my": "ပါရာဇိကဏ်ပါဠိတော်မြန်မာပြန်",
+      "publisher": "သာသနာရေးဦးစီးဌာန",
+      "detail_url": "https://www.kbrl.gov.mm/old/book/details/000127?categoryId=5",
+      "detail_status": "SEARCH_INDEX_VERIFIED",
+      "preview_url": null,
+      "rights_status": "KBRL_NON_COMMERCIAL_SITE_NOTICE; APK_REUSE_NOT_GRANTED"
+    },
+    {
+      "book_id": "000129",
+      "title_my": "မဟာဝဂ္ဂပါဠိတော်မြန်မာပြန်",
+      "publisher": "သာသနာရေးဦးစီးဌာန",
+      "detail_url": "https://www.kbrl.gov.mm/old/book/details/000129?categoryId=5",
+      "detail_status": "SEARCH_INDEX_VERIFIED",
+      "preview_url": null,
+      "rights_status": "KBRL_NON_COMMERCIAL_SITE_NOTICE; APK_REUSE_NOT_GRANTED"
+    },
+    {
+      "book_id": "000130",
+      "title_my": "စူဠဝဂ္ဂပါဠိတော်မြန်မာပြန်",
+      "publisher": "သာသနာရေးဦးစီးဌာန",
+      "detail_url": "https://www.kbrl.gov.mm/old/book/details/000130?categoryId=5",
+      "detail_status": "SEARCH_INDEX_VERIFIED",
+      "preview_url": null,
+      "rights_status": "KBRL_NON_COMMERCIAL_SITE_NOTICE; APK_REUSE_NOT_GRANTED"
+    },
+    {
+      "book_id": "000132",
+      "title_my": "သီလက္ခန္ဓဝဂ်ပါဠိတော်မြန်မာပြန်",
+      "publisher": "သာသနာရေးဦးစီးဌာန",
+      "detail_url": "https://www.kbrl.gov.mm/old/book/details/000132?categoryId=5",
+      "detail_status": "SEARCH_INDEX_VERIFIED",
+      "preview_url": null,
+      "rights_status": "KBRL_NON_COMMERCIAL_SITE_NOTICE; APK_REUSE_NOT_GRANTED"
+    },
+    {
+      "book_id": "000133",
+      "title_my": "မဟာဝဂ်ပါဠိတော်မြန်မာပြန် (သုတ္တန်)",
+      "publisher": "သာသနာရေးဦးစီးဌာန",
+      "detail_url": "https://www.kbrl.gov.mm/old/book/details/000133?categoryId=5",
+      "detail_status": "SEARCH_INDEX_VERIFIED",
+      "preview_url": null,
+      "rights_status": "KBRL_NON_COMMERCIAL_SITE_NOTICE; APK_REUSE_NOT_GRANTED"
+    },
+    {
+      "book_id": "000134",
+      "title_my": "ပါထိကဝဂ်ပါဠိတော်မြန်မာပြန်",
+      "publisher": "သာသနာရေးဦးစီးဌာန",
+      "detail_url": "https://www.kbrl.gov.mm/old/book/details/000134?categoryId=5",
+      "detail_status": "SEARCH_INDEX_VERIFIED",
+      "preview_url": null,
+      "rights_status": "KBRL_NON_COMMERCIAL_SITE_NOTICE; APK_REUSE_NOT_GRANTED"
+    },
+    {
+      "book_id": "000138",
+      "title_my": "မဟာဝဂ္ဂသံယုတ်ပါဠိတော်မြန်မာပြန်",
+      "publisher": "သာသနာရေးဦးစီးဌာန",
+      "detail_url": "https://www.kbrl.gov.mm/old/book/details/000138?categoryId=5",
+      "detail_status": "SEARCH_INDEX_VERIFIED",
+      "preview_url": null,
+      "rights_status": "KBRL_NON_COMMERCIAL_SITE_NOTICE; APK_REUSE_NOT_GRANTED"
+    },
+    {
+      "book_id": "000139",
+      "title_my": "သဂါထာဝဂ္ဂနှင့် နိဒါနဝဂ္ဂသံယုတ်ပါဠိတော်မြန်မာပြန်",
+      "publisher": "သာသနာရေးဦးစီးဌာန",
+      "detail_url": "https://www.kbrl.gov.mm/old/book/details/000139?categoryId=5",
+      "detail_status": "SEARCH_INDEX_VERIFIED",
+      "preview_url": null,
+      "rights_status": "KBRL_NON_COMMERCIAL_SITE_NOTICE; APK_REUSE_NOT_GRANTED"
+    },
+    {
+      "book_id": "000140",
+      "title_my": "ခန္ဓဝဂ္ဂနှင့် သဠာယတနဝဂ္ဂသံယုတ်ပါဠိတော်မြန်မာပြန်",
+      "publisher": "သာသနာရေးဦးစီးဌာန",
+      "detail_url": "https://www.kbrl.gov.mm/old/book/details/000140?categoryId=5",
+      "detail_status": "SEARCH_INDEX_VERIFIED",
+      "preview_url": null,
+      "rights_status": "KBRL_NON_COMMERCIAL_SITE_NOTICE; APK_REUSE_NOT_GRANTED"
+    }
+  ]
+}
