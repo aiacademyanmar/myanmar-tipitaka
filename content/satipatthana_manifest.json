@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "id": "satipatthana",
+  "title": "သတိပဋ္ဌာန် (Satipaṭṭhāna)",
+  "description": "သတိပဋ္ဌာန် ၄ ပါး — ကာယာနုပဿနာ၊ ဝေဒနာနုပဿနာ၊ စိတ္တာနုပဿနာ၊ ဓမ္မာနုပဿနာ",
+  "content_status": "CATALOG_ENTRY_ONLY",
+  "offline_content_imported": false,
+  "source_refs": [
+    {
+      "canonical_ref": "MN 10",
+      "title": "Satipaṭṭhānasutta",
+      "pali_url": "https://suttacentral.net/mn10/pli/ms"
+    },
+    {
+      "canonical_ref": "DN 22",
+      "title": "Mahāsatipaṭṭhānasutta",
+      "pali_url": "https://suttacentral.net/dn22/pli/ms"
+    }
+  ],
+  "four_foundations": [
+    {"id":"kaya","order":1,"pali":"Kāyānupassanā","title_my":"ကာယာနုပဿနာ"},
+    {"id":"vedana","order":2,"pali":"Vedanānupassanā","title_my":"ဝေဒနာနုပဿနာ"},
+    {"id":"citta","order":3,"pali":"Cittānupassanā","title_my":"စိတ္တာနုပဿနာ"},
+    {"id":"dhamma","order":4,"pali":"Dhammānupassanā","title_my":"ဓမ္မာနုပဿနာ"}
+  ],
+  "translation_status": "NOT_IMPORTED",
+  "explanation_status": "NOT_IMPORTED",
+  "review_status": "PENDING_SCHOLAR_REVIEW",
+  "release_gate": "Import source-aligned Pali passages and separately reviewed Myanmar translation and explanation for all selected passages before claiming full offline content."
+}
