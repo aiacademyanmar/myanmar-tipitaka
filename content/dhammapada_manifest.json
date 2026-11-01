@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "id": "dhammapada",
+  "title": "ဓမ္မပဒ (Dhammapada)",
+  "description": "ဂါထာ ၄၂၃ ပါဒ၊ ဝဂ် ၂၆ ခု",
+  "expected_verse_count": 423,
+  "expected_vagga_count": 26,
+  "content_status": "CATALOG_ENTRY_ONLY",
+  "offline_content_imported": false,
+  "translation_status": "NOT_IMPORTED",
+  "explanation_status": "NOT_IMPORTED",
+  "source_url": "https://tipitaka.cloud/en/learn/suttas/dhammapada",
+  "reader_requirements": {
+    "show_vagga_index": true,
+    "show_verse_number": true,
+    "pali_original": true,
+    "myanmar_translation_approved_only": true,
+    "myanmar_explanation_approved_only": true,
+    "offline_access": true
+  },
+  "release_gate": "Do not claim all 423 verses are available offline until all 26 vagga and 423 verse records pass import and validation."
+}
