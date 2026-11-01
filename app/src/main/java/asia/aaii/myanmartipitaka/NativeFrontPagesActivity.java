@@ -63,10 +63,10 @@ public class NativeFrontPagesActivity extends Activity {
     if(p==22){startActivity(new Intent(this,DhammapadaYamakavaggaActivity.class));return;}
     if(p==21){startActivity(new Intent(this,MyanmarCoverageActivity.class));return;}
     if(p==3){toggleMenu();return;}
-    if(p<=20){render(p);return;}
+    if(p<=21){render(p);return;}
     Intent i=new Intent(this,ExactScreensActivity.class);i.putExtra("openPage",p);startActivity(i);
   }
-  @Override public void onCreate(Bundle state){super.onCreate(state);page=state==null?getIntent().getIntExtra("openPage",1):state.getInt("page",1);render(Math.max(1,Math.min(20,page)));}
+  @Override public void onCreate(Bundle state){super.onCreate(state);page=state==null?getIntent().getIntExtra("openPage",1):state.getInt("page",1);render(Math.max(1,Math.min(21,page)));}
   private void render(int n){
     page=n;getWindow().setStatusBarColor(GREEN);getWindow().setNavigationBarColor(GREEN);
     root=new LinearLayout(this);root.setOrientation(LinearLayout.VERTICAL);root.setBackgroundColor(CREAM);
@@ -135,6 +135,17 @@ public class NativeFrontPagesActivity extends Activity {
       }
       addText("နိကာယ်အလိုက် Offline ပါဠိကျမ်းစာရင်းကို ဖွင့်နိုင်ပါသည်။",14,INK,false);
     }else if(n==20){
+      addText("သတိပဋ္ဌာန် လေ့လာရေး",27,GREEN,true);
+      addText("Satipaṭṭhāna Learning • သတိပဋ္ဌာန်သုတ်",16,GOLD,true);
+      addText("သတိပဋ္ဌာန် ၄ ပါးကို ပါဠိမူရင်း၊ မြန်မာဘာသာပြန်နှင့် လေ့လာရေးရှင်းလင်းချက်များဖြင့် သီးခြားလေ့လာရန်။",16,INK,false);
+      menuCard("၁","ကာယာနုပဿနာ — Kāyānupassanā","ကိုယ်ခန္ဓာကို ရှုမှတ်ခြင်း",()->openLink("https://tipitaka.cloud/en/learn/topics/satipatthana"));
+      menuCard("၂","ဝေဒနာနုပဿနာ — Vedanānupassanā","ဝေဒနာကို ရှုမှတ်ခြင်း",()->openLink("https://tipitaka.cloud/en/learn/topics/satipatthana"));
+      menuCard("၃","စိတ္တာနုပဿနာ — Cittānupassanā","စိတ်ကို ရှုမှတ်ခြင်း",()->openLink("https://tipitaka.cloud/en/learn/topics/satipatthana"));
+      menuCard("၄","ဓမ္မာနုပဿနာ — Dhammānupassanā","ဓမ္မသဘောတရားများကို ရှုမှတ်ခြင်း",()->openLink("https://tipitaka.cloud/en/learn/topics/satipatthana"));
+      sourceLink("သတိပဋ္ဌာန်သုတ် — MN 10","https://suttacentral.net/mn10/pli/ms");
+      sourceLink("မဟာသတိပဋ္ဌာန်သုတ် — DN 22","https://suttacentral.net/dn22/pli/ms");
+      addText("မြန်မာဘာသာပြန်နှင့် ရှင်းလင်းချက်များကို ပညာရှင်အတည်ပြုမပြီးမချင်း Draft အဖြစ်သာ ဖော်ပြမည်။ လက်ရှိတွင် ဤစာမျက်နှာသည် Native Navigation နှင့် ရင်းမြစ်လင့်ခ်များကို ပံ့ပိုးထားပြီး ကျမ်းစာအပြည့်အစုံ Offline ထည့်သွင်းမှု မပြီးသေးပါ။",14,INK,false);
+    }else if(n==21){
       addText("Myanmar Tipitaka",28,GREEN,true);
       addText("About • Help • App Information",16,GOLD,true);
       addText("မြန်မာ့ပိဋကတ်တော် လေ့လာရေး Native Android Application",17,INK,false);
@@ -331,19 +342,19 @@ public class NativeFrontPagesActivity extends Activity {
     }else{
       addText("လမ်းညွှန် မီနူး",27,GREEN,true);
       addText("Navigation Menu",16,GOLD,false);
-      String[] names={"မူလစာမျက်နှာ","ပိဋကတ်တော် မိတ်ဆက်","ပိဋကတ် အမျိုးအစားများ","စာအုပ်များ","Native Reader","စာအုပ်တိုက်","စာဖတ်ခြင်း","လေ့လာရန်","Search","Search Results","စာမှတ်များ","History","Advanced Search","အဘိဓမ္မာ","အဘိဓမ္မာ Reader","ဓမ္မသင်ခန်းစာ","မင်္ဂလသုတ်","နိကာယ်ငါးရပ်","About & Help"};
-      int[] targets={2,2,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
+      String[] names={"မူလစာမျက်နှာ","ပိဋကတ်တော် မိတ်ဆက်","ပိဋကတ် အမျိုးအစားများ","စာအုပ်များ","Native Reader","စာအုပ်တိုက်","စာဖတ်ခြင်း","လေ့လာရန်","Search","Search Results","စာမှတ်များ","History","Advanced Search","အဘိဓမ္မာ","အဘိဓမ္မာ Reader","ဓမ္မသင်ခန်းစာ","မင်္ဂလသုတ်","နိကာယ်ငါးရပ်","သတိပဋ္ဌာန်","About & Help"};
+      int[] targets={2,2,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21};
       for(int i=0;i<targets.length;i++)button(String.format(java.util.Locale.US,"%02d  %s",targets[i],names[i]),targets[i]);
     }
     menuPanel=new LinearLayout(this);menuPanel.setOrientation(LinearLayout.VERTICAL);menuPanel.setBackground(bg(Color.WHITE,18));menuPanel.setVisibility(View.GONE);
-    ScrollView menuScroll=new ScrollView(this);LinearLayout items=new LinearLayout(this);items.setOrientation(LinearLayout.VERTICAL);String[] menuTitles={"Home","Categories","Books","Native Reader","Library","Continue Reading","Learning","Search","Search Results","Bookmarks","Reading History","Advanced Search","Abhidhamma Books","Abhidhamma Reader","Dhamma Learning","Mangala Sutta","Five Nikayas","About"};int[] menuTargets={2,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
+    ScrollView menuScroll=new ScrollView(this);LinearLayout items=new LinearLayout(this);items.setOrientation(LinearLayout.VERTICAL);String[] menuTitles={"Home","Categories","Books","Native Reader","Library","Continue Reading","Learning","Search","Search Results","Bookmarks","Reading History","Advanced Search","Abhidhamma Books","Abhidhamma Reader","Dhamma Learning","Mangala Sutta","Five Nikayas","Satipaṭṭhāna","About"};int[] menuTargets={2,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21};
     for(int i=0;i<menuTitles.length;i++){final int target=menuTargets[i];TextView item=text(menuTitles[i],17,GREEN,true);items.addView(item);item.setOnClickListener(v->go(target));}
     menuScroll.addView(items);menuPanel.addView(menuScroll,new LinearLayout.LayoutParams(-1,dp(235)));
     root.addView(menuPanel);
     LinearLayout nav=new LinearLayout(this);nav.setGravity(Gravity.CENTER);nav.setBackgroundColor(GREEN);
-    String[] keys={"⌂ Home","▤ Books","☰ Menu","⌕ Search"};
-    int[] targets={2,5,3,10};
-    for(int i=0;i<4;i++){final int target=targets[i];TextView v=text(keys[i],13,Color.WHITE,false);
+    String[] keys={"⌂ Home","▤ Books","⌕ Search","▦ Modules","▣ Saved","⚙ Help"};
+    int[] targets={2,5,10,17,12,21};
+    for(int i=0;i<6;i++){final int target=targets[i];TextView v=text(keys[i],12,Color.WHITE,false);
       v.setGravity(Gravity.CENTER);nav.addView(v,new LinearLayout.LayoutParams(0,dp(55),1));v.setOnClickListener(w->go(target));}
     root.addView(nav);setContentView(root);
   }
