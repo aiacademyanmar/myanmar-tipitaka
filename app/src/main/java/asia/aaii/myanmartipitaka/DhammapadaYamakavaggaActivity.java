@@ -43,7 +43,8 @@ public final class DhammapadaYamakavaggaActivity extends Activity {
   private ScrollView readerScroll;
   private LinearLayout rows;
   private Spinner chapters;
-  private TextView indicator;
+  private TextView indicator,coverageLabel;
+  private android.widget.ProgressBar draftProgress,reviewedProgress;
   private int chapter, fontSize;
   private volatile boolean destroyed=false;
 
@@ -75,6 +76,12 @@ public final class DhammapadaYamakavaggaActivity extends Activity {
     title.setBackgroundColor(GREEN);root.addView(title);
     TextView subtitle=label("ပါဠိ ၄၂၃ ဂါထာ • ၂၆ ဝဂ် • Internet မလိုသော စာဖတ်စနစ်",14,MUTED,false);
     root.addView(subtitle);
+    coverageLabel=label("မြန်မာဘာသာပြန်မူကြမ်း: Loading...",14,MUTED,true);root.addView(coverageLabel);
+    draftProgress=new android.widget.ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal);
+    draftProgress.setMax(423);root.addView(draftProgress);
+    root.addView(label("ပညာရှင် အတည်ပြုဘာသာပြန်",13,MUTED,false));
+    reviewedProgress=new android.widget.ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal);
+    reviewedProgress.setMax(423);root.addView(reviewedProgress);
 
     chapters=new Spinner(this);
     String[] chapterLabels=new String[PAGE_COUNT];
@@ -127,9 +134,22 @@ public final class DhammapadaYamakavaggaActivity extends Activity {
         if(!c.moveToFirst() || c.getInt(0)!=423 || c.getInt(1)!=26 || c.getInt(2)!=1 || c.getInt(3)!=423)
           throw new IllegalStateException("Incomplete offline Dhammapada corpus");
       }
+      int[] counts=new int[2];
+      try(Cursor c=opened.rawQuery("SELECT COUNT(*) FROM dhammapada_verses WHERE my_draft IS NOT NULL AND length(trim(my_draft))>0",null)){
+        if(c.moveToFirst())counts[0]=c.getInt(0);
+      }
+      try(Cursor c=opened.rawQuery("SELECT COUNT(DISTINCT segment_id) FROM paragraph_myanmar_content WHERE reviewed=1 AND content_type='translation' AND segment_id LIKE 'dhp%'",null)){
+        if(c.moveToFirst())counts[1]=c.getInt(0);
+      }
       if(destroyed){opened.close();return;}
       db=opened;
-      runOnUiThread(()->{if(!destroyed)showChapter();});
+      runOnUiThread(()->{
+        if(destroyed)return;
+        draftProgress.setProgress(counts[0]);reviewedProgress.setProgress(Math.min(423,counts[1]));
+        coverageLabel.setText("ဘာသာပြန်မူကြမ်း "+counts[0]+"/423 • "+
+          String.format(java.util.Locale.US,"%.1f%%",counts[0]*100.0/423)+" | အတည်ပြု "+counts[1]+"/423");
+        showChapter();
+      });
     }catch(Exception e){
       if(opened!=null && opened!=db)opened.close();
       final String reason=e.getMessage()==null?"Unknown error":e.getMessage();
