@@ -1,0 +1,475 @@
+{
+  "schema_version": 1,
+  "content_id": "mangala_sutta",
+  "title": "မင်္ဂလသုတ် (Maṅgala Sutta)",
+  "subtitle": "မင်္ဂလာ ၃၈ ပါး",
+  "canonical_refs": [
+    "Sutta Nipāta 2.4 (Sn 258–269)",
+    "Khuddakapāṭha 5"
+  ],
+  "source": {
+    "name": "SuttaCentral",
+    "url": "https://suttacentral.net/snp2.4/pli/ms",
+    "edition": "Mahāsaṅgīti Tipiṭaka Buddhavasse 2500, World Tipiṭaka Edition (Roman Script)",
+    "attribution": "Pāli source transcription credited on SuttaCentral to the Mahāsaṅgīti Tipiṭaka; prepared by Blake Walshe and Bhikkhu Sujato.",
+    "verification_required": true
+  },
+  "pali_text": "Evaṃ me sutaṃ—ekaṃ samayaṃ bhagavā sāvatthiyaṃ viharati jetavane anāthapiṇḍikassa ārāme. Atha kho aññatarā devatā abhikkantāya rattiyā abhikantavaṇṇā kevalakappaṃ jetavanaṃ obhāsetvā yena bhagavā tenupasaṅkami; upasaṅkamitvā bhagavantaṃ abhivādetvā ekamantaṃ aṭṭhāsi. Ekamantaṃ ṭhitā kho sā devatā bhagavantaṃ gāthāya ajjhabhāsi:\n\nBahū devā manussā ca,\nmaṅgalāni acintayuṃ;\nĀkaṅkhamānā sotthānaṃ,\nbrūhi maṅgalamuttamaṃ.\n\nAsevanā ca bālānaṃ,\npaṇḍitānañca sevanā;\nPūjā ca pūjaneyyānaṃ,\netaṃ maṅgalamuttamaṃ.\n\nPatirūpadesavāso ca,\npubbe ca katapuññatā;\nAttasammāpaṇidhi ca,\netaṃ maṅgalamuttamaṃ.\n\nBāhusaccañca sippañca,\nvinayo ca susikkhito;\nSubhāsitā ca yā vācā,\netaṃ maṅgalamuttamaṃ.\n\nMātāpitu upaṭṭhānaṃ,\nputtadārassa saṅgaho;\nAnākulā ca kammantā,\netaṃ maṅgalamuttamaṃ.\n\nDānañca dhammacariyā ca,\nñātakānañca saṅgaho;\nAnavajjāni kammāni,\netaṃ maṅgalamuttamaṃ.\n\nĀratī viratī pāpā,\nmajjapānā ca saṃyamo;\nAppamādo ca dhammesu,\netaṃ maṅgalamuttamaṃ.\n\nGāravo ca nivāto ca,\nsantuṭṭhi ca kataññutā;\nKālena dhammassavanaṃ,\netaṃ maṅgalamuttamaṃ.\n\nKhantī ca sovacassatā,\nsamaṇānañca dassanaṃ;\nKālena dhammasākacchā,\netaṃ maṅgalamuttamaṃ.\n\nTapo ca brahmacariyañca,\nariyasaccāna dassanaṃ;\nNibbānasacchikiriyā ca,\netaṃ maṅgalamuttamaṃ.\n\nPhuṭṭhassa lokadhammehi,\ncittaṃ yassa na kampati;\nAsokaṃ virajaṃ khemaṃ,\netaṃ maṅgalamuttamaṃ.\n\nEtādisāni katvāna,\nsabbattha maparājitā;\nSabbattha sotthiṃ gacchanti,\ntaṃ tesaṃ maṅgalamuttaman”ti.\n\nMaṅgalasuttaṃ catutthaṃ.",
+  "sections": [
+    {
+      "id": "group_1",
+      "title": "အခြေခံလူမှုဆက်ဆံရေး",
+      "items": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "id": "group_2",
+      "title": "ဘဝအခြေခံကောင်းများ",
+      "items": [
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "id": "group_3",
+      "title": "ပညာနှင့် အကျင့်စည်းကမ်း",
+      "items": [
+        7,
+        8,
+        9,
+        10
+      ]
+    },
+    {
+      "id": "group_4",
+      "title": "မိသားစုနှင့် အသက်မွေးဝမ်းကျောင်း",
+      "items": [
+        11,
+        12,
+        13
+      ]
+    },
+    {
+      "id": "group_5",
+      "title": "လူမှုအကျိုးပြု ကုသိုလ်အမှုများ",
+      "items": [
+        14,
+        15,
+        16,
+        17
+      ]
+    },
+    {
+      "id": "group_6",
+      "title": "မကောင်းမှုရှောင်ကြဉ်ခြင်း",
+      "items": [
+        18,
+        19,
+        20,
+        21
+      ]
+    },
+    {
+      "id": "group_7",
+      "title": "လေးစားမှုနှင့် တရားနာယူမှု",
+      "items": [
+        22,
+        23,
+        24,
+        25,
+        26
+      ]
+    },
+    {
+      "id": "group_8",
+      "title": "သည်းခံခြင်းနှင့် တရားဆွေးနွေးခြင်း",
+      "items": [
+        27,
+        28,
+        29,
+        30
+      ]
+    },
+    {
+      "id": "group_9",
+      "title": "မြင့်မြတ်သော ကျင့်စဉ်နှင့် သစ္စာသိမြင်မှု",
+      "items": [
+        31,
+        32,
+        33,
+        34
+      ]
+    },
+    {
+      "id": "group_10",
+      "title": "လောကဓံကို ကျော်လွန်သော စိတ်အခြေအနေ",
+      "items": [
+        35,
+        36,
+        37,
+        38
+      ]
+    }
+  ],
+  "blessings": [
+    {
+      "number": 1,
+      "pali_term": "Asevanā bālānaṃ",
+      "myanmar_title": "လူမိုက်တို့နှင့် မပေါင်းသင်းခြင်း",
+      "myanmar_explanation_draft": "မကောင်းသော အကျင့်နှင့် အမြင်များကို အားပေးသည့် အပေါင်းအသင်းမှ ရှောင်ကြဉ်ရန်။",
+      "translation_status": "DRAFT",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "number": 2,
+      "pali_term": "Paṇḍitānaṃ sevanā",
+      "myanmar_title": "ပညာရှိသူတော်ကောင်းတို့နှင့် ပေါင်းသင်းခြင်း",
+      "myanmar_explanation_draft": "ပညာ၊ သီလ၊ အကျိုးရှိသော အကြံဉာဏ်ကို ပေးနိုင်သူတို့နှင့် ဆက်ဆံရန်။",
+      "translation_status": "DRAFT",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "number": 3,
+      "pali_term": "Pūjā pūjaneyyānaṃ",
+      "myanmar_title": "ပူဇော်ထိုက်သူတို့ကို ပူဇော်ခြင်း",
+      "myanmar_explanation_draft": "ဂုဏ်ကျေးဇူးနှင့် အရည်အချင်းရှိသူတို့အား လေးစားဂုဏ်ပြုရန်။",
+      "translation_status": "DRAFT",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "number": 4,
+      "pali_term": "Patirūpadesavāsa",
+      "myanmar_title": "သင့်လျော်သော အရပ်ဒေသ၌ နေထိုင်ခြင်း",
+      "myanmar_explanation_draft": "ဓမ္မ၊ ပညာရေး၊ အသက်မွေးဝမ်းကျောင်းနှင့် လူမှုဘဝ တိုးတက်နိုင်သည့် ပတ်ဝန်းကျင်ကို ရွေးချယ်ရန်။",
+      "translation_status": "DRAFT",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "number": 5,
+      "pali_term": "Pubbe katapuññatā",
+      "myanmar_title": "ရှေးက ပြုခဲ့ဖူးသော ကုသိုလ်ကောင်းမှုရှိခြင်း",
+      "myanmar_explanation_draft": "အတိတ်က ကောင်းမှု၏ အကျိုးနှင့် အထောက်အပံ့ကို တန်ဖိုးထားရန်။",
+      "translation_status": "DRAFT",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "number": 6,
+      "pali_term": "Attasammāpaṇidhi",
+      "myanmar_title": "မိမိကိုယ်ကို မှန်ကန်စွာ ထူထောင်ညွှန်ကြားခြင်း",
+      "myanmar_explanation_draft": "အတွေး၊ ရည်ရွယ်ချက်နှင့် အပြုအမူကို ကောင်းမွန်သော လမ်းကြောင်းပေါ်ထားရန်။",
+      "translation_status": "DRAFT",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "number": 7,
+      "pali_term": "Bāhusacca",
+      "myanmar_title": "အကြားအမြင် ဗဟုသုတများခြင်း",
+      "myanmar_explanation_draft": "သင်ယူလေ့လာမှုကို ဆက်လက်ပြုလုပ်ပြီး အသိပညာ တိုးပွားစေရန်။",
+      "translation_status": "DRAFT",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "number": 8,
+      "pali_term": "Sippa",
+      "myanmar_title": "အတတ်ပညာ လက်မှုပညာ တတ်မြောက်ခြင်း",
+      "myanmar_explanation_draft": "အသက်မွေးဝမ်းကျောင်းနှင့် လူ့အဖွဲ့အစည်းအတွက် အကျိုးရှိသော ကျွမ်းကျင်မှု ရရှိစေရန်။",
+      "translation_status": "DRAFT",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "number": 9,
+      "pali_term": "Vinaya susikkhita",
+      "myanmar_title": "စည်းကမ်းသိက္ခာကို ကောင်းစွာ သင်ယူကျင့်သုံးခြင်း",
+      "myanmar_explanation_draft": "ကိုယ်၊ နှုတ်၊ စိတ်တို့တွင် စည်းကမ်းနှင့် ကိုယ်ကျင့်တရားကို ထိန်းသိမ်းရန်။",
+      "translation_status": "DRAFT",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "number": 10,
+      "pali_term": "Subhāsitā vācā",
+      "myanmar_title": "ကောင်းမွန်သော စကားကို ပြောဆိုခြင်း",
+      "myanmar_explanation_draft": "အချိန်အခါသင့်လျော်၍ မှန်ကန်၊ နူးညံ့၊ အကျိုးရှိသော စကားကို ပြောရန်။",
+      "translation_status": "DRAFT",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "number": 11,
+      "pali_term": "Mātāpitu upaṭṭhāna",
+      "myanmar_title": "မိဘနှစ်ပါးကို လုပ်ကျွေးပြုစုခြင်း",
+      "myanmar_explanation_draft": "မိဘတို့၏ ကျေးဇူးကို သိရှိပြီး တတ်နိုင်သမျှ ပြုစုစောင့်ရှောက်ရန်။",
+      "translation_status": "DRAFT",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "number": 12,
+      "pali_term": "Puttadārassa saṅgaha",
+      "myanmar_title": "သားမယား/မိသားစုကို စောင့်ရှောက်ခြင်း",
+      "myanmar_explanation_draft": "မိသားစုဝင်များအပေါ် တာဝန်ယူ၍ ချစ်ခင်ကြင်နာစွာ စောင့်ရှောက်ရန်။",
+      "translation_status": "DRAFT",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "number": 13,
+      "pali_term": "Anākulā kammantā",
+      "myanmar_title": "အနှောင့်အယှက်ကင်း၍ စနစ်ကျသော အသက်မွေးမှု",
+      "myanmar_explanation_draft": "သူတစ်ပါးကို မထိခိုက်စေဘဲ ရိုးသားတည်ငြိမ်သော အလုပ်အကိုင် ပြုလုပ်ရန်။",
+      "translation_status": "DRAFT",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "number": 14,
+      "pali_term": "Dāna",
+      "myanmar_title": "ပေးကမ်းလှူဒါန်းခြင်း",
+      "myanmar_explanation_draft": "စေတနာသန့်ရှင်းစွာ မျှဝေပေးကမ်းရန်။",
+      "translation_status": "DRAFT",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "number": 15,
+      "pali_term": "Dhammacariyā",
+      "myanmar_title": "တရားနှင့်အညီ ကျင့်ကြံနေထိုင်ခြင်း",
+      "myanmar_explanation_draft": "ကိုယ်၊ နှုတ်၊ စိတ်တို့ဖြင့် တရားနှင့်လျော်ညီသော အပြုအမူကို ကျင့်သုံးရန်။",
+      "translation_status": "DRAFT",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "number": 16,
+      "pali_term": "Ñātakānaṃ saṅgaha",
+      "myanmar_title": "ဆွေမျိုးတို့ကို ကူညီစောင့်ရှောက်ခြင်း",
+      "myanmar_explanation_draft": "ဆွေမျိုးအသိုင်းအဝိုင်းအပေါ် သင့်လျော်သလို ကူညီထောက်ပံ့ရန်။",
+      "translation_status": "DRAFT",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "number": 17,
+      "pali_term": "Anavajjāni kammāni",
+      "myanmar_title": "အပြစ်ကင်းသော အမှုကိစ္စများ ပြုလုပ်ခြင်း",
+      "myanmar_explanation_draft": "မိမိနှင့် သူတစ်ပါးကို ထိခိုက်နစ်နာစေသော အလုပ်များကို ရှောင်ကြဉ်ရန်။",
+      "translation_status": "DRAFT",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "number": 18,
+      "pali_term": "Āratī pāpā",
+      "myanmar_title": "မကောင်းမှုမှ စက်ဆုပ်ရှောင်ကြဉ်ခြင်း",
+      "myanmar_explanation_draft": "အကုသိုလ်ဖြစ်စေသော အပြုအမူများကို မနှစ်သက်ဘဲ ရှောင်ရန်။",
+      "translation_status": "DRAFT",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "number": 19,
+      "pali_term": "Viratī pāpā",
+      "myanmar_title": "မကောင်းမှုမှ ရပ်စဲရှောင်ကြဉ်ခြင်း",
+      "myanmar_explanation_draft": "မကောင်းမှုကို သိရှိပြီး လက်တွေ့မပြုလုပ်ရန် ထိန်းသိမ်းခြင်း။",
+      "translation_status": "DRAFT",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "number": 20,
+      "pali_term": "Majjapānā saṃyama",
+      "myanmar_title": "မူးယစ်စေသော အရာများမှ စည်းကမ်းတကျ ရှောင်ကြဉ်ခြင်း",
+      "myanmar_explanation_draft": "သတိပညာကို ပျက်စီးစေသော မူးယစ်စေသည့် အရာများကို ရှောင်ကြဉ်ရန်။",
+      "translation_status": "DRAFT",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "number": 21,
+      "pali_term": "Appamādo dhammesu",
+      "myanmar_title": "ကုသိုလ်တရားတို့၌ မမေ့မလျော့ လုံ့လရှိခြင်း",
+      "myanmar_explanation_draft": "ကောင်းမှု၊ သီလ၊ သမာဓိ၊ ပညာတို့တွင် သတိနှင့် လုံ့လရှိရန်။",
+      "translation_status": "DRAFT",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "number": 22,
+      "pali_term": "Gārava",
+      "myanmar_title": "ရိုသေလေးစားခြင်း",
+      "myanmar_explanation_draft": "ဂုဏ်ကျေးဇူးရှိသူ၊ ဆရာသမား၊ မိဘနှင့် သီလပညာရှိသူတို့အား လေးစားရန်။",
+      "translation_status": "DRAFT",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "number": 23,
+      "pali_term": "Nivāta",
+      "myanmar_title": "မာန်မာနကင်း၍ နှိမ့်ချခြင်း",
+      "myanmar_explanation_draft": "မိမိကိုယ်ကို အထင်ကြီးမှု လျှော့ချပြီး နှိမ့်ချရိုသေစွာ နေထိုင်ရန်။",
+      "translation_status": "DRAFT",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "number": 24,
+      "pali_term": "Santuṭṭhi",
+      "myanmar_title": "ရောင့်ရဲတင်းတိမ်ခြင်း",
+      "myanmar_explanation_draft": "ရရှိထားသည့် အရာများအပေါ် မျှတစွာ ရောင့်ရဲတတ်ရန်။",
+      "translation_status": "DRAFT",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "number": 25,
+      "pali_term": "Kataññutā",
+      "myanmar_title": "ကျေးဇူးသိတတ်ခြင်း",
+      "myanmar_explanation_draft": "မိမိအပေါ် ပြုခဲ့သော ကျေးဇူးများကို မမေ့ဘဲ သိတတ်တန်ဖိုးထားရန်။",
+      "translation_status": "DRAFT",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "number": 26,
+      "pali_term": "Kālena dhammassavana",
+      "myanmar_title": "အခါသင့်လျော်စွာ တရားနာယူခြင်း",
+      "myanmar_explanation_draft": "သင့်လျော်သော အချိန်တွင် တရားတော်ကို နာယူလေ့လာရန်။",
+      "translation_status": "DRAFT",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "number": 27,
+      "pali_term": "Khantī",
+      "myanmar_title": "သည်းခံခြင်း",
+      "myanmar_explanation_draft": "အခက်အခဲနှင့် မနှစ်မြို့ဖွယ် အခြေအနေများကို သည်းခံနိုင်ရန်။",
+      "translation_status": "DRAFT",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "number": 28,
+      "pali_term": "Sovacassatā",
+      "myanmar_title": "ဆုံးမလွယ်ခြင်း၊ ဆုံးမစကားကို လက်ခံနိုင်ခြင်း",
+      "myanmar_explanation_draft": "အကျိုးရှိသော အကြံပြုဆုံးမမှုကို မာနမထားဘဲ လက်ခံပြုပြင်ရန်။",
+      "translation_status": "DRAFT",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "number": 29,
+      "pali_term": "Samaṇānaṃ dassana",
+      "myanmar_title": "ရဟန်းသံဃာ သူတော်စင်တို့ကို ဖူးမြင်ခြင်း",
+      "myanmar_explanation_draft": "သီလ၊ သမာဓိ၊ ပညာကျင့်သုံးသူတို့နှင့် တွေ့ဆုံ၍ အတုယူလေ့လာရန်။",
+      "translation_status": "DRAFT",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "number": 30,
+      "pali_term": "Kālena dhammasākacchā",
+      "myanmar_title": "အခါသင့်လျော်စွာ တရားဆွေးနွေးခြင်း",
+      "myanmar_explanation_draft": "တရားအကြောင်းကို အချိန်အခါသင့်လျော်စွာ ဆွေးနွေးမေးမြန်းရန်။",
+      "translation_status": "DRAFT",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "number": 31,
+      "pali_term": "Tapo",
+      "myanmar_title": "ခြိုးခြံစွာ ကိုယ်စိတ်ကို ထိန်းသိမ်းကျင့်ကြံခြင်း",
+      "myanmar_explanation_draft": "ကိလေသာနှင့် အကျင့်ဆိုးများကို လျှော့ချရန် ကိုယ်စိတ်ကို လေ့ကျင့်ထိန်းသိမ်းရန်။",
+      "translation_status": "DRAFT",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "number": 32,
+      "pali_term": "Brahmacariya",
+      "myanmar_title": "မြတ်သော အကျင့်ကို ကျင့်သုံးခြင်း",
+      "myanmar_explanation_draft": "သီလ၊ သမာဓိ၊ ပညာနှင့် သန့်ရှင်းသော အကျင့်လမ်းကို ကျင့်သုံးရန်။",
+      "translation_status": "DRAFT",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "number": 33,
+      "pali_term": "Ariyasaccāna dassana",
+      "myanmar_title": "အရိယသစ္စာတို့ကို ထိုးထွင်းသိမြင်ခြင်း",
+      "myanmar_explanation_draft": "ဒုက္ခ၊ ဒုက္ခသမုဒယ၊ ဒုက္ခနိရောဓ၊ ဒုက္ခနိရောဓဂါမိနီပဋိပဒါတို့ကို သိမြင်ရန်။",
+      "translation_status": "DRAFT",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "number": 34,
+      "pali_term": "Nibbānasacchikiriyā",
+      "myanmar_title": "နိဗ္ဗာန်ကို မျက်မှောက်ပြုခြင်း",
+      "myanmar_explanation_draft": "နိဗ္ဗာန်တရားကို ကိုယ်တိုင်သိမြင်မျက်မှောက်ပြုခြင်း။",
+      "translation_status": "DRAFT",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "number": 35,
+      "pali_term": "Cittaṃ na kampati lokadhammehi",
+      "myanmar_title": "လောကဓံကြောင့် စိတ်မတုန်လှုပ်ခြင်း",
+      "myanmar_explanation_draft": "လာဘ်၊ အလာဘ်၊ ယသ်၊ အယသ်၊ ချီးမွမ်း၊ ကဲ့ရဲ့၊ ချမ်းသာ၊ ဆင်းရဲတို့ကြား စိတ်တည်ငြိမ်ရန်။",
+      "translation_status": "DRAFT",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "number": 36,
+      "pali_term": "Asoka",
+      "myanmar_title": "စိုးရိမ်ပူဆွေးမှု ကင်းခြင်း",
+      "myanmar_explanation_draft": "အရဟတ္တမဂ်ဖိုလ်နှင့် ဆက်စပ်သည့် ပူဆွေးမှုကင်းသော အခြေအနေကို ညွှန်ပြသည်။",
+      "translation_status": "DRAFT",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "number": 37,
+      "pali_term": "Viraja",
+      "myanmar_title": "ကိလေသာအညစ်အကြေး ကင်းခြင်း",
+      "myanmar_explanation_draft": "လောဘ၊ ဒေါသ၊ မောဟ စသော ကိလေသာတို့မှ ကင်းစင်သည့် အခြေအနေကို ညွှန်ပြသည်။",
+      "translation_status": "DRAFT",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    },
+    {
+      "number": 38,
+      "pali_term": "Khema",
+      "myanmar_title": "ဘေးကင်းလုံခြုံသော အခြေအနေသို့ ရောက်ခြင်း",
+      "myanmar_explanation_draft": "ကိလေသာနှင့် သံသရာဘေးတို့မှ လွတ်မြောက်ရာ လုံခြုံမှုကို ညွှန်ပြသည်။",
+      "translation_status": "DRAFT",
+      "explanation_status": "DRAFT",
+      "review_status": "PENDING_SCHOLAR_REVIEW"
+    }
+  ],
+  "counts": {
+    "expected_blessings": 38,
+    "actual_blessings": 38,
+    "expected_sections": 10,
+    "actual_sections": 10
+  },
+  "import_policy": {
+    "approved_content_only_for_approved_label": true,
+    "ai_or_editorial_drafts_must_be_labeled_draft": true,
+    "offline_sqlite_target": true,
+    "stable_ids": true,
+    "source_attribution_required": true
+  }
+}
