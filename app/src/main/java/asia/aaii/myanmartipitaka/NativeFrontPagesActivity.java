@@ -85,7 +85,8 @@ public class NativeFrontPagesActivity extends Activity {
       TextView dhamma=text("☸  Offline ဓမ္မရှင်းလင်းချက်များ",18,Color.WHITE,true);dhamma.setBackground(bg(GREEN,16));content.addView(dhamma);dhamma.setOnClickListener(v->startActivity(new Intent(this,OfflineDhammaActivity.class)));
       sourceLink("မင်္ဂလသုတ် • Maṅgala Sutta","https://tipitaka.cloud/learn/suttas/mangala");
       sourceLink("နိဗ္ဗာန် • Nibbāna","https://tipitaka.cloud/en/learn/topics/nibbana");
-      button("မင်္ဂလသုတ် စာအုပ်ဖတ်ရန်",6);
+      button("📖  မင်္ဂလာ ၃၈ ပါး — Offline စာအုပ်ဖတ်ရန်",0);
+      TextView mangala=text("မင်္ဂလာ ၃၈ ပါးကို ပါဠိမူရင်းနှင့် မြန်မာရှင်းလင်းချက် Popup ဖြင့် ဖတ်ရန်",16,INK,false);content.addView(mangala);mangala.setOnClickListener(v->startActivity(new Intent(this,MangalaSuttaActivity.class)));
       button("ဓမ္မသင်ခန်းစာများ",17);
       button("မှတ်စုများရေးရန်",12);
       addText("မူရင်းမင်္ဂလသုတ် ပါဠိ/ဘာသာပြန် စာသားကို တရားဝင်အတည်ပြုထားသော ရင်းမြစ်မှ ထည့်သွင်းရန် လိုအပ်ပါသည်။",14,INK,false);
