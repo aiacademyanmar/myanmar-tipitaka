@@ -1,0 +1,59 @@
+name: Myanmar Tipitaka V2.3.4.9.3 — Native SQLite Generation
+on:
+  workflow_dispatch:
+    inputs:
+      source_run_id:
+        description: Successful V2.3.4.9.1 source acquisition run ID
+        required: true
+        type: string
+permissions:
+  actions: read
+  contents: read
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download Pali source staging artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: Myanmar-Tipitaka-V2.3.4.9.1-Pali-Source-Staging-UNMAPPED
+          run-id: ${{ inputs.source_run_id }}
+          github-token: ${{ github.token }}
+          path: source-staging
+      - name: Check approved edition mapping
+        id: mapping
+        run: |
+          python scripts/validate_45_volume_crosswalk.py
+      - name: Build native SQLite from approved crosswalk
+        run: |
+          mkdir -p app/src/main/assets
+          python scripts/build_native_45_sqlite.py source-staging/pali_root_source.sqlite \
+            --crosswalk corpus/45_volume_crosswalk.csv \
+            --output app/src/main/assets/tipitaka_offline.sqlite \
+            --report native_corpus_report.json
+      - name: Verify native SQLite contract
+        run: |
+          python - <<'PY'
+          import json,sqlite3,pathlib
+          p=pathlib.Path("app/src/main/assets/tipitaka_offline.sqlite")
+          db=sqlite3.connect(f"file:{p.resolve()}?mode=ro",uri=True)
+          assert db.execute("PRAGMA integrity_check").fetchone()[0]=="ok"
+          assert db.execute("SELECT COUNT(DISTINCT volume) FROM paragraphs").fetchone()[0]==45
+          assert db.execute("SELECT COUNT(*) FROM paragraphs").fetchone()[0]>0
+          assert db.execute("SELECT COUNT(*) FROM paragraph_myanmar_content").fetchone()[0]==0
+          report=json.loads(pathlib.Path("native_corpus_report.json").read_text())
+          assert report["volumes"]==45 and report["mapping_reviewed"] is True
+          print(json.dumps(report,ensure_ascii=False,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Myanmar-Tipitaka-V2.3.4.9.3-Native-45-Volume-SQLite
+          path: |
+            app/src/main/assets/tipitaka_offline.sqlite
+            native_corpus_report.json
+          if-no-files-found: error
+          retention-days: 30
