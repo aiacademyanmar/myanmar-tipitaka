@@ -62,7 +62,7 @@ public final class TipitakaLibraryActivity extends Activity {
     "ပဋ္ဌာန်း ၆"
   };
   private SQLiteDatabase db;
-  private LinearLayout content;
+  private LinearLayout content;\n  private int filterStart=1,filterEnd=45;
   private int dp(int v){return (int)(getResources().getDisplayMetrics().density*v+.5);}
   private TextView text(String s,int size){TextView t=new TextView(this);t.setText(s);t.setTextColor(GREEN);t.setTextSize(size);t.setPadding(dp(14),dp(12),dp(14),dp(12));return t;}
   private void row(String title,Runnable fn){
@@ -86,7 +86,7 @@ public final class TipitakaLibraryActivity extends Activity {
     TextView header=text("☸  ပိဋကတ်သုံးပုံ · Offline Library",22);header.setTextColor(Color.WHITE);header.setBackgroundColor(GREEN);root.addView(header);
     ScrollView scroll=new ScrollView(this);content=new LinearLayout(this);content.setOrientation(LinearLayout.VERTICAL);
     scroll.addView(content);root.addView(scroll,new LinearLayout.LayoutParams(-1,0,1));
-    content.addView(text("Offline ပါဠိကျမ်းဒေတာကို ဖွင့်နေပါသည်…",18));
+    content.addView(text("Offline ပါဠိကျမ်းဒေတာကို ဖွင့်နေပါသည်…",18));\n    if(filterStart!=1 || filterEnd!=45) content.addView(text("ရွေးချယ်ထားသော ကျမ်းအုပ်စု • "+filterStart+"–"+filterEnd,16));
     new Thread(()->{
       final boolean ready=openDb();
       long[] counts=new long[3];
