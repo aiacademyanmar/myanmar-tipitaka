@@ -1,4 +1,4 @@
-name: Myanmar Tipitaka V2.3.4.9.4 Native SQLite Foundation + APK
+name: Myanmar Tipitaka V2.3.4.9.5 Native SQLite Foundation + APK
 
 on:
   workflow_dispatch:
@@ -54,11 +54,22 @@ jobs:
       - name: Compile debug APK (compile smoke test even when corpus is incomplete)
         if: always() && steps.importer_tests.outcome == 'success'
         run: gradle --no-daemon assembleDebug
+      - name: Upload corpus verification reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Myanmar-Tipitaka-V2.3.4.9.5-Corpus-QA-Reports
+          path: |
+            corpus/offline_corpus_audit.json
+            corpus/myanmar_editorial_batch_audit.json
+            myanmar_review_coverage.json
+          if-no-files-found: ignore
+          retention-days: 14
       - name: Upload APK artifact (only when offline corpus gate passes)
         if: steps.corpus_gate.outcome == 'success' && steps.crosswalk_gate.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
-          name: Myanmar-Tipitaka-V2.3.4.9.4-debug-APK
+          name: Myanmar-Tipitaka-V2.3.4.9.5-debug-APK
           path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 14
