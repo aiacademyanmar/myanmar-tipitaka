@@ -33,9 +33,19 @@ public class BookReaderActivity extends Activity {
     font=prefs.getInt("font",21);
     layout();
     String savedUri=prefs.getString("lastUri",null);
+    boolean selectFile=getIntent().getBooleanExtra("select_file",false);
     if(savedUri!=null) {
-      try { open(Uri.parse(savedUri)); } catch(Exception e){status("Tap Open Book to select a document");}
-    }else status("Open a PDF, EPUB or UTF-8 TXT file to read offline");
+      try { open(Uri.parse(savedUri)); }
+      catch(Exception e){status("စာအုပ်ဖိုင်ကို ပြန်ဖွင့်၍မရပါ။ Offline Library မှ ကျမ်းစာကို ရွေးနိုင်ပါသည်။");}
+    } else if(selectFile) {
+      status("PDF / EPUB / UTF-8 TXT ဖိုင်ကို ရွေးချယ်ပါ");
+      choose();
+    } else {
+      // The old Five-Nikaya cards opened this generic file picker without a document.
+      // Route a normal Reader launch to the bundled 45-volume offline Tipitaka instead.
+      startActivity(new Intent(this,TipitakaLibraryActivity.class));
+      finish();
+    }
   }
   private TextView button(String text,Runnable action) {
     TextView v=new TextView(this);v.setText(text);v.setTextColor(Color.rgb(247,229,184));v.setTextSize(16);
@@ -77,7 +87,7 @@ public class BookReaderActivity extends Activity {
     super.onActivityResult(request,result,data);
     if(request==PICK&&result==RESULT_OK&&data!=null){
       Uri uri=data.getData();if(uri==null)return;
-      try {getContentResolver().takePersistableUriPermission(uri,Intent.FLAG_GRANT_READ_URI_PERMISSION);}catch(Exception ignored){}
+      try{getContentResolver().takePersistableUriPermission(uri,Intent.FLAG_GRANT_READ_URI_PERMISSION);}catch(Exception ignored){}
       try{open(uri);}catch(Exception e){new AlertDialog.Builder(this).setTitle("Cannot open book").setMessage(e.getMessage()).setPositiveButton("OK",null).show();}
     }
   }
@@ -86,7 +96,6 @@ public class BookReaderActivity extends Activity {
     closePdf();bookId=uri.toString();pdf=false;bookText="";page=0;
     String name=getFileName(uri).toLowerCase(Locale.ROOT);
     if(name.endsWith(".pdf")){
-      // PdfRenderer needs a seekable descriptor; content providers should support this.
       descriptor=getContentResolver().openFileDescriptor(uri,"r");
       if(descriptor==null)throw new IOException("PDF file not readable");
       renderer=new PdfRenderer(descriptor);pdf=true;
@@ -123,7 +132,7 @@ public class BookReaderActivity extends Activity {
           if(++files>500)throw new IOException("EPUB too many chapters");
           String html=readLimited(zip,2*1024*1024);
           String clean=Html.fromHtml(html,Html.FROM_HTML_MODE_LEGACY).toString().trim();
-          if(!clean.isEmpty()){result.append(clean).append("\n\n");}
+          if(!clean.isEmpty())result.append(clean).append("\n\n");
           if(result.length()>8_000_000)throw new IOException("EPUB text too large");
         }
         zip.closeEntry();
