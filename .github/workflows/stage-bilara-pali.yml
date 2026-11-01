@@ -12,6 +12,7 @@ on:
       - 'corpus/45_volume_crosswalk.csv'
       - 'corpus/45_volume_source_candidates.csv'
       - 'scripts/audit_bilara_45_candidates.py'
+      - 'scripts/report_bilara_boundaries.py'
 jobs:
   stage:
     runs-on: ubuntu-latest
@@ -34,6 +35,7 @@ jobs:
           python scripts/build_bilara_source_sqlite.py upstream-bilara/root/pli/ms --output pali_root_source.sqlite --source-commit "$(cat bilara_source_commit.txt)"
           python scripts/inventory_bilara_collections.py pali_root_source.sqlite --output bilara_collection_inventory.csv
           python scripts/audit_bilara_45_candidates.py pali_root_source.sqlite --output bilara_candidate_audit.csv
+          python scripts/report_bilara_boundaries.py pali_root_source.sqlite --details bilara_source_boundaries.csv --manifest bilara_source_file_manifest.csv --report bilara_mapping_review.json
       - name: Validate 45-volume editorial crosswalk
         run: python scripts/validate_45_volume_crosswalk.py
       - name: Provenance audit
@@ -55,6 +57,9 @@ jobs:
             bilara_pali_staging.csv
             bilara_collection_inventory.csv
             bilara_candidate_audit.csv
+            bilara_source_boundaries.csv
+            bilara_source_file_manifest.csv
+            bilara_mapping_review.json
             corpus/45_volume_crosswalk.csv
             upstream-bilara/LICENSE.md
           if-no-files-found: error
