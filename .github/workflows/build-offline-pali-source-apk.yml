@@ -20,6 +20,10 @@ on:
       - 'scripts/test_offline_45_boundaries.py'
       - 'scripts/build_dhammapada_yamakavagga.py'
       - 'scripts/build_dhammapada_423.py'
+      - 'scripts/build_mangala_sutta.py'
+      - 'corpus/mangala_sutta_38_my_drafts.json'
+      - 'corpus/mangala_sutta_38_my_drafts.csv'
+      - 'app/src/main/java/asia/aaii/myanmartipitaka/MangalaSuttaActivity.java'
       - 'corpus/dhammapada_yamakavagga_my_drafts.csv'
       - 'corpus/dhammapada_draft_21_99.csv'
       - 'corpus/dhammapada_draft_100_145.csv'
@@ -104,6 +108,18 @@ jobs:
           verses,chapters=db.execute("SELECT COUNT(*),COUNT(DISTINCT chapter) FROM dhammapada_verses").fetchone()
           assert verses==423 and chapters==26
           assert db.execute("SELECT COUNT(*) FROM dhammapada_verses WHERE my_draft IS NOT NULL").fetchone()[0]==423
+          PY
+      - name: Build standalone offline Mangala Sutta book (38 blessings)
+        run: |
+          python scripts/build_mangala_sutta.py
+          python - <<'PY'
+          import sqlite3
+          db=sqlite3.connect('app/src/main/assets/tipitaka_offline.sqlite')
+          assert db.execute('SELECT COUNT(*) FROM mangala_blessings').fetchone()[0]==38
+          assert db.execute('SELECT COUNT(*) FROM mangala_pali_stanzas').fetchone()[0]==13
+          assert db.execute("SELECT COUNT(*) FROM mangala_blessings WHERE translation_status='ai_draft_unreviewed'").fetchone()[0]==38
+          assert db.execute('SELECT COUNT(DISTINCT group_no) FROM mangala_blessings').fetchone()[0]==10
+          print('Mangala Sutta offline verification: 38 blessings / 10 groups / 13 Pali stanzas')
           PY
       - name: Import Tipitaka Online CST source passages, references and clearly-labelled AI translations
         run: python scripts/import_tipitakaonline_cst.py --database app/src/main/assets/tipitaka_offline.sqlite --max-pages 1800 --report tipitakaonline_cst_import_report.json
