@@ -30,7 +30,7 @@ public class OfflineSearchActivity extends Activity {
   String[] options=new String[46];options[0]="ကျမ်းအားလုံး";for(int i=1;i<=45;i++)options[i]="ကျမ်း "+i;
   volume=new Spinner(this);volume.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item,options));root.addView(volume);
   String filterName=getIntent().getStringExtra("pitaka_filter");
-  if(filterName!=null){if(filterName.contains("ဝိနည်း"))volume.setSelection(1);else if(filterName.contains("သုတ္တန်"))volume.setSelection(9);else if(filterName.contains("အဘိဓမ္မာ"))volume.setSelection(34);}
+
   Button find=new Button(this);find.setText("Offline ရှာဖွေမည်");root.addView(find);
   TextView scope=new TextView(this);scope.setText("ရှာဖွေမည့်အမျိုးအစား — ပါဠိမူရင်း + စိစစ်အတည်ပြုထားသော မြန်မာစာသားများ");scope.setTextColor(0xff66553b);scope.setPadding(16,8,16,8);root.addView(scope);
   ScrollView scroll=new ScrollView(this);results=new LinearLayout(this);results.setOrientation(1);scroll.addView(results);root.addView(scroll,new LinearLayout.LayoutParams(-1,0,1));
@@ -56,7 +56,10 @@ public class OfflineSearchActivity extends Activity {
   if(db==null){notice("Offline ကျမ်းစာ Database မရှိသေးပါ။");return;}
   String q=term.getText().toString().trim();if(q.isEmpty()){term.setError("ရှာဖွေစာသားထည့်ပါ");return;}
   int chosen=volume.getSelectedItemPosition();
-  String filter=chosen>0?(chosen==1?" AND p.volume BETWEEN 1 AND 8":chosen==9?" AND p.volume BETWEEN 9 AND 33":chosen==34?" AND p.volume BETWEEN 34 AND 45":" AND p.volume=?"):"";
+  String groupFilter=filterName!=null&&filterName.contains("ဝိနည်း")?" AND p.volume BETWEEN 1 AND 8":
+    filterName!=null&&filterName.contains("သုတ္တန်")?" AND p.volume BETWEEN 9 AND 33":
+    filterName!=null&&filterName.contains("အဘိဓမ္မာ")?" AND p.volume BETWEEN 34 AND 45":"";
+  String filter=(chosen>0?" AND p.volume=?":"")+groupFilter;
   String sql;
   String[] args;
   if(hasReviewedMyanmar){
@@ -69,11 +72,11 @@ public class OfflineSearchActivity extends Activity {
      "FROM paragraphs p WHERE (instr(p.body,?)>0 OR "+
      "EXISTS(SELECT 1 FROM paragraph_myanmar_content m WHERE m.segment_id=p.segment_id AND m.reviewed=1 AND instr(m.text_my,?)>0))"+
      filter+" ORDER BY p.volume,p.id LIMIT 100";
-   args=chosen>0?(chosen==1||chosen==9||chosen==34?new String[]{q,q,q,q}:new String[]{q,q,q,q,String.valueOf(chosen)}):new String[]{q,q,q,q};
+   args=chosen>0?new String[]{q,q,q,q,String.valueOf(chosen)}:new String[]{q,q,q,q};
   }else{
    sql="SELECT p.id,p.volume,p.segment_id,p.body,NULL,NULL,'ပါဠိမူရင်း' FROM paragraphs p WHERE instr(p.body,?)>0"+
      filter+" ORDER BY p.volume,p.id LIMIT 100";
-   args=chosen>0?(chosen==1||chosen==9||chosen==34?new String[]{q}:new String[]{q,String.valueOf(chosen)}):new String[]{q};
+   args=chosen>0?new String[]{q,String.valueOf(chosen)}:new String[]{q};
   }
   try(Cursor c=db.rawQuery(sql,args)){
    int count=0;
