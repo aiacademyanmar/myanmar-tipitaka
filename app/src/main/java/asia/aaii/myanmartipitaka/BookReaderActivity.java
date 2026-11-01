@@ -143,7 +143,6 @@ public final class BookReaderActivity extends Activity {
   }
   private String getFileName(Uri uri){
     if("file".equalsIgnoreCase(uri.getScheme()))return new File(uri.getPath()).getName();
-    try(CursorWrapper ignored=null){}catch(Exception ignored){}
     try(android.database.Cursor c=getContentResolver().query(uri,null,null,null,null)){
       if(c!=null&&c.moveToFirst()){
         int idx=c.getColumnIndex(android.provider.OpenableColumns.DISPLAY_NAME);
