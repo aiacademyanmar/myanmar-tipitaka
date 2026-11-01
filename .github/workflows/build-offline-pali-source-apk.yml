@@ -19,6 +19,7 @@ on:
       - 'app/src/main/java/asia/aaii/myanmartipitaka/NativeFrontPagesActivity.java'
       - 'scripts/test_offline_45_boundaries.py'
       - 'scripts/build_dhammapada_yamakavagga.py'
+      - 'scripts/build_dhammapada_423.py'
       - 'corpus/dhammapada_yamakavagga_my_drafts.csv'
       - 'app/src/main/java/asia/aaii/myanmartipitaka/DhammapadaYamakavaggaActivity.java'
       - 'scripts/compare_mcu_exact_45.py'
@@ -86,6 +87,16 @@ jobs:
           rows=db.execute("SELECT verse,pali_text,my_draft,translation_status FROM dhammapada_yamakavagga").fetchall()
           assert len(rows)==20 and all(p and m and s=='ai_draft_unreviewed' for _,p,m,s in rows)
           print("Yamakavagga 20 Pali verses and 20 unreviewed Myanmar drafts verified")
+          PY
+      - name: Build full 423-verse Dhammapada offline chapter index
+        run: |
+          python scripts/build_dhammapada_423.py
+          python - <<'PY'
+          import sqlite3
+          db=sqlite3.connect('app/src/main/assets/tipitaka_offline.sqlite')
+          verses,chapters=db.execute("SELECT COUNT(*),COUNT(DISTINCT chapter) FROM dhammapada_verses").fetchone()
+          assert verses==423 and chapters==26
+          assert db.execute("SELECT COUNT(*) FROM dhammapada_verses WHERE my_draft IS NOT NULL").fetchone()[0]==20
           PY
       - name: Import Tipitaka Online CST source passages, references and clearly-labelled AI translations
         run: python scripts/import_tipitakaonline_cst.py --database app/src/main/assets/tipitaka_offline.sqlite --max-pages 1800 --report tipitakaonline_cst_import_report.json
