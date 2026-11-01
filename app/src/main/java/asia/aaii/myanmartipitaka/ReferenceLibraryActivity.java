@@ -27,8 +27,12 @@ public final class ReferenceLibraryActivity extends Activity {
     TextView sub=label(subtitle,13,INK,false);sub.setPadding(dp(4),0,dp(4),dp(8));list.addView(sub);
   }
   private void open(String url){
-    try{Intent i=new Intent(Intent.ACTION_VIEW, Uri.parse(url));startActivity(i);}
-    catch(Exception e){Toast.makeText(this,"Browser ဖြင့် Link ဖွင့်၍မရပါ",Toast.LENGTH_LONG).show();}
+    try{
+      Intent i=new Intent(this,OnlineBookReaderActivity.class);
+      i.putExtra("url",url);
+      i.putExtra("source_title","Myanmar Tipitaka Reference");
+      startActivity(i);
+    }catch(Exception e){Toast.makeText(this,"In-App Reader ဖွင့်၍မရပါ",Toast.LENGTH_LONG).show();}
   }
   private void source(String title,String description,String status,String url){
     LinearLayout card=new LinearLayout(this);card.setOrientation(LinearLayout.VERTICAL);
