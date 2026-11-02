@@ -1,4 +1,4 @@
-name: Myanmar Tipitaka V2.3.7.2 Pali Offline BUNDLED Preview APK
+name: Myanmar Tipitaka V2.3.7.3 Pali Offline BUNDLED Preview APK
 on:
   workflow_dispatch:
   push:
@@ -10,6 +10,7 @@ on:
       - 'app/src/main/java/asia/aaii/myanmartipitaka/PaliOfflineQaActivity.java'
       - 'app/src/main/java/asia/aaii/myanmartipitaka/PaliOfflineSearchActivity.java'
       - 'app/src/main/java/asia/aaii/myanmartipitaka/PaliSourceInstaller.java'
+      - 'app/src/main/java/asia/aaii/myanmartipitaka/PaliReadingState.java'
       - 'app/src/main/java/asia/aaii/myanmartipitaka/NativeFrontPagesActivity.java'
 permissions:
   contents: read
@@ -68,6 +69,10 @@ jobs:
         run: |
           grep -q 'PaliSourceInstaller.prepare' app/src/main/java/asia/aaii/myanmartipitaka/PaliSourceLibraryActivity.java
           grep -q 'class PaliSourceInstaller' app/src/main/java/asia/aaii/myanmartipitaka/PaliSourceInstaller.java
+      - name: Verify segment-level reading state
+        run: |
+          grep -q 'class PaliReadingState' app/src/main/java/asia/aaii/myanmartipitaka/PaliReadingState.java
+          grep -q 'showSegmentBookmarks' app/src/main/java/asia/aaii/myanmartipitaka/PaliSourceLibraryActivity.java
       - name: Compile native bundled Pali APK
         run: gradle --no-daemon assembleDebug
       - name: Verify packaged APK contains genuine Pali source
@@ -76,7 +81,7 @@ jobs:
       - name: Upload verified Pali offline preview APK and QA
         uses: actions/upload-artifact@v4
         with:
-          name: Myanmar-Tipitaka-V2.3.7.2-OFFLINE-PALI-SOURCE-PREVIEW-NOT-45-FINAL
+          name: Myanmar-Tipitaka-V2.3.7.3-OFFLINE-PALI-SOURCE-PREVIEW-NOT-45-FINAL
           path: |
             app/build/outputs/apk/debug/app-debug.apk
             bundled_pali_apk_qa.json
