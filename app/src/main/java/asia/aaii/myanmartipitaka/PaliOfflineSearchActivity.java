@@ -58,6 +58,7 @@ public final class PaliOfflineSearchActivity extends Activity {
     sc.addView(results);root.addView(sc,new LinearLayout.LayoutParams(-1,0,1));
     Button back=new Button(this);back.setText("‹  Reader သို့ပြန်ရန်");root.addView(back);
     back.setOnClickListener(v->finish());search.setOnClickListener(v->runSearch());
+    TipitakaFooter.attach(this,root,10);
     query.setOnEditorActionListener((t,action,event)->{runSearch();return true;});
     setContentView(root);
     String initial=getIntent().getStringExtra("query");

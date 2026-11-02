@@ -43,8 +43,15 @@ public final class Mcu45CatalogActivity extends Activity {
             render();
         } catch(Exception e){add("Offline MCU Index မဖွင့်နိုင်ပါ: "+e.getMessage(),16,Color.RED);}
     }
+    private void openSource(String group){
+        Intent i=new Intent(this,PaliSourceLibraryActivity.class);
+        String prefix="Vinaya".equals(group)?"vinaya/":"Abhidhamma".equals(group)?"abhidhamma/":"sutta/";
+        i.putExtra("source_prefix",prefix);
+        startActivity(i);
+    }
     private void render(){
         add("MCU 45-Volume Catalog (8 Vinaya · 25 Sutta · 12 Abhidhamma)",15,GREEN);
+        add("ကျမ်းတစ်ကျမ်းကို နှိပ်ပြီး သက်ဆိုင်ရာ ပိဋကတ်၏ Offline ပါဠိ Source ကို တိုက်ရိုက်ဖတ်နိုင်ပါသည်။",14,GREEN);
         add("သတိ: ၄၅ ကျမ်းအမည်စာရင်းသာ Cross-check ပြုလုပ်ထားသည်။ SuttaCentral/Bilara ပါဠိစာပိုဒ်များကို MCU စာအုပ်အလိုက် အတိအကျ Mapping မပြီးသေးပါ။",14,0xff7b4b36);
         add("အတည်ပြု မြန်မာဘာသာပြန်နှင့် ရှင်းလင်းချက်များ မပါရှိသေးပါ။",14,0xff7b4b36);
         Button pali=new Button(this);pali.setText("📖  Offline ပါဠိမူရင်း 444,701 စာပိုဒ် ဖတ်ရန်");
@@ -66,7 +73,7 @@ public final class Mcu45CatalogActivity extends Activity {
                     row.setOnClickListener(v->new android.app.AlertDialog.Builder(this)
                         .setTitle(String.format(Locale.US,"MCU %02d — %s",vol,name))
                         .setMessage("ဤကျမ်း၏ Bilara Source-file/Paragraph Mapping မစစ်ဆေးရသေးပါ။ မမှန်ကန်သော ကျမ်းစာတစ်ခုသို့ အလိုအလျောက် မချိတ်ပေးပါ။ မူရင်းပါဠိစာများကို Source Category အလိုက် ဖတ်နိုင်ပါသည်။")
-                        .setPositiveButton("ပါဠိ Source ဖွင့်ရန်",(d,w)->startActivity(new Intent(this,PaliSourceLibraryActivity.class)))
+                        .setPositiveButton("သက်ဆိုင်ရာ ပိဋကတ် Source ဖွင့်ရန်",(d,w)->openSource(group))
                         .setNegativeButton("ပိတ်ရန်",null).show());
                 }
             }

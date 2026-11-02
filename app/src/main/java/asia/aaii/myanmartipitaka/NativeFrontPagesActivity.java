@@ -55,9 +55,16 @@ public class NativeFrontPagesActivity extends Activity {
     card.addView(arrow,new LinearLayout.LayoutParams(dp(28),-2));
     content.addView(card,lp);card.setOnClickListener(v->action.run());
   }
+  private void openCorpus(String prefix){
+    Intent i=new Intent(this,PaliSourceLibraryActivity.class);
+    i.putExtra("source_prefix",prefix);
+    startActivity(i);
+  }
   private void openVolumes(int start,int end){
-    Intent i=new Intent(this,TipitakaLibraryActivity.class);
-    i.putExtra("start_volume",start);i.putExtra("end_volume",end);startActivity(i);
+    // MCU volume paragraph crosswalk is not verified: open the matching original
+    // Vinaya/Sutta/Abhidhamma COLLECTION, never mislabel its text as one volume.
+    if(start<=8){startActivity(new Intent(this,VinayaOfflineActivity.class));return;}
+    openCorpus(start>=34?"abhidhamma/":"sutta/");
   }
   public void navigateTo(int p){go(p);}
   private void go(int p){
@@ -316,7 +323,9 @@ public class NativeFrontPagesActivity extends Activity {
       addText("Tipiṭaka  ·  45 ကျမ်း  ·  အခမဲ့",16,GOLD,true);
       addText("ထေရဝါဒ ပါဠိဘာသာ ပိဋကတ်သုံးပုံ (တိပိဋကတ်) ကို အောက်ပါ Menu များမှတစ်ဆင့် ဖတ်ရှုနိုင်ပါသည်။ ဝိနည်းပိဋကတ်၊ သုတ္တပိဋကတ်နှင့် အဘိဓမ္မပိဋကတ်တို့ကို လေ့လာနိုင်ပါသည်။",15,INK,false);
       menuCard("📜","ဝိနည်းကျမ်း အားလုံး Offline ဖတ်ရန်","Vinaya Piṭaka • Bilara Pāli source · အင်တာနက်မလို",()->startActivity(new Intent(this,VinayaOfflineActivity.class)));
-      menuCard("📚","ကျမ်းဖတ်ခန်း (45 ကျမ်း)","ပိဋကတ် ၄၅ ကျမ်း • Native Offline Reader",()->startActivity(new Intent(this,TipitakaLibraryActivity.class)));
+      menuCard("📚","ကျမ်းဖတ်ခန်း (45 ကျမ်း)","45-Volume Catalog + မူရင်းပါဠိ Source Reader",()->startActivity(new Intent(this,Mcu45CatalogActivity.class)));
+      menuCard("📖","သုတ္တန်စာသားအားလုံး Offline","Sutta Pāli · ခေါင်းစဉ်အလိုက် ဖတ်ရန်",()->openCorpus("sutta/"));
+      menuCard("☸","အဘိဓမ္မာစာသားအားလုံး Offline","Abhidhamma Pāli · ခေါင်းစဉ်အလိုက် ဖတ်ရန်",()->openCorpus("abhidhamma/"));
       menuCard("🛡","Offline Pāli QA","SQLite • Device • Offline Reader Check",()->startActivity(new Intent(this,PaliOfflineQaActivity.class)));
       menuCard("📚","MCU ၄၅ ကျမ်း Offline Index","ကျမ်းအမည်စာရင်း ၄၅ ကျမ်း • Pāli Source သီးခြားဖတ်ရှုနိုင်",()->startActivity(new Intent(this,Mcu45CatalogActivity.class)));
       menuCard("📜","မူရင်းပါဠိ Offline Source","SuttaCentral Bilara • စာအုပ်အုပ်ခွဲ ၄၅ ကျမ်း မအတည်ပြုသေး",()->startActivity(new Intent(this,PaliSourceLibraryActivity.class)));
