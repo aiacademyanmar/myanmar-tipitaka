@@ -66,7 +66,24 @@ public class MainActivity extends Activity {
         if(repo==null){line("SQLite database မရရှိပါ။");return;}
         line("ကျမ်း "+volume+" · Offline Reader");
         List<TipitakaRepository.Passage> passages=repo.passages(volume);
-        if(passages.isEmpty())line("ဤကျမ်းအတွက် စစ်ဆေးပြီးသော ပါဠိစာပိုဒ် မထည့်သွင်းရသေးပါ။ ကျမ်းအမည်စာရင်းသာ Offline ရရှိပါသည်။");
+        if(passages.isEmpty()) {
+            try {
+                List<ApprovedPaliStore.Passage> approved = new ApprovedPaliStore(this).get(volume,100);
+                if(approved.isEmpty()) {
+                    line("ဤကျမ်းအတွက် စစ်ဆေးပြီးသော ပါဠိစာပိုဒ် မထည့်သွင်းရသေးပါ။ ကျမ်းအမည်စာရင်းသာ Offline ရရှိပါသည်။");
+                } else {
+                    line("Verified Pāli · Offline (100 passages maximum)");
+                    for(ApprovedPaliStore.Passage p:approved){
+                        line("§ "+p.id);
+                        line("ပါဠိ — "+p.pali);
+                        line("မြန်မာဘာသာပြန် — အတည်ပြုစာသား မရှိသေးပါ");
+                        line("မြန်မာရှင်းလင်းချက် — အတည်ပြုစာသား မရှိသေးပါ");
+                    }
+                }
+            } catch(Exception e) {
+                line("Approved Pāli Database error — "+e.getClass().getSimpleName());
+            }
+        }
         for(TipitakaRepository.Passage p:passages){
             line("§ "+p.ref);line("ပါဠိ — "+p.pali);
             line("မြန်မာဘာသာပြန် — "+(p.translation==null?"အတည်ပြုစာသား မရှိသေးပါ":p.translation));
