@@ -76,20 +76,8 @@ public final class PaliSourceLibraryActivity extends Activity {
   private void initialize(){
     SQLiteDatabase opened=null;
     try{
-      File dest=new File(getFilesDir(),ASSET);
-      long installed=getPackageManager().getPackageInfo(getPackageName(),0).lastUpdateTime;
-      long prior=getSharedPreferences("pali_source",Context.MODE_PRIVATE).getLong("apk_update",0L);
-      if(!dest.isFile() || prior!=installed){
-        File temp=new File(getFilesDir(),ASSET+".tmp");
-        if(temp.exists())temp.delete();
-        try(InputStream in=getAssets().open(ASSET);OutputStream out=new FileOutputStream(temp)){
-          byte[] buf=new byte[65536];int n;
-          while((n=in.read(buf))!=-1){if(n>0)out.write(buf,0,n);}
-        }catch(Exception e){temp.delete();throw e;}
-        if(dest.exists() && !dest.delete())throw new IllegalStateException("Cannot replace source data");
-        if(!temp.renameTo(dest))throw new IllegalStateException("Cannot install source data");
-        getSharedPreferences("pali_source",Context.MODE_PRIVATE).edit().putLong("apk_update",installed).apply();
-      }
+      PaliSourceInstaller.Result installed=PaliSourceInstaller.prepare(this);
+      File dest=installed.file;
       opened=SQLiteDatabase.openDatabase(dest.getAbsolutePath(),null,SQLiteDatabase.OPEN_READONLY);
       try(Cursor c=opened.rawQuery("SELECT DISTINCT source_file FROM source_segments ORDER BY source_file",null)){
         while(c.moveToNext())files.add(c.getString(0));
