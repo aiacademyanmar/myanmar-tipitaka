@@ -1,4 +1,4 @@
-name: Myanmar Tipitaka V2.3.7.5 Pali Offline BUNDLED Preview APK
+name: Myanmar Tipitaka V2.3.7.6 Pali Offline BUNDLED Preview APK
 on:
   workflow_dispatch:
   push:
@@ -83,6 +83,10 @@ jobs:
           grep -q 'elapsedMs' app/src/main/java/asia/aaii/myanmartipitaka/PaliOfflineQaActivity.java
           grep -q 'Airplane Mode' app/src/main/java/asia/aaii/myanmartipitaka/PaliOfflineQaActivity.java
           grep -q 'Intent.ACTION_SEND' app/src/main/java/asia/aaii/myanmartipitaka/PaliOfflineQaActivity.java
+      - name: Verify exact segment jump highlight
+        run: |
+          grep -q 'focusSegment=segment' app/src/main/java/asia/aaii/myanmartipitaka/PaliSourceLibraryActivity.java
+          grep -q 'smoothScrollTo' app/src/main/java/asia/aaii/myanmartipitaka/PaliSourceLibraryActivity.java
       - name: Compile native bundled Pali APK
         run: gradle --no-daemon assembleDebug
       - name: Verify packaged APK contains genuine Pali source
@@ -91,7 +95,7 @@ jobs:
       - name: Upload verified Pali offline preview APK and QA
         uses: actions/upload-artifact@v4
         with:
-          name: Myanmar-Tipitaka-V2.3.7.5-OFFLINE-PALI-SOURCE-PREVIEW-NOT-45-FINAL
+          name: Myanmar-Tipitaka-V2.3.7.6-OFFLINE-PALI-SOURCE-PREVIEW-NOT-45-FINAL
           path: |
             app/build/outputs/apk/debug/app-debug.apk
             bundled_pali_apk_qa.json
