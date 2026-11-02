@@ -55,6 +55,9 @@ public class NativeFrontPagesActivity extends Activity {
     card.addView(arrow,new LinearLayout.LayoutParams(dp(28),-2));
     content.addView(card,lp);card.setOnClickListener(v->action.run());
   }
+  private void openTopic(int which){
+    startActivity(TopicHubActivity.intent(this,which));
+  }
   private void openCorpus(String prefix){
     Intent i=new Intent(this,PaliSourceLibraryActivity.class);
     i.putExtra("source_prefix",prefix);
@@ -324,6 +327,7 @@ public class NativeFrontPagesActivity extends Activity {
       addText("ထေရဝါဒ ပါဠိဘာသာ ပိဋကတ်သုံးပုံ (တိပိဋကတ်) ကို အောက်ပါ Menu များမှတစ်ဆင့် ဖတ်ရှုနိုင်ပါသည်။ ဝိနည်းပိဋကတ်၊ သုတ္တပိဋကတ်နှင့် အဘိဓမ္မပိဋကတ်တို့ကို လေ့လာနိုင်ပါသည်။",15,INK,false);
       menuCard("📜","ဝိနည်းကျမ်း အားလုံး Offline ဖတ်ရန်","Vinaya Piṭaka • Bilara Pāli source · အင်တာနက်မလို",()->startActivity(new Intent(this,VinayaOfflineActivity.class)));
       menuCard("📚","ကျမ်းဖတ်ခန်း (45 ကျမ်း)","45-Volume Catalog + မူရင်းပါဠိ Source Reader",()->startActivity(new Intent(this,Mcu45CatalogActivity.class)));
+      menuCard("🪷","၂။ အခြားခေါင်းစဉ်များ","ဓမ္မပဒ · မင်္ဂလသုတ် · နိဗ္ဗာန် · သတိပဋ္ဌာန် · နိကာယ် ၅ မျိုး",()->openTopic(-1));
       menuCard("📖","သုတ္တန်စာသားအားလုံး Offline","Sutta Pāli · ခေါင်းစဉ်အလိုက် ဖတ်ရန်",()->openCorpus("sutta/"));
       menuCard("☸","အဘိဓမ္မာစာသားအားလုံး Offline","Abhidhamma Pāli · ခေါင်းစဉ်အလိုက် ဖတ်ရန်",()->openCorpus("abhidhamma/"));
       menuCard("🛡","Offline Pāli QA","SQLite • Device • Offline Reader Check",()->startActivity(new Intent(this,PaliOfflineQaActivity.class)));
@@ -389,13 +393,19 @@ public class NativeFrontPagesActivity extends Activity {
         stats.addView(stat,params);
       }
       content.addView(stats);
-      addText("စာဖတ်ခန်းများ",20,GREEN,true);
-      menuCard("📜","ဝိနည်းကျမ်းအားလုံး • Offline","ဘိက္ခု · ဘိက္ခုနီ · ခန္ဓက · ပရိဝါ • ပါဠိမူရင်း",()->startActivity(new Intent(this,VinayaOfflineActivity.class)));
-      menuCard("📖","သုတ္တပိဋကတ်","Sutta · 25 MCU volumes",()->openVolumes(9,33));
-      menuCard("☸","အဘိဓမ္မာပိဋကတ်","Abhidhamma · 12 MCU volumes",()->openVolumes(34,45));
-      menuCard("📚","MCU ၄၅ ကျမ်း Index","45 Volume Catalog · Offline",()->startActivity(new Intent(this,Mcu45CatalogActivity.class)));
-      menuCard("📖","ပါဠိ + မြန်မာ Offline Reader","SuttaCentral Pāli · DN3/DN5 မြန်မာပြန်",()->startActivity(new Intent(this,PaliSourceLibraryActivity.class)));
-      menuCard("⌕","Offline ပါဠိရှာဖွေရန်","Segment Search",()->startActivity(new Intent(this,PaliOfflineSearchActivity.class)));
+      addText("၁။ ပိဋကတ်သုံးပုံ",22,GREEN,true);
+      addText("Tipiṭaka · Offline Pāli Library · MCU 45-Volume Catalog",13,GOLD,true);
+      menuCard("📜","ဝိနည်းပိဋကတ်","Vinaya · 71,585 ပါဠိစာပိုဒ် · Offline",()->startActivity(new Intent(this,VinayaOfflineActivity.class)));
+      menuCard("📖","သုတ္တပိဋကတ်","Sutta Piṭaka · ပါဠိမူရင်း Offline",()->openCorpus("sutta/"));
+      menuCard("☸","အဘိဓမ္မပိဋကတ်","Abhidhamma Piṭaka · ပါဠိမူရင်း Offline",()->openCorpus("abhidhamma/"));
+      menuCard("📚","ပိဋကတ် ၄၅ ကျမ်းစာရင်း","MCU Index · သက်ဆိုင်ရာ ပိဋကတ် Source ဖတ်ရန်",()->startActivity(new Intent(this,Mcu45CatalogActivity.class)));
+      addText("၂။ အခြားခေါင်းစဉ်များ",22,GREEN,true);
+      addText("သင်ကြားရေးကဏ္ဍ ၅ ခု · Offline Reader + Online Reference",13,GOLD,true);
+      menuCard("📖","ဓမ္မပဒ (Dhammapada)","ဂါထာ ၄၂၃ ပုဒ် · ဝဂ် ၂၆ ခု",()->openTopic(0));
+      menuCard("🌸","မင်္ဂလသုတ် (Maṅgala Sutta)","မင်္ဂလာ ၃၈ ပါး",()->openTopic(1));
+      menuCard("🪷","နိဗ္ဗာန် (Nibbāna)","ဒုက္ခနိဋ္ဌောဟူသော နိဗ္ဗာန်",()->openTopic(2));
+      menuCard("🧘","သတိပဋ္ဌာန် (Satipaṭṭhāna)","သတိပဋ္ဌာန် ၄ ပါး",()->openTopic(3));
+      menuCard("📚","နိကာယ် ၅ မျိုး","ဒီဃ၊ မဇ္ဈိမ၊ သံယုတ္တ၊ အင်္ဂုတ္တရ၊ ခုဒ္ဒက",()->openTopic(4));
       addText("မြန်မာစာသား — SuttaCentral Published DN3/DN5 သာရှိပြီး ၄၅ ကျမ်းလုံး မပြည့်စုံသေးပါ။",13,0xff8b5c25,false);
     }else if(n==2){
       addText("ကြိုဆိုပါသည်",27,GREEN,true);
@@ -417,6 +427,8 @@ public class NativeFrontPagesActivity extends Activity {
     }
     menuPanel=new LinearLayout(this);menuPanel.setOrientation(LinearLayout.VERTICAL);menuPanel.setBackground(bg(Color.WHITE,18));menuPanel.setVisibility(View.GONE);
     ScrollView menuScroll=new ScrollView(this);LinearLayout items=new LinearLayout(this);items.setOrientation(LinearLayout.VERTICAL);String[] menuTitles={"Home","Categories","Books","Online Reference Library","Native Reader","Library","Continue Reading","Learning","Search","Search Results","Bookmarks","Reading History","Advanced Search","Abhidhamma Books","Abhidhamma Reader","Dhamma Learning","Mangala Sutta","Five Nikayas","Satipaṭṭhāna","About"};int[] menuTargets={2,4,5,26,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21};
+    TextView groupOne=text("၁။ ပိဋကတ်သုံးပုံ",18,GREEN,true);items.addView(groupOne);groupOne.setOnClickListener(v->go(4));
+    TextView groupTwo=text("၂။ အခြားခေါင်းစဉ်များ",18,GREEN,true);items.addView(groupTwo);groupTwo.setOnClickListener(v->openTopic(-1));
     for(int i=0;i<menuTitles.length;i++){final int target=menuTargets[i];TextView item=text(menuTitles[i],17,GREEN,true);items.addView(item);item.setOnClickListener(v->go(target));}
     menuScroll.addView(items);menuPanel.addView(menuScroll,new LinearLayout.LayoutParams(-1,dp(235)));
     root.addView(menuPanel);

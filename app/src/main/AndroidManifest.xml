@@ -23,6 +23,7 @@
     <activity android:name=".ParagraphExplanationActivity" android:exported="false"/>
     <activity android:name=".TipitakaLibraryActivity" android:exported="false"/>
     <activity android:name=".Mcu45CatalogActivity" android:exported="false"/>
+    <activity android:name=".TopicHubActivity" android:exported="false" android:screenOrientation="portrait"/>
     <activity android:name=".VinayaOfflineActivity" android:exported="false" android:screenOrientation="portrait"/>
     <activity android:name=".PaliSourceLibraryActivity" android:exported="false"/>
     <activity android:name=".PaliOfflineQaActivity" android:exported="false"/>

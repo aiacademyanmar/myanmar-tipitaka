@@ -114,7 +114,9 @@ public final class PaliSourceLibraryActivity extends Activity {
           else showFile(requested,target);
         }else{
           String prefix=getIntent().getStringExtra("source_prefix");
-          String validPrefix=("vinaya/".equals(prefix)||"sutta/".equals(prefix)||"abhidhamma/".equals(prefix))?prefix:"";
+          String validPrefix="";
+          String[] known={"vinaya/","sutta/","abhidhamma/","sutta/dn/","sutta/mn/","sutta/sn/","sutta/an/","sutta/kn/"};
+          if(prefix!=null)for(String allowed:known)if(allowed.equals(prefix)){validPrefix=allowed;break;}
           browse(validPrefix);
         }
       });
