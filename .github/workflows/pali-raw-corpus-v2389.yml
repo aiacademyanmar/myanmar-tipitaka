@@ -1,0 +1,40 @@
+name: V2.3.8.9 Full Pali Source Staging
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-staging:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Checkout Bilara published source
+        run: python tools/fetch_bilara_pali.py --dest build/bilara-data --ref published
+      - name: Assemble all available three-basket source JSON into unreviewed SQLite
+        run: |
+          SHA=$(git -C build/bilara-data rev-parse HEAD)
+          python tools/build_raw_pali_corpus.py --root build/bilara-data/root/pli/ms --out build/pali_source_unreviewed.sqlite --source-commit "$SHA" --report build/pali_source_report.json
+      - name: Validate source SQLite (never qualify as 45 verified books)
+        run: |
+          python - <<'PY'
+          import json,sqlite3
+          report=json.load(open('build/pali_source_report.json'))
+          assert report['mcu_45_volumes_verified']==0
+          db=sqlite3.connect('build/pali_source_unreviewed.sqlite')
+          assert db.execute('pragma integrity_check').fetchone()[0]=='ok'
+          assert db.execute('select count(*) from source_segments').fetchone()[0]==report['segments_total']
+          assert db.execute('select count(*) from source_segments where review_status != "unreviewed"').fetchone()[0]==0
+          PY
+      - name: Upload source staging archive, not release APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: UNREVIEWED-THREE-BASKET-PALI-SOURCE-V2389
+          path: |
+            build/pali_source_unreviewed.sqlite
+            build/pali_source_report.json
+            build/bilara-data/pali-source-manifest.json
+          retention-days: 7
