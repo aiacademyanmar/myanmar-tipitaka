@@ -1,0 +1,68 @@
+name: Myanmar Tipitaka V2.3.6.9 Pali Offline BUNDLED Preview APK
+on:
+  workflow_dispatch:
+  push:
+    branches: [v2.3.4-offline-reader-critical-fix]
+    paths:
+      - '.github/workflows/build-bundled-pali-offline-v2-3-6-9.yml'
+      - 'scripts/check_bundled_pali_apk.py'
+      - 'app/src/main/java/asia/aaii/myanmartipitaka/PaliSourceLibraryActivity.java'
+      - 'app/src/main/java/asia/aaii/myanmartipitaka/NativeFrontPagesActivity.java'
+permissions:
+  contents: read
+jobs:
+  build-bundled-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+      - name: Fetch pinned public Pali source
+        run: |
+          git clone --depth 1 --branch published --filter=blob:none --sparse https://github.com/suttacentral/bilara-data.git upstream
+          git -C upstream sparse-checkout set root/pli/ms
+          git -C upstream rev-parse HEAD > source_commit.txt
+          cp upstream/LICENSE.md upstream_LICENSE.md
+      - name: Build and verify Pali original SQLite
+        run: |
+          python3 scripts/build_bilara_source_sqlite.py upstream/root/pli/ms --output pali_root_source.sqlite --source-commit "$(cat source_commit.txt)"
+          python3 - <<'PY'
+          import sqlite3,hashlib
+          db=sqlite3.connect("file:pali_root_source.sqlite?mode=ro",uri=True)
+          assert db.execute("PRAGMA integrity_check").fetchone()[0]=="ok"
+          assert db.execute("SELECT count(*) FROM source_segments").fetchone()[0]>0
+          assert sum(hashlib.sha256(body.encode()).hexdigest()!=sha.lower() for body,sha in db.execute("SELECT body,sha256 FROM source_segments"))==0
+          db.close()
+          PY
+      - name: Bundle original Pali SQLite with offline APK
+        run: |
+          mkdir -p app/src/main/assets
+          cp pali_root_source.sqlite app/src/main/assets/pali_root_source.sqlite
+          cp upstream_LICENSE.md app/src/main/assets/upstream_LICENSE.md
+          test -s app/src/main/assets/pali_root_source.sqlite
+          grep -q 'class PaliSourceLibraryActivity' app/src/main/java/asia/aaii/myanmartipitaka/PaliSourceLibraryActivity.java
+      - name: Compile native bundled Pali APK
+        run: gradle --no-daemon assembleDebug
+      - name: Verify packaged APK contains genuine Pali source
+        run: |
+          python3 scripts/check_bundled_pali_apk.py --apk app/build/outputs/apk/debug/app-debug.apk --source-db pali_root_source.sqlite --report bundled_pali_apk_qa.json
+      - name: Upload verified Pali offline preview APK and QA
+        uses: actions/upload-artifact@v4
+        with:
+          name: Myanmar-Tipitaka-V2.3.6.9-OFFLINE-PALI-SOURCE-PREVIEW-NOT-45-FINAL
+          path: |
+            app/build/outputs/apk/debug/app-debug.apk
+            bundled_pali_apk_qa.json
+            upstream_LICENSE.md
+            source_commit.txt
+          if-no-files-found: error
+          retention-days: 30
