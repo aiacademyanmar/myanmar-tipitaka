@@ -31,7 +31,7 @@ public final class Mcu45CatalogActivity extends Activity {
         list=new LinearLayout(this);list.setOrientation(1);list.setPadding(dp(8),dp(8),dp(8),dp(15));
         sc.addView(list);root.addView(sc,new LinearLayout.LayoutParams(-1,0,1));
         TextView close=text("‹  ပြန်ရန်",16,Color.WHITE);close.setBackgroundColor(GREEN);
-        root.addView(close);close.setOnClickListener(v->finish());setContentView(root);
+        root.addView(close);close.setOnClickListener(v->finish());TipitakaFooter.attach(this,root,4);setContentView(root);
         try {
             File dbFile=new File(getCacheDir(),"mcu45_metadata_v1.sqlite");
             if(!dbFile.exists()){

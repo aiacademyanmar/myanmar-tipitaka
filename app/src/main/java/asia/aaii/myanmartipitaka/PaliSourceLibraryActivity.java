@@ -75,6 +75,7 @@ public final class PaliSourceLibraryActivity extends Activity {
     TextView back=label("‹ ပြန်ရန် / Back",17,true);
     back.setTextColor(Color.WHITE);back.setBackgroundColor(GREEN);
     root.addView(back);back.setOnClickListener(v->goBack());
+    TipitakaFooter.attach(this,root,-1);
     setContentView(root);
     note("ပါဠိ Dataset ကို Offline ဖွင့်နေပါသည်။ ပထမအကြိမ်တွင် စာသား Database ကို ဖုန်းထဲသို့ ကူးယူပါမည်။");
     new Thread(this::initialize,"pali-source-init").start();
@@ -116,7 +117,7 @@ public final class PaliSourceLibraryActivity extends Activity {
   private void browse(String p){
     if(shuttingDown)return;
     prefix=p;currentFile=null;content.removeAllViews();
-    note("Bilara Pāli Source • Myanmar Tipitaka\nမူရင်းစာသားများသာ ပါဝင်သည်။ MCU ၄၅ ကျမ်း အုပ်ခွဲများ အတည်မပြုရသေးပါ။");
+    note("Bilara Pāli Source • Myanmar Tipitaka\nမူရင်းပါဠိစာသားများပါရှိသည်။ မြန်မာဘာသာပြန်သည် DN3 နှင့် DN5 တွင်သာ SuttaCentral Published အဖြစ်ပါဝင်သည်။ MCU ၄၅ ကျမ်း Mapping မပြီးသေးပါ။");
     if(p.isEmpty()){
       addRow("၁။ ဝိနည်းပိဋကတ် • Vinaya",()->browse("vinaya/"));
       addRow("၂။ သုတ္တပိဋကတ် • Sutta",()->browse("sutta/"));
@@ -157,8 +158,8 @@ public final class PaliSourceLibraryActivity extends Activity {
     note("ဖတ်ရှုနေသည် • "+file+"\nPage "+(currentPage+1)+" · ပါဠိမူရင်းစာသား");
     addRow("‹ နောက်ပြန်စာမျက်နှာ",()->showFile(file,Math.max(0,currentPage-1)));
     ArrayList<String[]> results=new ArrayList<>();
-    try(Cursor c=db.rawQuery("SELECT segment_id,body FROM source_segments WHERE source_file=? ORDER BY rowid LIMIT 50 OFFSET "+(currentPage*50),new String[]{file})){
-      while(c.moveToNext())results.add(new String[]{c.getString(0),c.getString(1)});
+    try(Cursor c=db.rawQuery("SELECT s.segment_id,s.body,COALESCE(t.body,'') FROM source_segments s LEFT JOIN myanmar_published t ON t.segment_id=s.segment_id WHERE s.source_file=? ORDER BY s.rowid LIMIT 50 OFFSET "+(currentPage*50),new String[]{file})){
+      while(c.moveToNext())results.add(new String[]{c.getString(0),c.getString(1),c.getString(2)});
     }catch(Exception e){note("စာသားဖတ်၍မရပါ: "+e.getMessage());return;}
     if(results.isEmpty())note("ယခုစာမျက်နှာတွင် စာသားမရှိပါ။");
     if(!results.isEmpty()&&focusSegment==null)segments.lastRead(file,results.get(0)[0],sourceRevision);
@@ -166,7 +167,11 @@ public final class PaliSourceLibraryActivity extends Activity {
     focusSegment=null;
     TextView focusedView=null;
     for(String[] row:results){
-      TextView v=label(row[0]+"\n"+row[1]+"\n🔖 Bookmark",16,false);
+      String translation=row[2]!=null && !row[2].trim().isEmpty()
+        ? "\n\n🇲🇲 မြန်မာဘာသာပြန် — SuttaCentral published (AAII ပြန်လည်စိစစ်ရန်ရှိ)\n"+row[2]
+        : "\n\n🇲🇲 မြန်မာဘာသာပြန် — မရရှိသေးပါ။";
+      String explanation="\n\nရှင်းလင်းချက် — အတည်ပြုစာသား မရရှိသေးပါ။";
+      TextView v=label(row[0]+"\n\nပါဠိမူရင်း\n"+row[1]+translation+explanation+"\n\n🔖 Bookmark",16,false);
       v.setOnClickListener(view->{
         segments.lastRead(file,row[0],sourceRevision);
         segments.add(file,row[0],sourceRevision);

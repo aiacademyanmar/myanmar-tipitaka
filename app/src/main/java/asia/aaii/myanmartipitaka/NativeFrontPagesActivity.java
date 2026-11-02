@@ -59,7 +59,7 @@ public class NativeFrontPagesActivity extends Activity {
     Intent i=new Intent(this,TipitakaLibraryActivity.class);
     i.putExtra("start_volume",start);i.putExtra("end_volume",end);startActivity(i);
   }
-  private void go(int p){
+  public void navigateTo(int p){go(p);}\n  private void go(int p){
     if(p==22){startActivity(new Intent(this,DhammapadaYamakavaggaActivity.class));return;}
     if(p==23){startActivity(new Intent(this,OfflineBookmarksActivity.class));return;}
     if(p==24){startActivity(new Intent(this,OfflineSearchActivity.class));return;}
@@ -354,12 +354,38 @@ public class NativeFrontPagesActivity extends Activity {
       button("စာအုပ်စာရင်းသို့ ပြန်သွားရန်",5);
       button("စာမှတ်များနှင့် မှတ်စု",12);
     }else if(n==1){
-      addText("☸",70,GOLD,true);
-      addText("မြန်မာ့ပိဋကတ်တော်",28,GREEN,true);
-      addText("Myanmar Tipitaka",21,GOLD,true);
-      addText("ဗုဒ္ဓမြတ်စွာဘုရား၏ တရားတော်များကို လေ့လာဖတ်ရှုရန်",17,INK,false);
-      button("စတင်လေ့လာရန်  →",2);button("စာအုပ်ဖတ်ရန်",6);button("ပိဋကတ်တော် ရှာဖွေရန်",10);
-      addText("ပါဠိ • မြန်မာ • Offline Reader",14,GREEN,false);
+      LinearLayout hero=new LinearLayout(this);hero.setOrientation(LinearLayout.VERTICAL);
+      GradientDrawable fade=new GradientDrawable(GradientDrawable.Orientation.TL_BR,new int[]{0xff104436,0xff276b54});
+      fade.setCornerRadius(dp(20));hero.setBackground(fade);hero.setPadding(dp(16),dp(12),dp(16),dp(15));
+      TextView wheel=text("☸",53,0xffefc66c,true);wheel.setGravity(Gravity.CENTER);hero.addView(wheel);
+      TextView name=text("ပိဋကတ်သုံးပုံ",25,Color.WHITE,true);name.setGravity(Gravity.CENTER);hero.addView(name);
+      TextView sub=text("Tipiṭaka · ထေရဝါဒ ဓမ္မစာကြည့်တိုက်\nပါဠိမူရင်းနှင့် မြန်မာစာလေ့လာရေး",13,0xffeac988,false);
+      sub.setGravity(Gravity.CENTER);hero.addView(sub);
+      TextView start=text("📚  ကျမ်း ၄၅ ကျမ်း ဖွင့်ရန် →",17,GREEN,true);
+      start.setGravity(Gravity.CENTER);start.setBackground(bg(0xffe9bf67,13));hero.addView(start);
+      start.setOnClickListener(v->startActivity(new Intent(this,Mcu45CatalogActivity.class)));
+      content.addView(hero,new LinearLayout.LayoutParams(-1,-2));
+      LinearLayout stats=new LinearLayout(this);stats.setGravity(Gravity.CENTER);
+      String[] values={"45","3","Offline"};
+      String[] labels={"MCU ကျမ်းစာရင်း","ပိဋကတ်အုပ်စု","ပါဠိ Source"};
+      for(int k=0;k<3;k++){
+        LinearLayout stat=new LinearLayout(this);stat.setOrientation(1);
+        stat.setGravity(Gravity.CENTER);stat.setBackground(bg(Color.WHITE,13));
+        TextView number=text(values[k],18,GREEN,true);number.setGravity(Gravity.CENTER);
+        TextView label=text(labels[k],10,INK,false);label.setGravity(Gravity.CENTER);
+        stat.addView(number);stat.addView(label);
+        LinearLayout.LayoutParams params=new LinearLayout.LayoutParams(0,-2,1);params.setMargins(dp(3),dp(12),dp(3),dp(5));
+        stats.addView(stat,params);
+      }
+      content.addView(stats);
+      addText("စာဖတ်ခန်းများ",20,GREEN,true);
+      menuCard("📜","ဝိနည်းပိဋကတ်","Vinaya · 8 MCU volumes",()->openVolumes(1,8));
+      menuCard("📖","သုတ္တပိဋကတ်","Sutta · 25 MCU volumes",()->openVolumes(9,33));
+      menuCard("☸","အဘိဓမ္မာပိဋကတ်","Abhidhamma · 12 MCU volumes",()->openVolumes(34,45));
+      menuCard("📚","MCU ၄၅ ကျမ်း Index","45 Volume Catalog · Offline",()->startActivity(new Intent(this,Mcu45CatalogActivity.class)));
+      menuCard("📖","ပါဠိ + မြန်မာ Offline Reader","SuttaCentral Pāli · DN3/DN5 မြန်မာပြန်",()->startActivity(new Intent(this,PaliSourceLibraryActivity.class)));
+      menuCard("⌕","Offline ပါဠိရှာဖွေရန်","Segment Search",()->startActivity(new Intent(this,PaliOfflineSearchActivity.class)));
+      addText("မြန်မာစာသား — SuttaCentral Published DN3/DN5 သာရှိပြီး ၄၅ ကျမ်းလုံး မပြည့်စုံသေးပါ။",13,0xff8b5c25,false);
     }else if(n==2){
       addText("ကြိုဆိုပါသည်",27,GREEN,true);
       addText("ပိဋကတ်တော် လေ့လာရေး",18,INK,false);
@@ -383,12 +409,7 @@ public class NativeFrontPagesActivity extends Activity {
     for(int i=0;i<menuTitles.length;i++){final int target=menuTargets[i];TextView item=text(menuTitles[i],17,GREEN,true);items.addView(item);item.setOnClickListener(v->go(target));}
     menuScroll.addView(items);menuPanel.addView(menuScroll,new LinearLayout.LayoutParams(-1,dp(235)));
     root.addView(menuPanel);
-    LinearLayout nav=new LinearLayout(this);nav.setGravity(Gravity.CENTER);nav.setBackgroundColor(GREEN);
-    String[] keys={"⌂ Home","▤ Books","⌕ Search","▦ Modules","▣ Saved","⚙ Help"};
-    int[] targets={2,5,10,17,12,21};
-    for(int i=0;i<6;i++){final int target=targets[i];TextView v=text(keys[i],12,Color.WHITE,false);
-      v.setGravity(Gravity.CENTER);nav.addView(v,new LinearLayout.LayoutParams(0,dp(55),1));v.setOnClickListener(w->go(target));}
-    root.addView(nav);setContentView(root);
+    TipitakaFooter.attach(this,root,n);setContentView(root);
   }
   private void toggleMenu(){if(menuPanel!=null)menuPanel.setVisibility(menuPanel.getVisibility()==View.VISIBLE?View.GONE:View.VISIBLE);}
   @Override public void onBackPressed(){if(page!=1)render(1);else super.onBackPressed();}
