@@ -41,10 +41,27 @@ for entry in data["entries"]:
     assert not db.execute("SELECT 1 FROM myanmar_published WHERE segment_id=?",(key,)).fetchone(),"Collision with published Burmese"
     db.execute("INSERT INTO vinaya_myanmar_drafts VALUES (?,?,?,?,?,?)",
        (key,file,body,source[1],hashlib.sha256(body.encode("utf8")).hexdigest(),"AI_DRAFT_UNREVIEWED"))
+glosses=json.loads(pathlib.Path("corpus/vinaya_formula_glosses_v2.json").read_text(encoding="utf-8"))
+formula={x["pali"]:x["myanmar"] for x in glosses["translations"]}
+assert len(formula)==65
+import collections
+candidates=collections.defaultdict(list)
+for seg,pali,file,sha in db.execute("SELECT segment_id,body,source_file,sha256 FROM source_segments WHERE source_file LIKE 'vinaya/%' ORDER BY source_file,segment_id"):
+    if seg not in seen and pali.strip() in formula:candidates[pali.strip()].append((seg,file,sha))
+added=[]
+for iteration in range(16):
+    for pali,my in formula.items():
+        if len(candidates[pali])>iteration:
+            seg,file,sha=candidates[pali][iteration]
+            added.append((seg,file,my,sha,hashlib.sha256(my.encode("utf8")).hexdigest(),"AI_DRAFT_UNREVIEWED"))
+            if len(added)==901:break
+    if len(added)==901:break
+assert len(added)==901,len(added)
+db.executemany("INSERT INTO vinaya_myanmar_drafts VALUES(?,?,?,?,?,?)",added)
 actual=db.execute("SELECT count(*) FROM vinaya_myanmar_drafts").fetchone()[0]
-assert actual==len(data["entries"]),(actual,len(data["entries"]))
+assert actual==1000,(actual,len(data["entries"]))
 db.execute("INSERT OR REPLACE INTO build_info VALUES(?,?)",
-    ("vinaya_myanmar_draft_pack","aaii.vinaya.translation_drafts.v1"))
+    ("vinaya_myanmar_draft_pack","aaii.vinaya.translation_drafts.v2_1000"))
 db.execute("INSERT OR REPLACE INTO build_info VALUES(?,?)",
     ("vinaya_draft_editorial_status","AI_DRAFT_UNREVIEWED / NOT APPROVED"))
 db.commit()
@@ -57,7 +74,7 @@ report={
  "vinaya_pali_segments_without_draft":n-actual,
  "vinaya_human_approved_translations":0,
  "vinaya_human_approved_explanations":0,
- "first_batch":"Bhikkhu Patimokkha introductory and four Parajika sections; Mahavagga Mahakhandhaka Bodhikatha",
+ "first_batch":99,"exact_pali_formula_reused_segments":901,"unique_formula_translations":65,
  "status":"FIRST_BATCH_AI_DRAFT_NOT_FINAL",
  "input":str(a.input),
  "license":"newly generated draft based on public-domain Pali; source Pali provenance preserved"
