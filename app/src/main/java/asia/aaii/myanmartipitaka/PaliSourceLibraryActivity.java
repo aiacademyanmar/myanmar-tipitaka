@@ -106,7 +106,10 @@ public final class PaliSourceLibraryActivity extends Activity {
           }
           if(segment!=null)jumpToSegment(requested,segment);
           else showFile(requested,target);
-        }else browse("");
+        }else{
+          String prefix=getIntent().getStringExtra("source_prefix");
+          browse(prefix!=null && prefix.startsWith("vinaya/")?"vinaya/":"");
+        }
       });
     }catch(Exception e){
       if(opened!=null && opened!=db)opened.close();

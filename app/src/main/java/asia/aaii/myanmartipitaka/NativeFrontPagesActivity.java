@@ -315,6 +315,7 @@ public class NativeFrontPagesActivity extends Activity {
       addText("ပိဋကတ်သုံးပုံ",28,GREEN,true);
       addText("Tipiṭaka  ·  45 ကျမ်း  ·  အခမဲ့",16,GOLD,true);
       addText("ထေရဝါဒ ပါဠိဘာသာ ပိဋကတ်သုံးပုံ (တိပိဋကတ်) ကို အောက်ပါ Menu များမှတစ်ဆင့် ဖတ်ရှုနိုင်ပါသည်။ ဝိနည်းပိဋကတ်၊ သုတ္တပိဋကတ်နှင့် အဘိဓမ္မပိဋကတ်တို့ကို လေ့လာနိုင်ပါသည်။",15,INK,false);
+      menuCard("📜","ဝိနည်းကျမ်း အားလုံး Offline ဖတ်ရန်","Vinaya Piṭaka • Bilara Pāli source · အင်တာနက်မလို",()->startActivity(new Intent(this,VinayaOfflineActivity.class)));
       menuCard("📚","ကျမ်းဖတ်ခန်း (45 ကျမ်း)","ပိဋကတ် ၄၅ ကျမ်း • Native Offline Reader",()->startActivity(new Intent(this,TipitakaLibraryActivity.class)));
       menuCard("🛡","Offline Pāli QA","SQLite • Device • Offline Reader Check",()->startActivity(new Intent(this,PaliOfflineQaActivity.class)));
       menuCard("📚","MCU ၄၅ ကျမ်း Offline Index","ကျမ်းအမည်စာရင်း ၄၅ ကျမ်း • Pāli Source သီးခြားဖတ်ရှုနိုင်",()->startActivity(new Intent(this,Mcu45CatalogActivity.class)));
@@ -341,7 +342,7 @@ public class NativeFrontPagesActivity extends Activity {
       button("🌐  မြန်မာပြန် Reference စာအုပ်များ Online",26);
       button("📖  PDF / EPUB / TXT ဖိုင်ဖွင့်ရန်",6);
       button("သုတ္တန်ပိဋကတ် — နိကာယ်ငါးရပ်",19);
-      button("ဝိနည်းပိဋကတ်",6);
+      menuCard("📜","ဝိနည်းပိဋကတ် Offline Reader","ဝိနည်းမူရင်းစာသားအားလုံး",()->startActivity(new Intent(this,VinayaOfflineActivity.class)));
       button("အဘိဓမ္မာပိဋကတ်",16);
       addText("Offline ကျမ်းစာသားများကို ၄၅ ကျမ်း Library မှ ရွေးချယ်ဖတ်ရှုနိုင်ပါသည်။",15,INK,false);
     }else if(n==6){
@@ -380,7 +381,7 @@ public class NativeFrontPagesActivity extends Activity {
       }
       content.addView(stats);
       addText("စာဖတ်ခန်းများ",20,GREEN,true);
-      menuCard("📜","ဝိနည်းပိဋကတ်","Vinaya · 8 MCU volumes",()->openVolumes(1,8));
+      menuCard("📜","ဝိနည်းကျမ်းအားလုံး • Offline","ဘိက္ခု · ဘိက္ခုနီ · ခန္ဓက · ပရိဝါ • ပါဠိမူရင်း",()->startActivity(new Intent(this,VinayaOfflineActivity.class)));
       menuCard("📖","သုတ္တပိဋကတ်","Sutta · 25 MCU volumes",()->openVolumes(9,33));
       menuCard("☸","အဘိဓမ္မာပိဋကတ်","Abhidhamma · 12 MCU volumes",()->openVolumes(34,45));
       menuCard("📚","MCU ၄၅ ကျမ်း Index","45 Volume Catalog · Offline",()->startActivity(new Intent(this,Mcu45CatalogActivity.class)));

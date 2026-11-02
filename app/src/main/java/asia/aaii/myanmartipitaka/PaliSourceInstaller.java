@@ -43,6 +43,9 @@ public final class PaliSourceInstaller {
         if(!c.moveToFirst()||!expected.equalsIgnoreCase(c.getString(0)))
           throw new IllegalStateException("Pali source revision mismatch");
       }
+      try(Cursor c=db.rawQuery("SELECT 1 FROM sqlite_master WHERE type='table' AND name='myanmar_published'",null)){
+        if(!c.moveToFirst())throw new IllegalStateException("Burmese table missing in existing Pali DB");
+      }
       try(Cursor c=db.rawQuery("SELECT 1 FROM source_segments LIMIT 1",null)){
         if(!c.moveToFirst())throw new IllegalStateException("Pali source segments empty");
       }
@@ -62,8 +65,11 @@ public final class PaliSourceInstaller {
       // Revision already verified on this installation; recheck schema quickly.
       try(SQLiteDatabase db=SQLiteDatabase.openDatabase(dest.getAbsolutePath(),null,SQLiteDatabase.OPEN_READONLY)){
         try(Cursor c=db.rawQuery("SELECT value FROM build_info WHERE name='commit'",null)){
-          if(c.moveToFirst()&&rev.equalsIgnoreCase(c.getString(0)))
-            return new Result(dest,false,SystemClock.elapsedRealtime()-start,rev);
+          if(c.moveToFirst()&&rev.equalsIgnoreCase(c.getString(0))){
+            try(Cursor cc=db.rawQuery("SELECT 1 FROM sqlite_master WHERE type='table' AND name='myanmar_published'",null)){
+              if(cc.moveToFirst())return new Result(dest,false,SystemClock.elapsedRealtime()-start,rev);
+            }
+          }
         }
       }catch(Exception ignored){/* recopy from immutable APK asset */}
     }
