@@ -30,8 +30,8 @@ public final class VinayaOfflineActivity extends Activity {
   };
   private static final String[] EMOJI={"📜","📜","📖","📖","☸","📚"};
   private static final class Book {
-    final String file;final int segments,group;
-    Book(String f,int s,int g){file=f;segments=s;group=g;}
+    final String file,title;final int segments,group;
+    Book(String f,int s,int g,String t){file=f;segments=s;group=g;title=t;}
   }
   private final ArrayList<Book> books=new ArrayList<>();
   private final int[] counts=new int[6],segments=new int[6];
@@ -91,12 +91,12 @@ public final class VinayaOfflineActivity extends Activity {
     try{
       PaliSourceInstaller.Result installed=PaliSourceInstaller.prepare(this);
       try(SQLiteDatabase db=SQLiteDatabase.openDatabase(installed.file.getAbsolutePath(),null,SQLiteDatabase.OPEN_READONLY);
-          Cursor c=db.rawQuery("SELECT source_file,count(*) FROM source_segments WHERE source_file LIKE 'vinaya/%' GROUP BY source_file ORDER BY source_file",null)){
+          Cursor c=db.rawQuery("SELECT s.source_file,count(*),b.book_title FROM source_segments s JOIN pali_source_books b ON b.source_file=s.source_file WHERE s.source_file LIKE 'vinaya/%' GROUP BY s.source_file,b.book_title ORDER BY s.source_file",null)){
         while(c.moveToNext()){
           String file=c.getString(0);
           int n=c.getInt(1),g=group(file);
           if(g<0)throw new IllegalStateException("Uncategorized Vinaya source: "+file);
-          fileCount[g]++;paragraphCount[g]+=n;items.add(new Book(file,n,g));
+          fileCount[g]++;paragraphCount[g]+=n;items.add(new Book(file,n,g,c.getString(2)));
         }
       }
       for(int i=0;i<6;i++)if(fileCount[i]==0)throw new IllegalStateException("Missing Vinaya section: "+LATIN[i]);
@@ -142,7 +142,7 @@ public final class VinayaOfflineActivity extends Activity {
       for(Book item:books)if(item.group==selected){
         n++;
         String fileName=item.file.substring(item.file.lastIndexOf('/')+1).replace("_root-pli-ms.json","");
-        card("📖",fileName,item.segments+" စာပိုဒ် · Offline Pāli",()->openSource(item.file));
+        card("📖",item.title,item.segments+" စာပိုဒ် · "+fileName,()->openSource(item.file));
       }
       if(n!=counts[selected])add("စာအုပ်စာရင်း မပြည့်စုံပါ!",14,Color.RED,true);
     }

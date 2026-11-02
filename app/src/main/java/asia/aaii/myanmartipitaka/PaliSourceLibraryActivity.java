@@ -19,6 +19,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -36,6 +37,7 @@ public final class PaliSourceLibraryActivity extends Activity {
   private String focusSegment=null;
   private SQLiteDatabase db;
   private final ArrayList<String> files=new ArrayList<>();
+  private final HashMap<String,String> bookTitles=new HashMap<>();
   private String prefix="", currentFile=null;
   private int currentPage=0;
   private SharedPreferences readingState;
@@ -92,6 +94,10 @@ public final class PaliSourceLibraryActivity extends Activity {
         while(c.moveToNext())files.add(c.getString(0));
       }
       if(files.isEmpty())throw new IllegalStateException("Empty Pali source library");
+      try(Cursor c=opened.rawQuery("SELECT source_file,book_title FROM pali_source_books ORDER BY source_file",null)){
+        while(c.moveToNext())bookTitles.put(c.getString(0),c.getString(1));
+      }
+      if(bookTitles.size()!=files.size())throw new IllegalStateException("Pali heading coverage mismatch");
       db=opened;
       runOnUiThread(()->{
         if(shuttingDown)return;
@@ -137,7 +143,7 @@ public final class PaliSourceLibraryActivity extends Activity {
       note("Source ဖိုင်အလိုက် ဖတ်ရှုနိုင်ပြီး အင်တာနက်မလိုပါ။");
       return;
     }
-    note("Source Path: "+p);
+    note("Source: "+p+"\nကျမ်းခေါင်းစဉ်နှင့် အခန်းခေါင်းစဉ်များကို Source Metadata ဖြင့် ဖော်ပြထားသည်။");
     addRow("⌕  ယခု Source အတွင်း ရှာရန်",()->openSearch(null));
     LinkedHashSet<String> entries=new LinkedHashSet<>();
     for(String file:files){
@@ -151,30 +157,37 @@ public final class PaliSourceLibraryActivity extends Activity {
       if(entry.endsWith("/")){
         addRow("📚  "+entry,()->browse(p+entry));
       }else{
-        addRow("📖  "+entry,()->showFile(p+entry,0));
+        addRow("📖  "+bookTitles.getOrDefault(p+entry,entry)+"\n"+entry,()->showFile(p+entry,0));
       }
     }
   }
   private void showFile(String file,int page){
     if(db==null || shuttingDown)return;
     currentFile=file;currentPage=Math.max(0,page);content.removeAllViews();
-    note("ဖတ်ရှုနေသည် • "+file+"\nPage "+(currentPage+1)+" · ပါဠိမူရင်းစာသား");
+    note("📖 ကျမ်းခေါင်းစဉ် • "+bookTitles.getOrDefault(file,file)+"\nSource: "+file+"\nPage "+(currentPage+1)+" · ပါဠိမူရင်းစာသား");
     addRow("‹ နောက်ပြန်စာမျက်နှာ",()->showFile(file,Math.max(0,currentPage-1)));
     ArrayList<String[]> results=new ArrayList<>();
-    try(Cursor c=db.rawQuery("SELECT s.segment_id,s.body,COALESCE(t.body,'') FROM source_segments s LEFT JOIN myanmar_published t ON t.segment_id=s.segment_id WHERE s.source_file=? ORDER BY s.rowid LIMIT 50 OFFSET "+(currentPage*50),new String[]{file})){
-      while(c.moveToNext())results.add(new String[]{c.getString(0),c.getString(1),c.getString(2)});
+    try(Cursor c=db.rawQuery("SELECT s.segment_id,s.body,COALESCE(t.body,''),h.book_title,h.chapter_title FROM source_segments s LEFT JOIN myanmar_published t ON t.segment_id=s.segment_id JOIN pali_segment_titles h ON h.segment_id=s.segment_id WHERE s.source_file=? ORDER BY s.rowid LIMIT 50 OFFSET "+(currentPage*50),new String[]{file})){
+      while(c.moveToNext())results.add(new String[]{c.getString(0),c.getString(1),c.getString(2),c.getString(3),c.getString(4)});
     }catch(Exception e){note("စာသားဖတ်၍မရပါ: "+e.getMessage());return;}
     if(results.isEmpty())note("ယခုစာမျက်နှာတွင် စာသားမရှိပါ။");
     if(!results.isEmpty()&&focusSegment==null)segments.lastRead(file,results.get(0)[0],sourceRevision);
     final String focus=focusSegment;
     focusSegment=null;
     TextView focusedView=null;
+    String previousChapter=null;
     for(String[] row:results){
+      if(previousChapter==null || !previousChapter.equals(row[4])){
+        TextView chapter=label("☸  "+row[4],19,true);
+        chapter.setBackgroundColor(0xffe3ecdf);
+        content.addView(chapter);
+        previousChapter=row[4];
+      }
       String translation=row[2]!=null && !row[2].trim().isEmpty()
         ? "\n\n🇲🇲 မြန်မာဘာသာပြန် — SuttaCentral published (AAII ပြန်လည်စိစစ်ရန်ရှိ)\n"+row[2]
         : "\n\n🇲🇲 မြန်မာဘာသာပြန် — မရရှိသေးပါ။";
       String explanation="\n\nရှင်းလင်းချက် — အတည်ပြုစာသား မရရှိသေးပါ။";
-      TextView v=label(row[0]+"\n\nပါဠိမူရင်း\n"+row[1]+translation+explanation+"\n\n🔖 Bookmark",16,false);
+      TextView v=label("ကျမ်း: "+row[3]+"\nအခန်း: "+row[4]+"\nစာပိုဒ်: "+row[0]+"\n\nပါဠိမူရင်း\n"+row[1]+translation+explanation+"\n\n🔖 Bookmark",16,false);
       v.setOnClickListener(view->{
         segments.lastRead(file,row[0],sourceRevision);
         segments.add(file,row[0],sourceRevision);
