@@ -1,0 +1,410 @@
+{
+  "schema": "aaii.vinaya.formula_glosses.v3",
+  "editorial_status": "AI_DRAFT_UNREVIEWED",
+  "method": "exact-Pali-string-match-only",
+  "reviewer_approved": false,
+  "cap_per_pali_formula": null,
+  "target_total_drafts": 10000,
+  "translations": [
+    {
+      "pali": "Bhagavato etamatthaṁ ārocesuṁ.",
+      "myanmar": "ထိုအကြောင်းကို မြတ်စွာဘုရားထံ လျှောက်ထားကြသည်။"
+    },
+    {
+      "pali": "Theravāda Vinaya",
+      "myanmar": "ထေရဝါဒ ဝိနည်း။"
+    },
+    {
+      "pali": "Anāpatti—",
+      "myanmar": "အာပတ်မသင့်သော အခြေအနေများမှာ —"
+    },
+    {
+      "pali": "Kaṁ ārabbhāti?",
+      "myanmar": "မည်သူ့ကို အကြောင်းပြုသနည်း။"
+    },
+    {
+      "pali": "Kismiṁ vatthusminti?",
+      "myanmar": "မည်သည့်အကြောင်းအရာ၌ ဖြစ်သနည်း။"
+    },
+    {
+      "pali": "“Saccaṁ, bhagavā”ti.",
+      "myanmar": "“မှန်ပါသည်၊ မြတ်စွာဘုရား” ဟု လျှောက်ထားကြ၏။"
+    },
+    {
+      "pali": "Tena samayena buddho bhagavā sāvatthiyaṁ viharati jetavane anāthapiṇḍikassa ārāme.",
+      "myanmar": "ထိုအခါ မြတ်စွာဘုရားသည် သာဝတ္ထိပြည်၊ ဇေတဝန်၊ အနာထပိဏ္ဍိကသူဌေး၏ ကျောင်းတိုက်၌ သီတင်းသုံးတော်မူ၏။"
+    },
+    {
+      "pali": "Vigarahi buddho bhagavā …pe…",
+      "myanmar": "မြတ်စွာဘုရားသည် ကဲ့ရဲ့တော်မူ၏ …(မူရင်းတွင် အတိုချုပ်ထားသည်)…"
+    },
+    {
+      "pali": "Ekā paññatti.",
+      "myanmar": "ပညတ်ချက်တစ်ခုရှိ၏။"
+    },
+    {
+      "pali": "Tassa kukkuccaṁ ahosi …pe…",
+      "myanmar": "ထိုသူ၌ စိတ်မအေးမချမ်းဖြစ်၍ သံသယရှိလာ၏ …(အတိုချုပ်ထားသည်)…"
+    },
+    {
+      "pali": "Sāvatthiyaṁ paññattaṁ.",
+      "myanmar": "သာဝတ္ထိပြည်၌ ပညတ်တော်မူခဲ့၏။"
+    },
+    {
+      "pali": "Mahāvibhaṅga",
+      "myanmar": "မဟာဝိဘင်း။"
+    },
+    {
+      "pali": "ādikammikassāti.",
+      "myanmar": "ပထမဆုံး ကျူးလွန်သူအတွက်ဟု ဆိုလိုသည်။"
+    },
+    {
+      "pali": "Ye te bhikkhū appicchā …pe… te ujjhāyanti khiyyanti vipācenti—",
+      "myanmar": "အလိုနည်းပါးသော ထိုရဟန်းတို့သည် …(အတိုချုပ်ထားသည်)… ကဲ့ရဲ့ပြစ်တင်၍ ပြောဆိုကြ၏ —"
+    },
+    {
+      "pali": "Pācittiyakaṇḍa",
+      "myanmar": "ပါစိတ္တိယအခန်း။"
+    },
+    {
+      "pali": "ummattakassa,",
+      "myanmar": "စိတ်ဖောက်ပြန်နေသောသူအတွက်၊"
+    },
+    {
+      "pali": "Netaṁ, bhikkhave, appasannānaṁ vā pasādāya …pe…",
+      "myanmar": "ရဟန်းတို့၊ ဤအရာသည် မကြည်ညိုသူတို့ကို ကြည်ညိုစေရန် မဟုတ် …(အတိုချုပ်ထားသည်)…"
+    },
+    {
+      "pali": "Manussā ujjhāyanti khiyyanti vipācenti—",
+      "myanmar": "လူတို့သည် ကဲ့ရဲ့ပြစ်တင်၍ ပြောဆိုကြ၏ —"
+    },
+    {
+      "pali": "Katamehi pañcahi?",
+      "myanmar": "မည်သည့် ငါးမျိုးတို့ဖြင့်နည်း။"
+    },
+    {
+      "pali": "evañca pana, bhikkhave, imaṁ sikkhāpadaṁ uddiseyyātha—",
+      "myanmar": "ရဟန်းတို့၊ ဤသိက္ခာပုဒ်ကို ဤသို့ ရွတ်ဆိုကြရမည် —"
+    },
+    {
+      "pali": "yassa nakkhamati, so bhāseyya.",
+      "myanmar": "သဘောမတူသောသူသည် ပြောဆိုပါစေ။"
+    },
+    {
+      "pali": "Bhikkhunivibhaṅga",
+      "myanmar": "ဘိက္ခုနီဝိဘင်း။"
+    },
+    {
+      "pali": "‘Suṇātu me, bhante, saṅgho.",
+      "myanmar": "အသျှင်ဘုရားတို့၊ သံဃာတော်သည် ကျွန်ုပ်၏ စကားကို နားထောင်တော်မူပါစေ။"
+    },
+    {
+      "pali": "Esā ñatti.",
+      "myanmar": "ဤသည် ဉတ္တိဖြစ်သည်။"
+    },
+    {
+      "pali": "evañca pana, bhikkhave, bhikkhuniyo imaṁ sikkhāpadaṁ uddisantu—",
+      "myanmar": "ရဟန်းတို့၊ ဘိက္ခုနီတို့သည် ဤသိက္ခာပုဒ်ကို ဤသို့ ရွတ်ဆိုကြပါစေ —"
+    },
+    {
+      "pali": "ādikammikāyāti.",
+      "myanmar": "ပထမဆုံး ကျူးလွန်သော ဘိက္ခုနီအတွက်ဟု ဆိုလိုသည်။"
+    },
+    {
+      "pali": "ummattikāya,",
+      "myanmar": "စိတ်ဖောက်ပြန်နေသော ဘိက္ခုနီအတွက်၊"
+    },
+    {
+      "pali": "Yā panāti",
+      "myanmar": "“မည်သည့် ဘိက္ခုနီမဆို” ဟူသော စကားရပ်၏ အဓိပ္ပါယ်မှာ —"
+    },
+    {
+      "pali": "Suṇātu me, bhante, saṅgho.",
+      "myanmar": "အသျှင်ဘုရားတို့၊ သံဃာတော်သည် ကျွန်ုပ်၏ စကားကို နားထောင်တော်မူပါစေ။"
+    },
+    {
+      "pali": "yā yādisā …pe…",
+      "myanmar": "ထိုဘိက္ခုနီသည် မည်သည့်အမျိုးအစားဖြစ်စေ …(အတိုချုပ်ထားသည်)…"
+    },
+    {
+      "pali": "Yā tā bhikkhuniyo appicchā …pe… tā ujjhāyanti khiyyanti vipācenti—",
+      "myanmar": "အလိုနည်းပါးသော ဘိက္ခုနီတို့သည် …(အတိုချုပ်ထားသည်)… ကဲ့ရဲ့ပြစ်တင်၍ ပြောဆိုကြ၏ —"
+    },
+    {
+      "pali": "bhikkhunīti",
+      "myanmar": "“ဘိက္ခုနီ” ဟူသည်မှာ —"
+    },
+    {
+      "pali": "…pe… ayaṁ imasmiṁ atthe adhippetā bhikkhunīti.",
+      "myanmar": "…(အတိုချုပ်ထားသည်)… ဤအကြောင်းတွင် ရည်ညွှန်းထားသော ဘိက္ခုနီဖြစ်သည်။"
+    },
+    {
+      "pali": "Atha kho bhagavā etasmiṁ nidāne etasmiṁ pakaraṇe dhammiṁ kathaṁ katvā bhikkhū āmantesi—",
+      "myanmar": "ထို့နောက် မြတ်စွာဘုရားသည် ဤအကြောင်းနှင့်စပ်လျဉ်း၍ တရားဟောတော်မူပြီး ရဟန်းတို့ကို မိန့်တော်မူ၏ —"
+    },
+    {
+      "pali": "Yo panāti",
+      "myanmar": "“မည်သည့် ရဟန်းမဆို” ဟူသော စကားရပ်၏ အဓိပ္ပါယ်မှာ —"
+    },
+    {
+      "pali": "āpadāsu,",
+      "myanmar": "ဘေးအန္တရာယ်ကျရောက်သောအခါ၊"
+    },
+    {
+      "pali": "bhikkhūti",
+      "myanmar": "“ရဟန်းတို့” ဟူသည်မှာ —"
+    },
+    {
+      "pali": "…pe… ayaṁ imasmiṁ atthe adhippeto bhikkhūti.",
+      "myanmar": "…(အတိုချုပ်ထားသည်)… ဤအကြောင်းတွင် ရည်ညွှန်းထားသော ရဟန်းဖြစ်သည်။"
+    },
+    {
+      "pali": "yo yādiso …pe…",
+      "myanmar": "မည်သည့် ရဟန်းအမျိုးအစားဖြစ်စေ …(အတိုချုပ်ထားသည်)…"
+    },
+    {
+      "pali": "Channaṁ āpattisamuṭṭhānānaṁ ekena samuṭṭhānena samuṭṭhāti—",
+      "myanmar": "အာပတ်ဖြစ်ပေါ်ရာ အကြောင်းခြောက်မျိုးအနက် အကြောင်းတစ်မျိုးကြောင့် ဖြစ်ပေါ်၏ —"
+    },
+    {
+      "pali": "Tassuddānaṁ",
+      "myanmar": "ထိုအကြောင်းအရာတို့၏ အကျဉ်းချုပ်။"
+    },
+    {
+      "pali": "dhammiṁ kathaṁ katvā bhikkhū āmantesi—",
+      "myanmar": "တရားဟောတော်မူပြီး ရဟန်းတို့ကို မိန့်တော်မူ၏ —"
+    },
+    {
+      "pali": "Byattena bhikkhunā paṭibalena saṅgho ñāpetabbo—",
+      "myanmar": "ကျွမ်းကျင်၍ စွမ်းဆောင်နိုင်သော ရဟန်းတစ်ပါးက သံဃာတော်အား ဉတ္တိတင်ပြရမည် —"
+    },
+    {
+      "pali": "vigarahitvā …pe…",
+      "myanmar": "ကဲ့ရဲ့တော်မူပြီး …(အတိုချုပ်ထားသည်)…"
+    },
+    {
+      "pali": "Khamati saṅghassa, tasmā tuṇhī, evametaṁ dhārayāmī’”ti.",
+      "myanmar": "သံဃာတော်က သဘောတူသဖြင့် တိတ်ဆိတ်နေကြသည်။ ထိုအတိုင်း မှတ်ယူပါမည်ဟု ဆို၏။"
+    },
+    {
+      "pali": "‘atthaññe āvāsikā bhikkhū anāgatā’ti.",
+      "myanmar": "“ဤကျောင်းတိုက်၌ နေသော အခြားရဟန်းများ မရောက်လာကြသေးပါ” ဟု ဆို၏။"
+    },
+    {
+      "pali": "Sekhiyakaṇḍa",
+      "myanmar": "သေခိယသိက္ခာပုဒ် အခန်း။"
+    },
+    {
+      "pali": "Dukkaṭaṁ.",
+      "myanmar": "ဒုက္ကဋ်အာပတ် ဖြစ်သည်။"
+    },
+    {
+      "pali": "Netaṁ, moghapurisā, appasannānaṁ vā pasādāya …pe…",
+      "myanmar": "အချည်းနှီးသောသူတို့၊ ဤအကျင့်သည် မကြည်ညိုသူတို့ ကြည်ညိုစေရန် မဖြစ် …(အတိုချုပ်ထားသည်)…"
+    },
+    {
+      "pali": "Assosuṁ kho bhikkhū tesaṁ manussānaṁ ujjhāyantānaṁ khiyyantānaṁ vipācentānaṁ.",
+      "myanmar": "ရဟန်းတို့သည် ထိုလူများ၏ ကဲ့ရဲ့ပြစ်တင်ပြောဆိုမှုကို ကြားသိကြ၏။"
+    },
+    {
+      "pali": "Channaṁ āpattisamuṭṭhānānaṁ tīhi samuṭṭhānehi samuṭṭhāti …pe….",
+      "myanmar": "အာပတ်ဖြစ်ပေါ်ရာ အကြောင်းခြောက်မျိုးအနက် သုံးမျိုးကြောင့် ဖြစ်ပေါ်၏ …(အတိုချုပ်ထားသည်)…"
+    },
+    {
+      "pali": "āpatti thullaccayassā”ti.",
+      "myanmar": "ထုလ္လစ္စည်းအာပတ် သင့်သည်ဟု ဆို၏။"
+    },
+    {
+      "pali": "kāyato ca cittato ca samuṭṭhāti, na vācato …pe….",
+      "myanmar": "ကိုယ်နှင့် စိတ်ကြောင့် ဖြစ်ပေါ်၏၊ နှုတ်ကြောင့် မဟုတ် …(အတိုချုပ်ထားသည်)…"
+    },
+    {
+      "pali": "Chabbaggiye bhikkhū ārabbha.",
+      "myanmar": "ဆဗ္ဗဂ္ဂီရဟန်းခြောက်ဦးကို အကြောင်းပြု၍ ဖြစ်သည်။"
+    },
+    {
+      "pali": "Evañcidaṁ bhagavatā bhikkhūnaṁ sikkhāpadaṁ paññattaṁ hoti.",
+      "myanmar": "မြတ်စွာဘုရားသည် ရဟန်းတို့အတွက် ဤသိက္ခာပုဒ်ကို ဤသို့ ပညတ်တော်မူခဲ့၏။"
+    },
+    {
+      "pali": "Paṭiggaṇhāti vīmaṁsati paccāharati, āpatti saṅghādisesassa.",
+      "myanmar": "လက်ခံခြင်း၊ စုံစမ်းစစ်ဆေးခြင်း၊ ပြန်လည်ယူဆောင်ခြင်းတို့ ပြုလျှင် သံဃာဒိသိသ်အာပတ် သင့်၏။"
+    },
+    {
+      "pali": "Netaṁ, moghapurisa, appasannānaṁ vā pasādāya …pe…",
+      "myanmar": "အချည်းနှီးသောသူ၊ ဤအကျင့်သည် မကြည်ညိုသူတို့ ကြည်ညိုစေရန် မဖြစ် …(အတိုချုပ်ထားသည်)…"
+    },
+    {
+      "pali": "“āpattiṁ tvaṁ, bhikkhu, āpanno pārājikan”ti.",
+      "myanmar": "“ရဟန်း၊ သင်သည် ပါရာဇိကအာပတ် ကျူးလွန်ပြီးပြီ” ဟု ဆို၏။"
+    },
+    {
+      "pali": "Channaṁ āpattisamuṭṭhānānaṁ dvīhi samuṭṭhānehi samuṭṭhāti—",
+      "myanmar": "အာပတ်ဖြစ်ပေါ်ရာ အကြောင်းခြောက်မျိုးအနက် နှစ်မျိုးကြောင့် ဖြစ်ပေါ်၏ —"
+    },
+    {
+      "pali": "Evañca pana, bhikkhave, imaṁ sikkhāpadaṁ uddiseyyātha—",
+      "myanmar": "ရဟန်းတို့၊ ဤသိက္ခာပုဒ်ကို ဤသို့ ရွတ်ဆိုရမည် —"
+    },
+    {
+      "pali": "Āroceyyāti",
+      "myanmar": "“အသိပေးပြောကြားရမည်” ဟူသည်မှာ —"
+    },
+    {
+      "pali": "Te jānanti—",
+      "myanmar": "ထိုသူတို့ သိရှိကြ၏ —"
+    },
+    {
+      "pali": "Dutiyampi etamatthaṁ vadāmi …pe…",
+      "myanmar": "ဤအကြောင်းကို ဒုတိယအကြိမ်လည်း ပြောဆိုပါမည် …(အတိုချုပ်ထားသည်)…"
+    },
+    {
+      "pali": "Atha kho te bhikkhū bhagavato etamatthaṁ ārocesuṁ.",
+      "myanmar": "ထို့နောက် ရဟန်းတို့သည် ထိုအကြောင်းကို မြတ်စွာဘုရားထံ လျှောက်ထားကြ၏။"
+    },
+    {
+      "pali": "Tatthapi bhikkhūnaṁ evaṁ hoti—",
+      "myanmar": "ထိုနေရာ၌လည်း ရဟန်းတို့သည် ဤသို့ စဉ်းစားကြ၏ —"
+    },
+    {
+      "pali": "asañcicca,",
+      "myanmar": "ရည်ရွယ်ချက်မရှိဘဲ၊"
+    },
+    {
+      "pali": "Parivāra",
+      "myanmar": "ပရိဝါရကျမ်း။"
+    },
+    {
+      "pali": "Channaṁ āpattisamuṭṭhānānaṁ chahi samuṭṭhānehi samuṭṭhāti …pe….",
+      "myanmar": "အာပတ်ဖြစ်ပေါ်ရာ အကြောင်းခြောက်မျိုးလုံးကြောင့် ဖြစ်ပေါ်၏ …(အတိုချုပ်ထားသည်)…"
+    },
+    {
+      "pali": "assatiyā,",
+      "myanmar": "သတိလွတ်ခြင်းကြောင့်၊"
+    },
+    {
+      "pali": "So evaṁ vadeti—",
+      "myanmar": "ထိုသူက ဤသို့ ပြောဆို၏ —"
+    },
+    {
+      "pali": "Tatra ce bhikkhūnaṁ evaṁ hoti—",
+      "myanmar": "ထိုအခါ ရဟန်းတို့သည် ဤသို့ စဉ်းစားကြလျှင် —"
+    },
+    {
+      "pali": "ajānantassa,",
+      "myanmar": "မသိသောသူအတွက်၊"
+    },
+    {
+      "pali": "Ekā paññatti, ekā anupaññatti.",
+      "myanmar": "မူလပညတ်ချက်တစ်ခုနှင့် ထပ်ဆင့်ပညတ်ချက်တစ်ခု ရှိ၏။"
+    },
+    {
+      "pali": "“anāpatti, bhikkhu, saṅghādisesassa;",
+      "myanmar": "ရဟန်း၊ သင်၌ သံဃာဒိသိသ်အာပတ် မသင့်ပါ။"
+    },
+    {
+      "pali": "Atha kho te bhikkhū bhagavato etamatthaṁ ārocesuṁ …pe…",
+      "myanmar": "ထို့နောက် ရဟန်းတို့သည် ထိုအကြောင်းကို မြတ်စွာဘုရားထံ လျှောက်ထားကြ၏ …(အတိုချုပ်ထားသည်)…"
+    },
+    {
+      "pali": "Atha kho bhikkhūnaṁ etadahosi—",
+      "myanmar": "ထို့နောက် ရဟန်းတို့သည် ဤသို့ အကြံဖြစ်ကြ၏ —"
+    },
+    {
+      "pali": "Sambahulā bhikkhuniyo ārabbha.",
+      "myanmar": "ဘိက္ခုနီများစွာကို အကြောင်းပြု၍ ဖြစ်သည်။"
+    },
+    {
+      "pali": "gilānassa,",
+      "myanmar": "နာမကျန်းသော ရဟန်းအတွက်၊"
+    },
+    {
+      "pali": "samāpajjāmi …",
+      "myanmar": "ကျွန်ုပ် ပြုမည်ဟု ဆို၏ …"
+    },
+    {
+      "pali": "Sattāhaṁ sannivatto kātabbo.",
+      "myanmar": "ခုနစ်ရက်ကြာ စုဝေးနေထိုင်ခြင်း ပြုရမည်။"
+    },
+    {
+      "pali": "ekā paññatti.",
+      "myanmar": "ပညတ်ချက်တစ်ခုရှိ၏။"
+    },
+    {
+      "pali": "Thullanandaṁ bhikkhuniṁ ārabbha.",
+      "myanmar": "ထုလ္လနန္ဒာ ဘိက္ခုနီကို အကြောင်းပြု၍ ဖြစ်သည်။"
+    },
+    {
+      "pali": "Pañhā mesā kusalehi cintitā.",
+      "myanmar": "ဤမေးခွန်းကို ပညာရှိတို့က ဆင်ခြင်ထားကြသည်။"
+    },
+    {
+      "pali": "Nissaggiyakaṇḍa",
+      "myanmar": "နိဿဂ္ဂိယအခန်း။"
+    },
+    {
+      "pali": "pubbevassa hoti musā bhaṇissanti,",
+      "myanmar": "မပြောမီကပင် “မုသားပြောမည်” ဟု အကြံရှိ၏၊"
+    },
+    {
+      "pali": "bhaṇantassa hoti musā bhaṇāmīti,",
+      "myanmar": "ပြောဆိုနေစဉ် “မုသားပြောနေသည်” ဟု သိ၏၊"
+    },
+    {
+      "pali": "“seyyathāpi gihī kāmabhogino”ti.",
+      "myanmar": "“ကာမဂုဏ်ခံစားသော အိမ်ထောင်သည်ကဲ့သို့” ဟု ဆို၏။"
+    },
+    {
+      "pali": "Bhagavato etamatthaṁ ārocesuṁ …pe…",
+      "myanmar": "ထိုအကြောင်းကို မြတ်စွာဘုရားထံ လျှောက်ထားကြသည် …(အတိုချုပ်ထားသည်)…"
+    },
+    {
+      "pali": "vasimhi …",
+      "myanmar": "ကျွန်ုပ် သီတင်းသုံးခဲ့၏ …"
+    },
+    {
+      "pali": "Vigarahi buddho bhagavā—",
+      "myanmar": "မြတ်စွာဘုရားသည် ကဲ့ရဲ့တော်မူ၏ —"
+    },
+    {
+      "pali": "“kaccittha parisuddhā”?",
+      "myanmar": "ဤနေရာ၌ စင်ကြယ်ကြပါသလား။"
+    },
+    {
+      "pali": "Phandāpeti, āpatti thullaccayassa.",
+      "myanmar": "လှုပ်ရှားစေလျှင် ထုလ္လစ္စည်းအာပတ် သင့်၏။"
+    },
+    {
+      "pali": "Katame pañca?",
+      "myanmar": "မည်သည့် ငါးမျိုးတို့နည်း။"
+    },
+    {
+      "pali": "Kathaṁ nu kho mayā paṭipajjitabban”ti?",
+      "myanmar": "ကျွန်ုပ် မည်သို့ လိုက်နာကျင့်သုံးရမည်နည်း။"
+    },
+    {
+      "pali": "Puriso bhikkhuṁ pahiṇati—",
+      "myanmar": "လူတစ်ဦးသည် ရဟန်းထံ သတင်းစကားပို့၏ —"
+    },
+    {
+      "pali": "Bhikkhū evamāhaṁsu—",
+      "myanmar": "ရဟန်းတို့သည် ဤသို့ ပြောဆိုကြ၏ —"
+    },
+    {
+      "pali": "Evañca pana, bhikkhave, nissajjitabbaṁ.",
+      "myanmar": "ရဟန်းတို့၊ ဤသို့ စွန့်လွှတ်အပ်သည်။"
+    },
+    {
+      "pali": "Bhikkhū bhagavato etamatthaṁ ārocesuṁ.",
+      "myanmar": "ရဟန်းတို့သည် ထိုအကြောင်းကို မြတ်စွာဘုရားထံ လျှောက်ထားကြ၏။"
+    },
+    {
+      "pali": "Tesaṁ kukkuccaṁ ahosi …pe…",
+      "myanmar": "ထိုရဟန်းတို့၌ စိတ်မအေးမချမ်းဖြစ်၍ သံသယရှိလာ၏ …(အတိုချုပ်ထားသည်)…"
+    },
+    {
+      "pali": "bhaṇitassa hoti musā mayā bhaṇitanti,",
+      "myanmar": "ပြောပြီးနောက် “ငါ မုသားပြောခဲ့သည်” ဟု သိ၏၊"
+    }
+  ]
+}

@@ -47,7 +47,7 @@ public final class PaliSourceInstaller {
         if(!c.moveToFirst())throw new IllegalStateException("Burmese table missing in existing Pali DB");
       }
       try(Cursor c=db.rawQuery("SELECT value FROM build_info WHERE name='vinaya_myanmar_draft_pack'",null)){
-        if(!c.moveToFirst()||!"aaii.vinaya.translation_drafts.v2_1000".equals(c.getString(0)))
+        if(!c.moveToFirst()||!"aaii.vinaya.translation_drafts.v3_10000".equals(c.getString(0)))
           throw new IllegalStateException("Vinaya Myanmar translation pack is missing");
       }
       try(Cursor c=db.rawQuery("SELECT 1 FROM source_segments LIMIT 1",null)){
@@ -71,7 +71,7 @@ public final class PaliSourceInstaller {
         try(Cursor c=db.rawQuery("SELECT value FROM build_info WHERE name='commit'",null)){
           if(c.moveToFirst()&&rev.equalsIgnoreCase(c.getString(0))){
             try(Cursor cc=db.rawQuery("SELECT value FROM build_info WHERE name='vinaya_myanmar_draft_pack'",null)){
-              if(cc.moveToFirst() && "aaii.vinaya.translation_drafts.v2_1000".equals(cc.getString(0)))
+              if(cc.moveToFirst() && "aaii.vinaya.translation_drafts.v3_10000".equals(cc.getString(0)))
                 return new Result(dest,false,SystemClock.elapsedRealtime()-start,rev);
             }
           }
