@@ -69,7 +69,7 @@ def audit(database: pathlib.Path,crosswalk: pathlib.Path):
             for missing in cols-actual:errors.append(f"Missing {table}.{missing}.")
         if errors:return report
         metadata={r[0]:r[1] for r in db.execute("SELECT name,value FROM build_info")}
-        if metadata.get("edition_mapping")!="45-volume human-reviewed crosswalk":
+        if metadata.get("edition_mapping") not in ("45-volume human-reviewed crosswalk","45-volume human-reviewed crosswalk with approved multifile spans"):
             errors.append("No approved edition-mapping metadata.")
         if not metadata.get("source_commit"):errors.append("Missing pinned Pali source commit.")
         volumes=db.execute("SELECT volume,title_my,pitaka,source_file_prefix,reviewer_reference,rights_evidence FROM volumes ORDER BY volume").fetchall()
