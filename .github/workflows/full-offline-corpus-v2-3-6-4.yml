@@ -1,4 +1,4 @@
-name: Myanmar Tipitaka V2.3.6.7 — Full Pali Source Corpus Staging
+name: Myanmar Tipitaka V2.3.6.8 — Full Pali Source Corpus Staging
 on:
   workflow_dispatch:
   push:
@@ -7,6 +7,9 @@ on:
       - '.github/workflows/full-offline-corpus-v2-3-6-4.yml'
       - 'scripts/build_bilara_source_sqlite.py'
       - 'scripts/build_native_45_sqlite.py'
+      - 'scripts/build_verified_multifile_corpus.py'
+      - 'scripts/test_verified_multifile_corpus.py'
+      - 'corpus/45_volume_verified_source_spans.csv'
       - 'scripts/validate_45_volume_crosswalk.py'
       - 'corpus/45_volume_crosswalk.csv'
 permissions:
@@ -61,6 +64,8 @@ jobs:
           assert len(rows)==45 and all(r['mapping_status']=='UNVERIFIED' for r in rows)
           print('PASS: multi-file span template is unapproved')
           PY
+      - name: Test 45-volume multi-file assembler (synthetic fixtures only)
+        run: python3 -m unittest scripts/test_verified_multifile_corpus.py -v
       - name: Candidate 45-volume crosswalk validation (expected blocked)
         id: crosswalk
         continue-on-error: true
@@ -72,7 +77,7 @@ jobs:
       - name: Upload genuine source text staging separately from release
         uses: actions/upload-artifact@v4
         with:
-          name: Myanmar-Tipitaka-V2.3.6.7-Pali-Source-UNMAPPED-NOT-45-APK
+          name: Myanmar-Tipitaka-V2.3.6.8-Pali-Source-UNMAPPED-NOT-45-APK
           path: |
             pali_root_source.sqlite
             source_commit.txt
@@ -88,7 +93,7 @@ jobs:
         if: steps.crosswalk.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
-          name: Myanmar-Tipitaka-V2.3.6.7-Native-45-Volumes-VERIFIED
+          name: Myanmar-Tipitaka-V2.3.6.8-Native-45-Volumes-VERIFIED
           path: |
             tipitaka_offline.sqlite
             native_corpus_report.json
