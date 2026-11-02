@@ -1,4 +1,4 @@
-name: Myanmar Tipitaka V2.3.6.6 Native SQLite Foundation + APK
+name: Myanmar Tipitaka V2.3.6.7 Native SQLite Foundation + APK
 
 on:
   workflow_dispatch:
@@ -44,13 +44,13 @@ jobs:
         id: special_content
         continue-on-error: true
         run: python3 scripts/validate_special_content.py
-      - name: Verify V2.3.6.6 offline search and SQLite QA
+      - name: Verify V2.3.6.7 offline search and SQLite QA
         run: |
           grep -q 'class OfflineDatabaseQaActivity' app/src/main/java/asia/aaii/myanmartipitaka/OfflineDatabaseQaActivity.java
           grep -q 'OfflineDatabaseQaActivity' app/src/main/AndroidManifest.xml
           grep -q 'MyanmarContentStore.DB_NAME' app/src/main/java/asia/aaii/myanmartipitaka/OfflineSearchActivity.java
           grep -q 'tipitaka-offline-search' app/src/main/java/asia/aaii/myanmartipitaka/OfflineSearchActivity.java
-      - name: Verify V2.3.6.6 searchable offline library and progress
+      - name: Verify V2.3.6.7 searchable offline library and progress
         run: |
           grep -q 'class OfflineBookLibraryActivity' app/src/main/java/asia/aaii/myanmartipitaka/OfflineBookLibraryActivity.java
           grep -q 'addTextChangedListener' app/src/main/java/asia/aaii/myanmartipitaka/OfflineBookLibraryActivity.java
@@ -63,7 +63,7 @@ jobs:
           grep -q 'copyIntoOfflineLibrary' app/src/main/java/asia/aaii/myanmartipitaka/BookReaderActivity.java
           grep -q 'bookmarks_' app/src/main/java/asia/aaii/myanmartipitaka/BookReaderActivity.java
           grep -q 'local_path' app/src/main/java/asia/aaii/myanmartipitaka/OfflineBookLibraryActivity.java
-      - name: Verify V2.3.6.6 PDF reader, bookmarks and history
+      - name: Verify V2.3.6.7 PDF reader, bookmarks and history
         run: |
           grep -q 'class KbrlBookCatalogActivity' app/src/main/java/asia/aaii/myanmartipitaka/KbrlBookCatalogActivity.java
           grep -q 'KbrlBookCatalogActivity' app/src/main/java/asia/aaii/myanmartipitaka/ReferenceLibraryActivity.java
@@ -71,7 +71,7 @@ jobs:
           grep -q 'showEntries("history","Reading History")' app/src/main/java/asia/aaii/myanmartipitaka/OnlineBookReaderActivity.java
           grep -q 'isPdfUrl' app/src/main/java/asia/aaii/myanmartipitaka/OnlineBookReaderActivity.java
           grep -q 'android.net.http.SslError' app/src/main/java/asia/aaii/myanmartipitaka/OnlineBookReaderActivity.java
-      - name: Verify V2.3.6.6 KBRL catalog and WebView reader
+      - name: Verify V2.3.6.7 KBRL catalog and WebView reader
         run: |
           grep -q 'class KbrlBookCatalogActivity' app/src/main/java/asia/aaii/myanmartipitaka/KbrlBookCatalogActivity.java
           grep -q 'kbrl_reference_books.json' app/src/main/java/asia/aaii/myanmartipitaka/KbrlBookCatalogActivity.java
@@ -89,7 +89,7 @@ jobs:
           grep -q 'class ReferenceLibraryActivity' app/src/main/java/asia/aaii/myanmartipitaka/ReferenceLibraryActivity.java
           grep -q 'ReferenceLibraryActivity' app/src/main/AndroidManifest.xml
           grep -q 'ReferenceLibraryActivity' app/src/main/java/asia/aaii/myanmartipitaka/NativeFrontPagesActivity.java
-      - name: Validate V2.3.6.6 Myanmar source inventory
+      - name: Validate V2.3.6.7 Myanmar source inventory
         run: python3 scripts/validate_myanmar_source_inventory.py
       - name: Test 45-volume editorial batch planner
         run: python3 -m unittest scripts/test_myanmar_editorial_batches.py -v
@@ -137,7 +137,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: Myanmar-Tipitaka-V2.3.6.6-Corpus-QA-Reports
+          name: Myanmar-Tipitaka-V2.3.6.7-Corpus-QA-Reports
           path: |
             corpus/offline_corpus_audit.json
             corpus/myanmar_editorial_batch_audit.json
@@ -153,7 +153,7 @@ jobs:
         if: always() && steps.importer_tests.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
-          name: Myanmar-Tipitaka-V2.3.6.6-PREVIEW-APK-NOT-FINAL-OFFLINE
+          name: Myanmar-Tipitaka-V2.3.6.7-PREVIEW-APK-NOT-FINAL-OFFLINE
           path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 14
@@ -161,7 +161,7 @@ jobs:
         if: steps.corpus_gate.outcome == 'success' && steps.crosswalk_gate.outcome == 'success' && steps.full_release.outcome == 'success' && steps.myanmar_batch.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
-          name: Myanmar-Tipitaka-V2.3.6.6-FINAL-OFFLINE-APK
+          name: Myanmar-Tipitaka-V2.3.6.7-FINAL-OFFLINE-APK
           path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 14
