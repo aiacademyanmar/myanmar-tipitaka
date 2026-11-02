@@ -1,4 +1,4 @@
-name: Myanmar Tipitaka V2.3.7.0 Pali Offline BUNDLED Preview APK
+name: Myanmar Tipitaka V2.3.7.1 Pali Offline BUNDLED Preview APK
 on:
   workflow_dispatch:
   push:
@@ -8,6 +8,7 @@ on:
       - 'scripts/check_bundled_pali_apk.py'
       - 'app/src/main/java/asia/aaii/myanmartipitaka/PaliSourceLibraryActivity.java'
       - 'app/src/main/java/asia/aaii/myanmartipitaka/PaliOfflineQaActivity.java'
+      - 'app/src/main/java/asia/aaii/myanmartipitaka/PaliOfflineSearchActivity.java'
       - 'app/src/main/java/asia/aaii/myanmartipitaka/NativeFrontPagesActivity.java'
 permissions:
   contents: read
@@ -51,6 +52,12 @@ jobs:
           cp upstream_LICENSE.md app/src/main/assets/upstream_LICENSE.md
           test -s app/src/main/assets/pali_root_source.sqlite
           grep -q 'class PaliSourceLibraryActivity' app/src/main/java/asia/aaii/myanmartipitaka/PaliSourceLibraryActivity.java
+      - name: Verify offline Pali search, bookmarks and resume
+        run: |
+          grep -q 'PaliOfflineSearchActivity' app/src/main/AndroidManifest.xml
+          grep -q 'offline-pali-source-search' app/src/main/java/asia/aaii/myanmartipitaka/PaliOfflineSearchActivity.java
+          grep -q 'saveBookmark' app/src/main/java/asia/aaii/myanmartipitaka/PaliSourceLibraryActivity.java
+          grep -q 'last_file' app/src/main/java/asia/aaii/myanmartipitaka/PaliSourceLibraryActivity.java
       - name: Validate on-device QA registration
         run: |
           grep -q 'PaliOfflineQaActivity' app/src/main/AndroidManifest.xml
@@ -63,7 +70,7 @@ jobs:
       - name: Upload verified Pali offline preview APK and QA
         uses: actions/upload-artifact@v4
         with:
-          name: Myanmar-Tipitaka-V2.3.7.0-OFFLINE-PALI-SOURCE-PREVIEW-NOT-45-FINAL
+          name: Myanmar-Tipitaka-V2.3.7.1-OFFLINE-PALI-SOURCE-PREVIEW-NOT-45-FINAL
           path: |
             app/build/outputs/apk/debug/app-debug.apk
             bundled_pali_apk_qa.json
