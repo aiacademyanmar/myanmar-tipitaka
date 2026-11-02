@@ -32,6 +32,8 @@ public final class PaliSourceLibraryActivity extends Activity {
   private static final int GREEN=Color.rgb(20,66,56), CREAM=Color.rgb(250,245,231);
   private static final String ASSET="pali_root_source.sqlite";
   private LinearLayout content;
+  private ScrollView readerScroll;
+  private String focusSegment=null;
   private SQLiteDatabase db;
   private final ArrayList<String> files=new ArrayList<>();
   private String prefix="", currentFile=null;
@@ -67,6 +69,7 @@ public final class PaliSourceLibraryActivity extends Activity {
     header.setTextColor(Color.WHITE);header.setBackgroundColor(GREEN);
     root.addView(header);
     ScrollView scroll=new ScrollView(this);
+    readerScroll=scroll;
     content=new LinearLayout(this);content.setOrientation(LinearLayout.VERTICAL);
     scroll.addView(content);root.addView(scroll,new LinearLayout.LayoutParams(-1,0,1));
     TextView back=label("‹ ပြန်ရန် / Back",17,true);
@@ -100,7 +103,8 @@ public final class PaliSourceLibraryActivity extends Activity {
               if(c.moveToFirst())target=c.getInt(0)/50;
             }
           }
-          showFile(requested,target);
+          if(segment!=null)jumpToSegment(requested,segment);
+          else showFile(requested,target);
         }else browse("");
       });
     }catch(Exception e){
@@ -157,14 +161,30 @@ public final class PaliSourceLibraryActivity extends Activity {
       while(c.moveToNext())results.add(new String[]{c.getString(0),c.getString(1)});
     }catch(Exception e){note("စာသားဖတ်၍မရပါ: "+e.getMessage());return;}
     if(results.isEmpty())note("ယခုစာမျက်နှာတွင် စာသားမရှိပါ။");
-    if(!results.isEmpty())segments.lastRead(file,results.get(0)[0],sourceRevision);
+    if(!results.isEmpty()&&focusSegment==null)segments.lastRead(file,results.get(0)[0],sourceRevision);
+    final String focus=focusSegment;
+    focusSegment=null;
+    TextView focusedView=null;
     for(String[] row:results){
       TextView v=label(row[0]+"\n"+row[1]+"\n🔖 Bookmark",16,false);
-      v.setOnClickListener(view->{segments.add(file,row[0],sourceRevision);android.widget.Toast.makeText(this,"စာပိုဒ် Bookmark သိမ်းပြီး",android.widget.Toast.LENGTH_SHORT).show();});
+      v.setOnClickListener(view->{
+        segments.lastRead(file,row[0],sourceRevision);
+        segments.add(file,row[0],sourceRevision);
+        android.widget.Toast.makeText(this,"စာပိုဒ် Bookmark သိမ်းပြီး",android.widget.Toast.LENGTH_SHORT).show();
+      });
+      if(row[0].equals(focus)){
+        v.setBackgroundColor(0xfffff1c7);
+        focusedView=v;
+        segments.lastRead(file,row[0],sourceRevision);
+      }
       LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(-1,-2);
       lp.setMargins(dp(9),dp(4),dp(9),dp(4));content.addView(v,lp);
       View separator=new View(this);separator.setBackgroundColor(0xffd5c8ae);
       content.addView(separator,new LinearLayout.LayoutParams(-1,dp(1)));
+    }
+    if(focusedView!=null&&readerScroll!=null){
+      final TextView target=focusedView;
+      readerScroll.post(()->readerScroll.smoothScrollTo(0,target.getTop()));
     }
     if(results.size()==50)addRow("နောက်စာမျက်နှာ ›",()->showFile(file,currentPage+1));
     addRow("‹ Source File စာရင်း",()->browse(parent(file)));
@@ -177,7 +197,10 @@ public final class PaliSourceLibraryActivity extends Activity {
       }
     }
     try(Cursor cursor=db.rawQuery("SELECT COUNT(*) FROM source_segments WHERE source_file=? AND rowid<(SELECT rowid FROM source_segments WHERE source_file=? AND segment_id=? LIMIT 1)",new String[]{file,file,segment})){
-      if(cursor.moveToFirst())showFile(file,cursor.getInt(0)/50);
+      if(cursor.moveToFirst()){
+        focusSegment=segment;
+        showFile(file,cursor.getInt(0)/50);
+      }
     }
   }
   private void showSegmentBookmarks(){
