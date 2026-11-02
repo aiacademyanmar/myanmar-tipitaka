@@ -37,6 +37,8 @@ public final class PaliSourceLibraryActivity extends Activity {
   private String prefix="", currentFile=null;
   private int currentPage=0;
   private SharedPreferences readingState;
+  private PaliReadingState segments;
+  private String sourceRevision="";
   private volatile boolean shuttingDown=false;
   private int dp(int d){return (int)(d*getResources().getDisplayMetrics().density+.5f);}
   private TextView label(String text,int sp,boolean bold){
@@ -57,6 +59,7 @@ public final class PaliSourceLibraryActivity extends Activity {
   @Override public void onCreate(Bundle b){
     super.onCreate(b);
     readingState=getSharedPreferences("pali_source_reading",MODE_PRIVATE);
+    segments=new PaliReadingState(this);
     getWindow().setStatusBarColor(GREEN);getWindow().setNavigationBarColor(GREEN);
     LinearLayout root=new LinearLayout(this);root.setOrientation(LinearLayout.VERTICAL);
     root.setBackgroundColor(CREAM);
@@ -78,6 +81,7 @@ public final class PaliSourceLibraryActivity extends Activity {
     try{
       PaliSourceInstaller.Result installed=PaliSourceInstaller.prepare(this);
       File dest=installed.file;
+      sourceRevision=installed.revision;
       opened=SQLiteDatabase.openDatabase(dest.getAbsolutePath(),null,SQLiteDatabase.OPEN_READONLY);
       try(Cursor c=opened.rawQuery("SELECT DISTINCT source_file FROM source_segments ORDER BY source_file",null)){
         while(c.moveToNext())files.add(c.getString(0));
@@ -118,6 +122,9 @@ public final class PaliSourceLibraryActivity extends Activity {
         int lastPage=readingState.getInt("page_"+lastFile,0);
         addRow("▶ ဆက်လက်ဖတ်ရှုရန် • "+lastFile,()->showFile(lastFile,lastPage));
       }
+      PaliReadingState.Entry last=segments.lastRead();
+      if(last!=null&&files.contains(last.file))addRow("▶ စာပိုဒ်မှ ဆက်ဖတ်ရန် • "+last.segment,()->jumpToSegment(last.file,last.segment));
+      addRow("🔖 စာပိုဒ် Bookmarks",this::showSegmentBookmarks);
       note("Source ဖိုင်အလိုက် ဖတ်ရှုနိုင်ပြီး အင်တာနက်မလိုပါ။");
       return;
     }
@@ -149,8 +156,10 @@ public final class PaliSourceLibraryActivity extends Activity {
       while(c.moveToNext())results.add(new String[]{c.getString(0),c.getString(1)});
     }catch(Exception e){note("စာသားဖတ်၍မရပါ: "+e.getMessage());return;}
     if(results.isEmpty())note("ယခုစာမျက်နှာတွင် စာသားမရှိပါ။");
+    if(!results.isEmpty())segments.lastRead(file,results.get(0)[0],sourceRevision);
     for(String[] row:results){
-      TextView v=label(row[0]+"\n"+row[1],16,false);
+      TextView v=label(row[0]+"\n"+row[1]+"\n🔖 Bookmark",16,false);
+      v.setOnClickListener(view->{segments.add(file,row[0],sourceRevision);android.widget.Toast.makeText(this,"စာပိုဒ် Bookmark သိမ်းပြီး",android.widget.Toast.LENGTH_SHORT).show();});
       LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(-1,-2);
       lp.setMargins(dp(9),dp(4),dp(9),dp(4));content.addView(v,lp);
       View separator=new View(this);separator.setBackgroundColor(0xffd5c8ae);
@@ -158,6 +167,22 @@ public final class PaliSourceLibraryActivity extends Activity {
     }
     if(results.size()==50)addRow("နောက်စာမျက်နှာ ›",()->showFile(file,currentPage+1));
     addRow("‹ Source File စာရင်း",()->browse(parent(file)));
+  }
+  private void jumpToSegment(String file,String segment){
+    if(db==null)return;
+    try(Cursor cursor=db.rawQuery("SELECT COUNT(*) FROM source_segments WHERE source_file=? AND rowid<(SELECT rowid FROM source_segments WHERE source_file=? AND segment_id=? LIMIT 1)",new String[]{file,file,segment})){
+      if(cursor.moveToFirst())showFile(file,cursor.getInt(0)/50);
+    }
+  }
+  private void showSegmentBookmarks(){
+    java.util.List<PaliReadingState.Entry> saved=segments.bookmarks();
+    if(saved.isEmpty()){new AlertDialog.Builder(this).setMessage("စာပိုဒ် Bookmark မရှိသေးပါ").setPositiveButton("OK",null).show();return;}
+    String[] names=new String[saved.size()];
+    for(int i=0;i<saved.size();i++)names[i]=saved.get(i).segment+" • "+saved.get(i).file;
+    new AlertDialog.Builder(this).setTitle("စာပိုဒ် Bookmarks").setItems(names,(d,i)->{
+      PaliReadingState.Entry e=saved.get(i);
+      if(files.contains(e.file))jumpToSegment(e.file,e.segment);
+    }).setNegativeButton("ပိတ်ရန်",null).show();
   }
   private void openSearch(String file){
     Intent i=new Intent(this,PaliOfflineSearchActivity.class);
