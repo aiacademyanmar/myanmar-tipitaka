@@ -24,6 +24,7 @@
     <activity android:name=".TipitakaLibraryActivity" android:exported="false"/>
     <activity android:name=".PaliSourceLibraryActivity" android:exported="false"/>
     <activity android:name=".PaliOfflineQaActivity" android:exported="false"/>
+    <activity android:name=".PaliOfflineSearchActivity" android:exported="false"/>
     <activity android:name=".OfflineDhammaActivity" android:exported="false"/>
     <activity android:name=".BookReaderActivity" android:exported="false"/>
     <activity android:name=".OfflineBookLibraryActivity" android:exported="false"/>
