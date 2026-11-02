@@ -399,6 +399,7 @@ public class NativeFrontPagesActivity extends Activity {
       menuCard("📖","သုတ္တပိဋကတ်","Sutta Piṭaka · ပါဠိမူရင်း Offline",()->openCorpus("sutta/"));
       menuCard("☸","အဘိဓမ္မပိဋကတ်","Abhidhamma Piṭaka · ပါဠိမူရင်း Offline",()->openCorpus("abhidhamma/"));
       menuCard("📚","ပိဋကတ် ၄၅ ကျမ်းစာရင်း","MCU Index · သက်ဆိုင်ရာ ပိဋကတ် Source ဖတ်ရန်",()->startActivity(new Intent(this,Mcu45CatalogActivity.class)));
+      menuCard("📊","ပါဠိ + မြန်မာ Progress","စာပိုဒ်အလိုက် SQLite Coverage စစ်ဆေးရန်",()->startActivity(new Intent(this,ProjectProgressActivity.class)));
       addText("၂။ အခြားခေါင်းစဉ်များ",22,GREEN,true);
       addText("သင်ကြားရေးကဏ္ဍ ၅ ခု · Offline Reader + Online Reference",13,GOLD,true);
       menuCard("📖","ဓမ္မပဒ (Dhammapada)","ဂါထာ ၄၂၃ ပုဒ် · ဝဂ် ၂၆ ခု",()->openTopic(0));
