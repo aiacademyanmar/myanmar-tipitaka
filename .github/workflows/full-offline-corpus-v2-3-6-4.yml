@@ -1,4 +1,4 @@
-name: Myanmar Tipitaka V2.3.6.6 — Full Pali Source Corpus Staging
+name: Myanmar Tipitaka V2.3.6.7 — Full Pali Source Corpus Staging
 on:
   workflow_dispatch:
   push:
@@ -52,6 +52,15 @@ jobs:
         id: editorial_review
         continue-on-error: true
         run: python3 scripts/audit_45_mapping_review.py pali_root_source.sqlite --sheet mapping-review-v2-3-6-5/45_volume_human_review_sheet.csv --report mapping_editorial_audit.json
+      - name: Test multi-file span manifest stays unapproved
+        run: |
+          python3 - <<'PY'
+          import csv
+          p='corpus/45_volume_verified_source_spans.csv'
+          rows=list(csv.DictReader(open(p,encoding='utf-8')))
+          assert len(rows)==45 and all(r['mapping_status']=='UNVERIFIED' for r in rows)
+          print('PASS: multi-file span template is unapproved')
+          PY
       - name: Candidate 45-volume crosswalk validation (expected blocked)
         id: crosswalk
         continue-on-error: true
@@ -59,11 +68,11 @@ jobs:
       - name: Build final reader SQLite only if exact mapping is verified
         if: steps.crosswalk.outcome == 'success'
         run: |
-          python3 scripts/build_native_45_sqlite.py pali_root_source.sqlite --crosswalk corpus/45_volume_crosswalk.csv --output tipitaka_offline.sqlite --report native_corpus_report.json
+          python3 scripts/build_verified_multifile_corpus.py pali_root_source.sqlite --crosswalk corpus/45_volume_crosswalk.csv --spans corpus/45_volume_verified_source_spans.csv --output tipitaka_offline.sqlite --report native_corpus_report.json
       - name: Upload genuine source text staging separately from release
         uses: actions/upload-artifact@v4
         with:
-          name: Myanmar-Tipitaka-V2.3.6.6-Pali-Source-UNMAPPED-NOT-45-APK
+          name: Myanmar-Tipitaka-V2.3.6.7-Pali-Source-UNMAPPED-NOT-45-APK
           path: |
             pali_root_source.sqlite
             source_commit.txt
@@ -72,13 +81,14 @@ jobs:
             corpus/45_volume_crosswalk.csv
             mapping-review-v2-3-6-5/
             mapping_editorial_audit.json
+            corpus/45_volume_verified_source_spans.csv
           if-no-files-found: error
           retention-days: 30
       - name: Upload fully verified 45-volume reader SQLite if approved
         if: steps.crosswalk.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
-          name: Myanmar-Tipitaka-V2.3.6.6-Native-45-Volumes-VERIFIED
+          name: Myanmar-Tipitaka-V2.3.6.7-Native-45-Volumes-VERIFIED
           path: |
             tipitaka_offline.sqlite
             native_corpus_report.json
