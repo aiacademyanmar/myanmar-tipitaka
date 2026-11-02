@@ -15,7 +15,7 @@ FIELDS=("volume_id","book_title_my","candidate_prefix","source_file","source_seg
 REV_FIELDS=("volume_id","book_title_my","pitaka","mapping_status",
  "proposed_source_prefix","reviewed_source_file","first_segment_id",
  "last_segment_id","exact_edition_source","printed_page_start","printed_page_end",
- "independent_reference","rights_evidence","reviewer_reference","review_notes")
+ "independent_reference","rights_evidence","reviewer_1","reviewer_2","reviewer_reference","first_sha256","last_sha256","review_notes")
 
 def load_csv(path):
  with path.open(encoding="utf-8-sig",newline="") as f:return list(csv.DictReader(f))
@@ -74,7 +74,7 @@ def generate(database,crosswalk,candidates,out):
      "proposed_source_prefix":" | ".join(prefixes),
      "reviewed_source_file":"","first_segment_id":"","last_segment_id":"",
      "exact_edition_source":"","printed_page_start":"","printed_page_end":"",
-     "independent_reference":"","rights_evidence":"","reviewer_reference":"","review_notes":""})
+     "independent_reference":"","rights_evidence":"","reviewer_1":"","reviewer_2":"","reviewer_reference":"","first_sha256":"","last_sha256":"","review_notes":""})
   for prefix in prefixes:
    matched=sorted(path for path in files if path.startswith(prefix+"/") or path.startswith(prefix+"_"))
    if not matched:missing.append({"volume_id":vid,"missing_candidate_prefix":prefix})
@@ -92,7 +92,7 @@ def generate(database,crosswalk,candidates,out):
  out.mkdir(parents=True,exist_ok=True)
  write_csv(out/"candidate_source_file_boundaries.csv",FIELDS,file_rows)
  write_csv(out/"45_volume_human_review_sheet.csv",REV_FIELDS,volume_review)
- report={"version":"2.3.6.5","source_commit":source_commit,
+ report={"version":"2.3.6.6","source_commit":source_commit,
   "source_files":len(files),"source_segments":n,
   "candidate_rows":45,"candidate_file_assignments":len(file_rows),
   "missing_candidate_families":missing,
