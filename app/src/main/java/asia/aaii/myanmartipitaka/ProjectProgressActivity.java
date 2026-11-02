@@ -78,7 +78,7 @@ public final class ProjectProgressActivity extends Activity {
         return count(db,"SELECT COUNT(*) FROM myanmar_published m JOIN source_segments s ON s.segment_id=m.segment_id WHERE s.source_file LIKE ?",new String[]{group+"/%"});
     }
     private static class Coverage {
-        int total,paliFiles, headings,myanmar,approvedTranslation,approvedExplanation;
+        int total,paliFiles, headings,myanmar,vinayaDrafts,approvedTranslation,approvedExplanation;
         int[] group=new int[3],translation=new int[3];
         int catalog,verifiedCrosswalk;
         boolean integrity;
@@ -93,6 +93,7 @@ public final class ProjectProgressActivity extends Activity {
                 d.paliFiles=count(db,"SELECT COUNT(DISTINCT source_file) FROM source_segments",null);
                 d.headings=count(db,"SELECT COUNT(*) FROM pali_segment_titles",null);
                 d.myanmar=count(db,"SELECT COUNT(*) FROM myanmar_published",null);
+                d.vinayaDrafts=count(db,"SELECT COUNT(*) FROM vinaya_myanmar_drafts WHERE editorial_status='AI_DRAFT_UNREVIEWED'",null);
                 String[] names={"vinaya","sutta","abhidhamma"};
                 for(int i=0;i<3;i++){
                     d.group[i]=groupCount(db,names[i]);
@@ -142,6 +143,10 @@ public final class ProjectProgressActivity extends Activity {
             progress(groupNames[i]+" — မြန်မာဘာသာပြန်",d.translation[i],d.group[i],true);
         }
         label("DN3 နှင့် DN5 ၏ မြန်မာစာပိုဒ်များကို SuttaCentral Published Data အဖြစ် ဖတ်နိုင်သည်။ ကျန်စာပိုဒ်များတွင် ဘာသာပြန်မရှိသေးကြောင်း ဖော်ပြသည်။",12,false);
+        label("ဝိနည်းမြန်မာဘာသာပြန် — အထူးဦးစားပေး",18,true);
+        progress("ဝိနည်း AI ဘာသာပြန်မူကြမ်း (မစိစစ်ရသေး)",d.vinayaDrafts,d.group[0],true);
+        progress("ဝိနည်း မြန်မာစာသား Draft + Published",d.vinayaDrafts+d.translation[0],d.group[0],true);
+        label("မူကြမ်းစာပိုဒ်များကို ပညာရှင်အတည်ပြုစာသားများအဖြစ် မသတ်မှတ်ပါ။",12,false);
         progress("AAII သီးခြားအတည်ပြု မြန်မာဘာသာပြန်",d.approvedTranslation,d.total,true);
         progress("AAII သီးခြားအတည်ပြု မြန်မာရှင်းလင်းချက်",d.approvedExplanation,d.total,true);
 

@@ -1,0 +1,504 @@
+{
+  "schema": "aaii.vinaya.translation_drafts.v1",
+  "status": "AI_DRAFT_UNREVIEWED",
+  "reviewer_approved": false,
+  "source": "suttacentral/bilara-data published root/pli/ms/vinaya",
+  "description": "Myanmar study drafts newly translated from Pali original. No professional monastic editorial review. Not a published approved Myanmar translation.",
+  "entries": [
+    {
+      "segment_id": "pli-tv-bu-pm:0.1",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "ဒွေမာတိကာ ပါဠိ။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:0.2",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "ထေရဝါဒ ဘိက္ခုပါဋိမောက်။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:1.0",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "ကြိုတင်ပြင်ဆင်ရမည့် အရာများ။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:1.1",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "တံမြက်စည်း၊ မီးအိမ်၊ ရေနှင့် ထိုင်ခုံတို့ကို ပြင်ဆင်ထားခြင်း။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:1.2",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "ဥပုသ်ပြုရာတွင် ဤအရာများကို ကြိုတင်ပြင်ဆင်မှုဟု ခေါ်သည်။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:2.0",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "ကြိုတင်ဆောင်ရွက်ရမည့် ကိစ္စများ။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:2.1",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "ဆန္ဒပေးခြင်း၊ စင်ကြယ်မှုကို တင်ပြခြင်း၊ ဥတုကို အသိပေးခြင်း၊ ရဟန်းဦးရေတွက်ခြင်းနှင့် ဩဝါဒပေးခြင်းတို့ ဖြစ်သည်။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:2.2",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "ဥပုသ်အတွက် ဤအရာများကို ကြိုတင်ဆောင်ရွက်ရမည့် ကိစ္စများဟု ခေါ်သည်။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:3.0",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "ဥပုသ်ဆောင်ရွက်ရန် သင့်လျော်သော အင်္ဂါရပ်များ။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:3.1",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "ဥပုသ်ပြုရန် ကံဆောင်ခွင့်ရှိသော ရဟန်းများ စုံညီရမည်။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:3.2",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "တူညီသည့် အာပတ်များ မရှိရ။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:3.3",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "ရှောင်ကြဉ်ရမည့် ပုဂ္ဂိုလ်များလည်း ထိုနေရာတွင် မရှိရ။ ဤသို့ရှိခြင်းကို သင့်လျော်သောအခြေအနေဟု ခေါ်သည်။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:4.1",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "ကြိုတင်ပြင်ဆင်မှုနှင့် ကြိုတင်ဆောင်ရွက်မှုများ ပြီးစီး၍ အာပတ်ကို ဖော်ပြပြီးသော ညီညွတ်သည့် ရဟန်းသံဃာ၏ သဘောတူညီချက်ဖြင့် ပါဋိမောက်ကို ရွတ်ဆိုရန် ဖိတ်ကြားတောင်းဆိုပါသည်။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:5.0",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "နိဒါန်းကို ရွတ်ဆိုခြင်း။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:5.1",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "အသျှင်ဘုရားတို့၊ သံဃာတော်သည် နားထောင်တော်မူပါစေ။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:5.2",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "ယနေ့သည် လပြည့်ဥပုသ်နေ့ ဖြစ်ပါသည်။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:5.3",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "သံဃာတော်အတွက် အခါသင့်လျော်ပါက သံဃာတော်သည် ဥပုသ်ပြု၍ ပါဋိမောက်ကို ရွတ်ဆိုတော်မူပါစေ။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:6.1",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "သံဃာတော်၏ ကြိုတင်ဆောင်ရွက်ရမည့် ကိစ္စသည် အဘယ်နည်း။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:6.2",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "အသျှင်ဘုရားတို့၊ မိမိတို့၏ စင်ကြယ်မှုကို အသိပေးတော်မူကြပါ။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:6.3",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "ပါဋိမောက်ကို ရွတ်ဆိုပါမည်။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:6.4",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "ထို့ကြောင့် အားလုံး ငြိမ်သက်စွာ ကောင်းမွန်စွာ နားထောင်၍ နှလုံးသွင်းကြပါစို့။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:6.5",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "အာပတ်ရှိသူသည် ထိုအာပတ်ကို ဖော်ပြဝန်ခံရမည်။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:6.6",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "အာပတ်မရှိပါက တိတ်ဆိတ်နေသင့်သည်။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:6.7",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "အသျှင်ဘုရားတို့ တိတ်ဆိတ်နေခြင်းဖြင့် စင်ကြယ်ကြောင်း ကျွန်ုပ် သိရှိပါမည်။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:6.8",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "တစ်ဦးချင်း မေးမြန်းလျှင် ဖြေကြားရသကဲ့သို့ ဤသံဃာပရိသတ်တွင် သုံးကြိမ်တိုင်တိုင် ကြေညာမေးမြန်းပါမည်။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:6.9",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "ရဟန်းတစ်ပါးသည် သုံးကြိမ်တိုင်တိုင် ကြေညာမေးမြန်းစဉ် မိမိ၌ အာပတ်ရှိကြောင်း မှတ်မိပါလျက် မဖော်ပြလျှင် သိလျက်နှင့် မုသားပြောဆိုမှု ဖြစ်သည်။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:6.10",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "အသျှင်ဘုရားတို့၊ သိလျက်နှင့် မုသားပြောခြင်းကို ဘုရားရှင်က အန္တရာယ်ဖြစ်စေသော တရားဟု ဟောကြားတော်မူခဲ့သည်။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:6.11",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "ထို့ကြောင့် အာပတ်ရှိကြောင်း မှတ်မိ၍ စင်ကြယ်လိုသော ရဟန်းသည် ထိုအာပတ်ကို ဖော်ပြဝန်ခံရမည်။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:6.12",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "အာပတ်ကို ဖော်ပြဝန်ခံခြင်းသည် ထိုရဟန်းအတွက် ချမ်းသာသက်သာစေသည်။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:7.1",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "အသျှင်ဘုရားတို့၊ နိဒါန်းကို ရွတ်ဆိုပြီးပါပြီ။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:7.2",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "ယခု အသျှင်ဘုရားတို့ကို မေးပါသည်။ ဤနေရာ၌ စင်ကြယ်ကြပါသလား။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:7.3",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "ဒုတိယအကြိမ်လည်း မေးပါသည်။ ဤနေရာ၌ စင်ကြယ်ကြပါသလား။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:7.4",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "တတိယအကြိမ်လည်း မေးပါသည်။ ဤနေရာ၌ စင်ကြယ်ကြပါသလား။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:7.5",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "အသျှင်ဘုရားတို့သည် စင်ကြယ်ကြသောကြောင့် တိတ်ဆိတ်နေကြသည်။ ထိုအတိုင်း မှတ်ယူပါမည်။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:7.6",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "နိဒါန်း ပြီးဆုံးပါပြီ။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:8.0",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "ပါရာဇိကသိက္ခာပုဒ်များကို ရွတ်ဆိုခြင်း။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:8.1",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "ယခု ပါရာဇိကတရား လေးပါးကို ရွတ်ဆိုပါမည်။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:9.0",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "ပါရာဇိက (၁) — မေထုန်အကျင့်။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:9.1",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "ရဟန်းတစ်ပါးသည် ရဟန်းတို့၏ သိက္ခာနှင့် အသက်မွေးဝမ်းကျောင်းကျင့်ဝတ်ကို လက်ခံထားပြီး သိက္ခာကို မစွန့်လွှတ်၊ မိမိအားနည်းမှုကို မကြေညာဘဲ တိရစ္ဆာန်နှင့်ပင် ဖြစ်စေ မေထုန်အကျင့်ကို ကျူးလွန်လျှင် ပါရာဇိကကျ၍ သံဃာနှင့် အတူနေခွင့် မရှိတော့ပေ။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:10.0",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "ပါရာဇိက (၂) — မပေးသောပစ္စည်းကို ခိုးယူခြင်း။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:10.1",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "ရဟန်းတစ်ပါးသည် ရွာမှဖြစ်စေ တောမှဖြစ်စေ မပေးအပ်သောပစ္စည်းကို ခိုးယူလိုသောစိတ်ဖြင့် ယူလျှင်၊"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:10.2",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "ထိုခိုးယူမှုသည် မင်းများက သူခိုးကို ဖမ်းဆီး၍ သတ်ခြင်း၊ ချုပ်နှောင်ခြင်း သို့မဟုတ် နယ်နှင်ခြင်း ပြုနိုင်လောက်သည့် အမျိုးအစားဖြစ်ပြီး 'သင်သည် သူခိုး၊ လူမိုက်၊ မသိနားမလည်သူ၊ လုယက်သူဖြစ်သည်' ဟု စွပ်စွဲရလောက်သော အရာဖြစ်ပါက၊"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:10.3",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "ထိုရဟန်းလည်း ပါရာဇိကကျ၍ သံဃာနှင့် အတူနေခွင့် မရှိတော့ပေ။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:11.0",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "ပါရာဇိက (၃) — လူ့အသက်ကို သတ်ဖြတ်ခြင်း။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:11.1",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "ရဟန်းတစ်ပါးသည် လူတစ်ဦး၏ အသက်ကို ရည်ရွယ်ချက်ရှိရှိ သတ်ဖြတ်ခြင်း၊ သတ်ဖြတ်မည့်သူကို ရှာပေးခြင်း၊ သေခြင်း၏ကောင်းကျိုးကို ချီးမွမ်းခြင်း၊ သေစေရန် တိုက်တွန်းခြင်းတို့ ပြုလုပ်လျှင်၊"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:11.2",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "'အို လူ၊ ဤဆင်းရဲသောအသက်တာနှင့် သင့်အတွက် ဘာအကျိုးရှိသနည်း။ အသက်ရှင်ခြင်းထက် သေခြင်းက သင့်အတွက် ပိုကောင်း၏' ဟု ပြောဆိုလျှင်၊"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:11.3",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "ဤသို့စိတ်ဖြင့် ရည်ရွယ်ကြံစည်ကာ အကြောင်းအမျိုးမျိုးပြ၍ သေခြင်းကို ချီးမွမ်းခြင်း၊ သေစေရန် တိုက်တွန်းခြင်း ပြုလျှင်၊"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:11.4",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "ထိုရဟန်းလည်း ပါရာဇိကကျ၍ သံဃာနှင့် အတူနေခွင့် မရှိတော့ပေ။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:12.0",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "ပါရာဇိက (၄) — မရှိသော အထက်လူ့တရားကို ရရှိသည်ဟု ပြောဆိုခြင်း။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:12.1",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "ရဟန်းတစ်ပါးသည် မိမိမသိမမြင်သည့် အရိယာတို့၏ ဉာဏ်အမြင်နှင့်ဆိုင်သော အထက်လူ့တရားကို မိမိ၌ ရှိသည်ဟု 'ငါ သိ၏၊ ငါ မြင်၏' ဟု ပြောဆိုလျှင်၊"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:12.2",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "နောက်အခါ မေးမြန်းစစ်ဆေးခံရသည်ဖြစ်စေ မခံရသည်ဖြစ်စေ စင်ကြယ်လို၍ 'ငါ မသိပါဘဲ သိသည်ဟု ပြောခဲ့၏၊ မမြင်ပါဘဲ မြင်သည်ဟု ပြောခဲ့၏၊ အချည်းနှီး မုသားပြောခဲ့၏' ဟု ဝန်ခံလျှင်၊"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:12.3",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "မိမိတကယ်ရရှိသည်ဟု မှားယွင်းထင်မြင်ခြင်းမျိုးကို ချန်လှပ်၍၊"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:12.4",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "ထိုရဟန်းလည်း ပါရာဇိကကျ၍ သံဃာနှင့် အတူနေခွင့် မရှိတော့ပေ။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:13.1",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "အသျှင်ဘုရားတို့၊ ပါရာဇိကတရား လေးပါးကို ရွတ်ဆိုပြီးပါပြီ။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:13.2",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "ထိုအထဲမှ တစ်ပါးပါးကို ကျူးလွန်သော ရဟန်းသည် အခြားရဟန်းများနှင့် အတူနေခွင့် မရှိတော့ပေ။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:13.3",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "ယခင်ကကဲ့သို့ပင် နောက်ပိုင်းတွင်လည်း ပါရာဇိကကျ၍ သံဃာနှင့် အတူနေခွင့် မရှိတော့ပေ။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:13.4",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "ယခု အသျှင်ဘုရားတို့ကို မေးပါသည်။ ဤနေရာ၌ စင်ကြယ်ကြပါသလား။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:13.5",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "ဒုတိယအကြိမ်လည်း မေးပါသည်။ ဤနေရာ၌ စင်ကြယ်ကြပါသလား။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:13.6",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "တတိယအကြိမ်လည်း မေးပါသည်။ ဤနေရာ၌ စင်ကြယ်ကြပါသလား။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:13.7",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "အသျှင်ဘုရားတို့သည် စင်ကြယ်ကြသောကြောင့် တိတ်ဆိတ်နေကြသည်။ ထိုအတိုင်း မှတ်ယူပါမည်။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:13.8",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "ပါရာဇိကအပိုင်း ပြီးဆုံးပါပြီ။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:14.0",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "သံဃာဒိသိသ်တရားများကို ရွတ်ဆိုခြင်း။"
+    },
+    {
+      "segment_id": "pli-tv-bu-pm:14.1",
+      "source_file": "vinaya/pli-tv-bu-pm_root-pli-ms.json",
+      "text_my": "ယခု သံဃာဒိသိသ်တရား ဆယ့်သုံးပါးကို ရွတ်ဆိုပါမည်။"
+    },
+    {
+      "segment_id": "pli-tv-kd1:0.1",
+      "source_file": "vinaya/pli-tv-kd/pli-tv-kd1_root-pli-ms.json",
+      "text_my": "ထေရဝါဒ ဝိနည်းပိဋကတ်။"
+    },
+    {
+      "segment_id": "pli-tv-kd1:0.2",
+      "source_file": "vinaya/pli-tv-kd/pli-tv-kd1_root-pli-ms.json",
+      "text_my": "မဟာဝဂ္ဂ။"
+    },
+    {
+      "segment_id": "pli-tv-kd1:0.3",
+      "source_file": "vinaya/pli-tv-kd/pli-tv-kd1_root-pli-ms.json",
+      "text_my": "ပထမ မဟာခန္ဓက။"
+    },
+    {
+      "segment_id": "pli-tv-kd1:1.0.1",
+      "source_file": "vinaya/pli-tv-kd/pli-tv-kd1_root-pli-ms.json",
+      "text_my": "ပထမ — ဗောဓိကထာ။"
+    },
+    {
+      "segment_id": "pli-tv-kd1:1.0.2",
+      "source_file": "vinaya/pli-tv-kd/pli-tv-kd1_root-pli-ms.json",
+      "text_my": "အရဟံ၊ သမ္မာသမ္ဗုဒ္ဓဖြစ်တော်မူသော မြတ်စွာဘုရားအား ရှိခိုးပါ၏။"
+    },
+    {
+      "segment_id": "pli-tv-kd1:1.1.1",
+      "source_file": "vinaya/pli-tv-kd/pli-tv-kd1_root-pli-ms.json",
+      "text_my": "ထိုအခါ မြတ်စွာဘုရားသည် ဘုရားဖြစ်တော်မူခါစ ဥရုဝေလတော၌ နေရဉ္ဇရာမြစ်ကမ်းပေါ်ရှိ ဗောဓိပင်ရင်းတွင် သီတင်းသုံးတော်မူ၏။"
+    },
+    {
+      "segment_id": "pli-tv-kd1:1.1.2",
+      "source_file": "vinaya/pli-tv-kd/pli-tv-kd1_root-pli-ms.json",
+      "text_my": "ထို့နောက် မြတ်စွာဘုရားသည် ဗောဓိပင်ရင်းတွင် ခုနစ်ရက်ပတ်လုံး ထိုင်နေရာမှ မရွေ့ဘဲ ဝိမုတ္တိချမ်းသာကို ခံစားတော်မူ၏။"
+    },
+    {
+      "segment_id": "pli-tv-kd1:1.2.1",
+      "source_file": "vinaya/pli-tv-kd/pli-tv-kd1_root-pli-ms.json",
+      "text_my": "ထို့နောက် မြတ်စွာဘုရားသည် ညဉ့်ဦးယံတွင် ပဋိစ္စသမုပ္ပါဒ်တရားကို အစဉ်လိုက်နှင့် ပြောင်းပြန် အာရုံပြုတော်မူ၏။"
+    },
+    {
+      "segment_id": "pli-tv-kd1:1.2.2",
+      "source_file": "vinaya/pli-tv-kd/pli-tv-kd1_root-pli-ms.json",
+      "text_my": "အဝိဇ္ဇာကြောင့် သင်္ခါရများ၊ သင်္ခါရကြောင့် ဝိညာဏ်၊ ဝိညာဏ်ကြောင့် နာမ်ရုပ်၊ နာမ်ရုပ်ကြောင့် သဠာယတန၊ သဠာယတနကြောင့် ဖဿ၊ ဖဿကြောင့် ဝေဒနာ၊ ဝေဒနာကြောင့် တဏှာ၊ တဏှာကြောင့် ဥပါဒါန်၊ ဥပါဒါန်ကြောင့် ဘဝ၊ ဘဝကြောင့် ဇာတိ၊ ဇာတိကြောင့် ဇရာမရဏနှင့် စိုးရိမ်ငိုကြွေးခြင်း၊ ဆင်းရဲခြင်း၊ စိတ်မချမ်းသာခြင်း၊ ပူပန်ခြင်းတို့ ဖြစ်ပေါ်လာကြသည်။"
+    },
+    {
+      "segment_id": "pli-tv-kd1:1.2.3",
+      "source_file": "vinaya/pli-tv-kd/pli-tv-kd1_root-pli-ms.json",
+      "text_my": "ဤသို့ ဒုက္ခအစုအဝေးတစ်ခုလုံး၏ ဖြစ်ပေါ်လာမှု ဖြစ်သည်။"
+    },
+    {
+      "segment_id": "pli-tv-kd1:1.2.4",
+      "source_file": "vinaya/pli-tv-kd/pli-tv-kd1_root-pli-ms.json",
+      "text_my": "အဝိဇ္ဇာသည် အကြွင်းမဲ့ ကင်းငြိမ်းသဖြင့် သင်္ခါရချုပ်၏။ သင်္ခါရချုပ်သဖြင့် ဝိညာဏ်ချုပ်၏။ အစဉ်အတိုင်း နာမ်ရုပ်၊ သဠာယတန၊ ဖဿ၊ ဝေဒနာ၊ တဏှာ၊ ဥပါဒါန်၊ ဘဝ၊ ဇာတိတို့ ချုပ်ကြပြီး ဇရာမရဏ၊ စိုးရိမ်ငိုကြွေးခြင်း၊ ဆင်းရဲခြင်း၊ စိတ်မချမ်းသာခြင်း၊ ပူပန်ခြင်းတို့လည်း ချုပ်ငြိမ်းကြသည်။"
+    },
+    {
+      "segment_id": "pli-tv-kd1:1.2.5",
+      "source_file": "vinaya/pli-tv-kd/pli-tv-kd1_root-pli-ms.json",
+      "text_my": "ဤသို့ ဒုက္ခအစုအဝေးတစ်ခုလုံး၏ ချုပ်ငြိမ်းမှု ဖြစ်သည်။"
+    },
+    {
+      "segment_id": "pli-tv-kd1:1.3.1",
+      "source_file": "vinaya/pli-tv-kd/pli-tv-kd1_root-pli-ms.json",
+      "text_my": "ထိုအကြောင်းကို သိမြင်တော်မူသော မြတ်စွာဘုရားသည် ထိုအချိန်၌ ဤဥဒါန်းကို ကျူးရင့်တော်မူ၏။"
+    },
+    {
+      "segment_id": "pli-tv-kd1:1.3.2",
+      "source_file": "vinaya/pli-tv-kd/pli-tv-kd1_root-pli-ms.json",
+      "text_my": "အားထုတ်၍ ဈာန်ဝင်စားသော ဗြာဟ္မဏအတွက် တရားသဘောများ ထင်ရှားလာသောအခါ၊"
+    },
+    {
+      "segment_id": "pli-tv-kd1:1.3.3",
+      "source_file": "vinaya/pli-tv-kd/pli-tv-kd1_root-pli-ms.json",
+      "text_my": "အားထုတ်၍ တရားရှုမှတ်နေသော ထိုသူအတွက်၊"
+    },
+    {
+      "segment_id": "pli-tv-kd1:1.3.4",
+      "source_file": "vinaya/pli-tv-kd/pli-tv-kd1_root-pli-ms.json",
+      "text_my": "သူ၏ ယုံမှားသံသယအားလုံး ကွယ်ပျောက်ကြသည်။"
+    },
+    {
+      "segment_id": "pli-tv-kd1:1.3.5",
+      "source_file": "vinaya/pli-tv-kd/pli-tv-kd1_root-pli-ms.json",
+      "text_my": "အကြောင်းနှင့်တကွ ဖြစ်ပေါ်သော တရားတို့ကို သိမြင်သောကြောင့်တည်း။"
+    },
+    {
+      "segment_id": "pli-tv-kd1:1.4.1",
+      "source_file": "vinaya/pli-tv-kd/pli-tv-kd1_root-pli-ms.json",
+      "text_my": "ထို့နောက် မြတ်စွာဘုရားသည် ညဉ့်သန်းခေါင်ယံ၌ ပဋိစ္စသမုပ္ပါဒ်တရားကို အစဉ်လိုက်နှင့် ပြောင်းပြန် အာရုံပြုတော်မူ၏။"
+    },
+    {
+      "segment_id": "pli-tv-kd1:1.4.2",
+      "source_file": "vinaya/pli-tv-kd/pli-tv-kd1_root-pli-ms.json",
+      "text_my": "အဝိဇ္ဇာကြောင့် သင်္ခါရများ၊ သင်္ခါရကြောင့် ဝိညာဏ်၊ ဝိညာဏ်ကြောင့် နာမ်ရုပ် စသည်ဖြင့်…"
+    },
+    {
+      "segment_id": "pli-tv-kd1:1.4.3",
+      "source_file": "vinaya/pli-tv-kd/pli-tv-kd1_root-pli-ms.json",
+      "text_my": "ဤသို့ ဒုက္ခအစုအဝေးတစ်ခုလုံး ဖြစ်ပေါ်လာသည် စသည်ဖြင့်…"
+    },
+    {
+      "segment_id": "pli-tv-kd1:1.4.4",
+      "source_file": "vinaya/pli-tv-kd/pli-tv-kd1_root-pli-ms.json",
+      "text_my": "ချုပ်ငြိမ်းသွားသည်ဟူ၏။"
+    },
+    {
+      "segment_id": "pli-tv-kd1:1.5.1",
+      "source_file": "vinaya/pli-tv-kd/pli-tv-kd1_root-pli-ms.json",
+      "text_my": "ထိုအကြောင်းကို သိမြင်တော်မူသော မြတ်စွာဘုရားသည် ထိုအချိန်၌ ဤဥဒါန်းကို ကျူးရင့်တော်မူ၏။"
+    },
+    {
+      "segment_id": "pli-tv-kd1:1.5.2",
+      "source_file": "vinaya/pli-tv-kd/pli-tv-kd1_root-pli-ms.json",
+      "text_my": "အားထုတ်၍ ဈာန်ဝင်စားသော ဗြာဟ္မဏအတွက် တရားသဘောများ ထင်ရှားလာသောအခါ၊"
+    },
+    {
+      "segment_id": "pli-tv-kd1:1.5.3",
+      "source_file": "vinaya/pli-tv-kd/pli-tv-kd1_root-pli-ms.json",
+      "text_my": "အားထုတ်၍ တရားရှုမှတ်နေသော ထိုသူအတွက်၊"
+    },
+    {
+      "segment_id": "pli-tv-kd1:1.5.4",
+      "source_file": "vinaya/pli-tv-kd/pli-tv-kd1_root-pli-ms.json",
+      "text_my": "သူ၏ ယုံမှားသံသယအားလုံး ကွယ်ပျောက်ကြသည်။"
+    },
+    {
+      "segment_id": "pli-tv-kd1:1.5.5",
+      "source_file": "vinaya/pli-tv-kd/pli-tv-kd1_root-pli-ms.json",
+      "text_my": "အကြောင်းတရားတို့၏ ချုပ်ငြိမ်းမှုကို သိမြင်သောကြောင့်တည်း။"
+    },
+    {
+      "segment_id": "pli-tv-kd1:1.6.1",
+      "source_file": "vinaya/pli-tv-kd/pli-tv-kd1_root-pli-ms.json",
+      "text_my": "ထို့နောက် မြတ်စွာဘုရားသည် ညဉ့်နောက်ဆုံးယံ၌ ပဋိစ္စသမုပ္ပါဒ်တရားကို အစဉ်လိုက်နှင့် ပြောင်းပြန် အာရုံပြုတော်မူ၏။"
+    },
+    {
+      "segment_id": "pli-tv-kd1:1.6.2",
+      "source_file": "vinaya/pli-tv-kd/pli-tv-kd1_root-pli-ms.json",
+      "text_my": "အဝိဇ္ဇာကြောင့် သင်္ခါရများ၊ သင်္ခါရကြောင့် ဝိညာဏ်၊ ဝိညာဏ်ကြောင့် နာမ်ရုပ် စသည်ဖြင့်…"
+    },
+    {
+      "segment_id": "pli-tv-kd1:1.6.3",
+      "source_file": "vinaya/pli-tv-kd/pli-tv-kd1_root-pli-ms.json",
+      "text_my": "ဤသို့ ဒုက္ခအစုအဝေးတစ်ခုလုံး ဖြစ်ပေါ်လာသည် စသည်ဖြင့်…"
+    },
+    {
+      "segment_id": "pli-tv-kd1:1.6.4",
+      "source_file": "vinaya/pli-tv-kd/pli-tv-kd1_root-pli-ms.json",
+      "text_my": "ချုပ်ငြိမ်းသွားသည်ဟူ၏။"
+    },
+    {
+      "segment_id": "pli-tv-kd1:1.7.1",
+      "source_file": "vinaya/pli-tv-kd/pli-tv-kd1_root-pli-ms.json",
+      "text_my": "ထိုအကြောင်းကို သိမြင်တော်မူသော မြတ်စွာဘုရားသည် ထိုအချိန်၌ ဤဥဒါန်းကို ကျူးရင့်တော်မူ၏။"
+    },
+    {
+      "segment_id": "pli-tv-kd1:1.7.2",
+      "source_file": "vinaya/pli-tv-kd/pli-tv-kd1_root-pli-ms.json",
+      "text_my": "အားထုတ်၍ ဈာန်ဝင်စားသော ဗြာဟ္မဏအတွက် တရားသဘောများ ထင်ရှားလာသောအခါ၊"
+    },
+    {
+      "segment_id": "pli-tv-kd1:1.7.3",
+      "source_file": "vinaya/pli-tv-kd/pli-tv-kd1_root-pli-ms.json",
+      "text_my": "အားထုတ်၍ တရားရှုမှတ်နေသော ထိုသူအတွက်၊"
+    },
+    {
+      "segment_id": "pli-tv-kd1:1.7.4",
+      "source_file": "vinaya/pli-tv-kd/pli-tv-kd1_root-pli-ms.json",
+      "text_my": "မာရ်၏စစ်တပ်ကို ပယ်ရှားနိုင်၏။"
+    },
+    {
+      "segment_id": "pli-tv-kd1:1.7.5",
+      "source_file": "vinaya/pli-tv-kd/pli-tv-kd1_root-pli-ms.json",
+      "text_my": "နေမင်းကဲ့သို့ အာကာသတစ်ခွင်ကို ထွန်းလင်းစေ၏။"
+    },
+    {
+      "segment_id": "pli-tv-kd1:1.7.6",
+      "source_file": "vinaya/pli-tv-kd/pli-tv-kd1_root-pli-ms.json",
+      "text_my": "ဗောဓိကထာ ပြီးဆုံး၏။"
+    }
+  ]
+}

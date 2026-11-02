@@ -170,8 +170,8 @@ public final class PaliSourceLibraryActivity extends Activity {
     note("📖 ကျမ်းခေါင်းစဉ် • "+bookTitles.getOrDefault(file,file)+"\nSource: "+file+"\nPage "+(currentPage+1)+" · ပါဠိမူရင်းစာသား");
     addRow("‹ နောက်ပြန်စာမျက်နှာ",()->showFile(file,Math.max(0,currentPage-1)));
     ArrayList<String[]> results=new ArrayList<>();
-    try(Cursor c=db.rawQuery("SELECT s.segment_id,s.body,COALESCE(t.body,''),h.book_title,h.chapter_title FROM source_segments s LEFT JOIN myanmar_published t ON t.segment_id=s.segment_id JOIN pali_segment_titles h ON h.segment_id=s.segment_id WHERE s.source_file=? ORDER BY s.rowid LIMIT 50 OFFSET "+(currentPage*50),new String[]{file})){
-      while(c.moveToNext())results.add(new String[]{c.getString(0),c.getString(1),c.getString(2),c.getString(3),c.getString(4)});
+    try(Cursor c=db.rawQuery("SELECT s.segment_id,s.body,COALESCE(t.body,''),h.book_title,h.chapter_title,COALESCE(d.text_my,'') FROM source_segments s LEFT JOIN myanmar_published t ON t.segment_id=s.segment_id LEFT JOIN vinaya_myanmar_drafts d ON d.segment_id=s.segment_id JOIN pali_segment_titles h ON h.segment_id=s.segment_id WHERE s.source_file=? ORDER BY s.rowid LIMIT 50 OFFSET "+(currentPage*50),new String[]{file})){
+      while(c.moveToNext())results.add(new String[]{c.getString(0),c.getString(1),c.getString(2),c.getString(3),c.getString(4),c.getString(5)});
     }catch(Exception e){note("စာသားဖတ်၍မရပါ: "+e.getMessage());return;}
     if(results.isEmpty())note("ယခုစာမျက်နှာတွင် စာသားမရှိပါ။");
     if(!results.isEmpty()&&focusSegment==null)segments.lastRead(file,results.get(0)[0],sourceRevision);
@@ -187,8 +187,10 @@ public final class PaliSourceLibraryActivity extends Activity {
         previousChapter=row[4];
       }
       String translation=row[2]!=null && !row[2].trim().isEmpty()
-        ? "\n\n🇲🇲 မြန်မာဘာသာပြန် — SuttaCentral published (AAII ပြန်လည်စိစစ်ရန်ရှိ)\n"+row[2]
-        : "\n\n🇲🇲 မြန်မာဘာသာပြန် — မရရှိသေးပါ။";
+        ? "\n\n🇲🇲 မြန်မာဘာသာပြန် — SuttaCentral Published (AAII သီးခြားမစိစစ်ရသေး)\n"+row[2]
+        : (row[5]!=null && !row[5].trim().isEmpty()
+          ? "\n\n🇲🇲 ဝိနည်း မြန်မာဘာသာပြန်မူကြမ်း — AI_DRAFT_UNREVIEWED (ပညာရှင် မစိစစ်ရသေး)\n"+row[5]
+          : "\n\n🇲🇲 မြန်မာဘာသာပြန် — မရရှိသေးပါ။");
       String explanation="\n\nရှင်းလင်းချက် — အတည်ပြုစာသား မရရှိသေးပါ။";
       TextView v=label("ကျမ်း: "+row[3]+"\nအခန်း: "+row[4]+"\nစာပိုဒ်: "+row[0]+"\n\nပါဠိမူရင်း\n"+row[1]+translation+explanation+"\n\n🔖 Bookmark",16,false);
       v.setOnClickListener(view->{
