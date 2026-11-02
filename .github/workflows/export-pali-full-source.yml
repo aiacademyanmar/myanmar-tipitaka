@@ -1,0 +1,58 @@
+name: Compile Pali Full Source Excel Word SQLite
+on:
+  push:
+    branches:
+      - feature/verified-pali-import-v2377
+    paths:
+      - 'tools/export_bilara_complete_source.py'
+      - '.github/workflows/export-pali-full-source.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  compile-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Word and Excel exporters
+        run: python -m pip install python-docx xlsxwriter
+      - name: Fetch published source
+        run: |
+          git clone --depth 1 --branch published --filter=blob:none --sparse https://github.com/suttacentral/bilara-data.git build/bilara-data
+          git -C build/bilara-data sparse-checkout set root/pli/ms
+      - name: Compile available complete source and inventory
+        run: |
+          SHA=$(git -C build/bilara-data rev-parse HEAD)
+          python tools/export_bilara_complete_source.py --root build/bilara-data/root/pli/ms --out build/pali-export --source-commit "$SHA"
+      - name: Validate source output and volume disclaimer
+        run: |
+          python - <<'PY'
+          import json,sqlite3
+          from pathlib import Path
+          p=Path('build/pali-export')
+          m=json.loads((p/'manifest.json').read_text())
+          assert m['mapping_to_MCU_45']=='NOT VERIFIED'
+          assert all(m['segments_by_pitaka'][b]>0 for b in ['vinaya','sutta','abhidhamma'])
+          d=sqlite3.connect(p/'pali_source_unreviewed.sqlite')
+          assert d.execute('PRAGMA integrity_check').fetchone()[0]=='ok'
+          assert d.execute('SELECT count(*) FROM segments').fetchone()[0]==m['total_segments']
+          assert d.execute("SELECT count(*) FROM segments WHERE review_status!='UNREVIEWED'").fetchone()[0]==0
+          assert list((p/'excel').glob('*.xlsx')) and list((p/'word').glob('*.docx'))
+          d.close()
+          print('Source export checked; MCU 45-volume mapping remains unverified')
+          PY
+      - name: Upload downloadable Word Excel and SQLite parts
+        uses: actions/upload-artifact@v4
+        with:
+          name: PALI-FULL-SOURCE-EXCEL-WORD-SQLITE-NOT-MCU45-VERIFIED
+          path: |
+            build/pali-export/excel/
+            build/pali-export/word/
+            build/pali-export/pali_source_unreviewed.sqlite
+            build/pali-export/manifest.json
+          retention-days: 14
+          compression-level: 6
