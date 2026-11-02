@@ -1,4 +1,4 @@
-name: Myanmar Tipitaka V2.3.7.1 Pali Offline BUNDLED Preview APK
+name: Myanmar Tipitaka V2.3.7.2 Pali Offline BUNDLED Preview APK
 on:
   workflow_dispatch:
   push:
@@ -9,6 +9,7 @@ on:
       - 'app/src/main/java/asia/aaii/myanmartipitaka/PaliSourceLibraryActivity.java'
       - 'app/src/main/java/asia/aaii/myanmartipitaka/PaliOfflineQaActivity.java'
       - 'app/src/main/java/asia/aaii/myanmartipitaka/PaliOfflineSearchActivity.java'
+      - 'app/src/main/java/asia/aaii/myanmartipitaka/PaliSourceInstaller.java'
       - 'app/src/main/java/asia/aaii/myanmartipitaka/NativeFrontPagesActivity.java'
 permissions:
   contents: read
@@ -50,6 +51,7 @@ jobs:
           mkdir -p app/src/main/assets
           cp pali_root_source.sqlite app/src/main/assets/pali_root_source.sqlite
           cp upstream_LICENSE.md app/src/main/assets/upstream_LICENSE.md
+          cp source_commit.txt app/src/main/assets/pali_source_commit.txt
           test -s app/src/main/assets/pali_root_source.sqlite
           grep -q 'class PaliSourceLibraryActivity' app/src/main/java/asia/aaii/myanmartipitaka/PaliSourceLibraryActivity.java
       - name: Verify offline Pali search, bookmarks and resume
@@ -62,6 +64,10 @@ jobs:
         run: |
           grep -q 'PaliOfflineQaActivity' app/src/main/AndroidManifest.xml
           grep -q 'class PaliOfflineQaActivity' app/src/main/java/asia/aaii/myanmartipitaka/PaliOfflineQaActivity.java
+      - name: Verify fast installer wiring
+        run: |
+          grep -q 'PaliSourceInstaller.prepare' app/src/main/java/asia/aaii/myanmartipitaka/PaliSourceLibraryActivity.java
+          grep -q 'class PaliSourceInstaller' app/src/main/java/asia/aaii/myanmartipitaka/PaliSourceInstaller.java
       - name: Compile native bundled Pali APK
         run: gradle --no-daemon assembleDebug
       - name: Verify packaged APK contains genuine Pali source
@@ -70,7 +76,7 @@ jobs:
       - name: Upload verified Pali offline preview APK and QA
         uses: actions/upload-artifact@v4
         with:
-          name: Myanmar-Tipitaka-V2.3.7.1-OFFLINE-PALI-SOURCE-PREVIEW-NOT-45-FINAL
+          name: Myanmar-Tipitaka-V2.3.7.2-OFFLINE-PALI-SOURCE-PREVIEW-NOT-45-FINAL
           path: |
             app/build/outputs/apk/debug/app-debug.apk
             bundled_pali_apk_qa.json
