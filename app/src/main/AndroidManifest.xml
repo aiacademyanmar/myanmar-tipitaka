@@ -22,6 +22,7 @@
     <activity android:name=".SourceAcquisitionActivity" android:exported="false"/>
     <activity android:name=".ParagraphExplanationActivity" android:exported="false"/>
     <activity android:name=".TipitakaLibraryActivity" android:exported="false"/>
+    <activity android:name=".Mcu45CatalogActivity" android:exported="false"/>
     <activity android:name=".PaliSourceLibraryActivity" android:exported="false"/>
     <activity android:name=".PaliOfflineQaActivity" android:exported="false"/>
     <activity android:name=".PaliOfflineSearchActivity" android:exported="false"/>

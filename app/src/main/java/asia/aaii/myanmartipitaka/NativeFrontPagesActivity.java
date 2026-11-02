@@ -316,6 +316,7 @@ public class NativeFrontPagesActivity extends Activity {
       addText("ထေရဝါဒ ပါဠိဘာသာ ပိဋကတ်သုံးပုံ (တိပိဋကတ်) ကို အောက်ပါ Menu များမှတစ်ဆင့် ဖတ်ရှုနိုင်ပါသည်။ ဝိနည်းပိဋကတ်၊ သုတ္တပိဋကတ်နှင့် အဘိဓမ္မပိဋကတ်တို့ကို လေ့လာနိုင်ပါသည်။",15,INK,false);
       menuCard("📚","ကျမ်းဖတ်ခန်း (45 ကျမ်း)","ပိဋကတ် ၄၅ ကျမ်း • Native Offline Reader",()->startActivity(new Intent(this,TipitakaLibraryActivity.class)));
       menuCard("🛡","Offline Pāli QA","SQLite • Device • Offline Reader Check",()->startActivity(new Intent(this,PaliOfflineQaActivity.class)));
+      menuCard("📚","MCU ၄၅ ကျမ်း Offline Index","ကျမ်းအမည်စာရင်း ၄၅ ကျမ်း • Pāli Source သီးခြားဖတ်ရှုနိုင်",()->startActivity(new Intent(this,Mcu45CatalogActivity.class)));
       menuCard("📜","မူရင်းပါဠိ Offline Source","SuttaCentral Bilara • စာအုပ်အုပ်ခွဲ ၄၅ ကျမ်း မအတည်ပြုသေး",()->startActivity(new Intent(this,PaliSourceLibraryActivity.class)));
       menuCard("🌐","Reference စာအုပ်များ Online ဖတ်ရန်","မြန်မာပြန်စာအုပ်များ • PDF • University Libraries",()->startActivity(new Intent(this,ReferenceLibraryActivity.class)));
       menuCard("📈","Project Progress Bar","ကျမ်း ၄၅ ကျမ်း • Source + SQLite + Myanmar Coverage",()->startActivity(new Intent(this,ProjectProgressActivity.class)));
