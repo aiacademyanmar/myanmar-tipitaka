@@ -1,6 +1,9 @@
 package asia.aaii.myanmartipitaka;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -33,6 +36,7 @@ public final class PaliSourceLibraryActivity extends Activity {
   private final ArrayList<String> files=new ArrayList<>();
   private String prefix="", currentFile=null;
   private int currentPage=0;
+  private SharedPreferences readingState;
   private volatile boolean shuttingDown=false;
   private int dp(int d){return (int)(d*getResources().getDisplayMetrics().density+.5f);}
   private TextView label(String text,int sp,boolean bold){
@@ -52,6 +56,7 @@ public final class PaliSourceLibraryActivity extends Activity {
   private void note(String s){content.addView(label(s,15,false));}
   @Override public void onCreate(Bundle b){
     super.onCreate(b);
+    readingState=getSharedPreferences("pali_source_reading",MODE_PRIVATE);
     getWindow().setStatusBarColor(GREEN);getWindow().setNavigationBarColor(GREEN);
     LinearLayout root=new LinearLayout(this);root.setOrientation(LinearLayout.VERTICAL);
     root.setBackgroundColor(CREAM);
@@ -91,7 +96,20 @@ public final class PaliSourceLibraryActivity extends Activity {
       }
       if(files.isEmpty())throw new IllegalStateException("Empty Pali source library");
       db=opened;
-      runOnUiThread(()->{if(!shuttingDown)browse("");});
+      runOnUiThread(()->{
+        if(shuttingDown)return;
+        String requested=getIntent().getStringExtra("source_file");
+        String segment=getIntent().getStringExtra("source_segment_id");
+        if(requested!=null && files.contains(requested)){
+          int target=0;
+          if(segment!=null){
+            try(Cursor c=db.rawQuery("SELECT COUNT(*) FROM source_segments WHERE source_file=? AND rowid < (SELECT rowid FROM source_segments WHERE segment_id=? LIMIT 1)",new String[]{requested,segment})){
+              if(c.moveToFirst())target=c.getInt(0)/50;
+            }
+          }
+          showFile(requested,target);
+        }else browse("");
+      });
     }catch(Exception e){
       if(opened!=null && opened!=db)opened.close();
       final String message=e.getMessage()==null?"Database unavailable":e.getMessage();
@@ -106,10 +124,17 @@ public final class PaliSourceLibraryActivity extends Activity {
       addRow("၁။ ဝိနည်းပိဋကတ် • Vinaya",()->browse("vinaya/"));
       addRow("၂။ သုတ္တပိဋကတ် • Sutta",()->browse("sutta/"));
       addRow("၃။ အဘိဓမ္မပိဋကတ် • Abhidhamma",()->browse("abhidhamma/"));
+      addRow("⌕  Offline ပါဠိစာသား ရှာရန်",()->openSearch(null));
+      String lastFile=readingState.getString("last_file",null);
+      if(lastFile!=null&&files.contains(lastFile)){
+        int lastPage=readingState.getInt("page_"+lastFile,0);
+        addRow("▶ ဆက်လက်ဖတ်ရှုရန် • "+lastFile,()->showFile(lastFile,lastPage));
+      }
       note("Source ဖိုင်အလိုက် ဖတ်ရှုနိုင်ပြီး အင်တာနက်မလိုပါ။");
       return;
     }
     note("Source Path: "+p);
+    addRow("⌕  ယခု Source အတွင်း ရှာရန်",()->openSearch(null));
     LinkedHashSet<String> entries=new LinkedHashSet<>();
     for(String file:files){
       if(!file.startsWith(p))continue;
@@ -145,6 +170,32 @@ public final class PaliSourceLibraryActivity extends Activity {
     }
     if(results.size()==50)addRow("နောက်စာမျက်နှာ ›",()->showFile(file,currentPage+1));
     addRow("‹ Source File စာရင်း",()->browse(parent(file)));
+  }
+  private void openSearch(String file){
+    Intent i=new Intent(this,PaliOfflineSearchActivity.class);
+    if(file!=null)i.putExtra("source_file",file);
+    startActivity(i);
+  }
+  private void saveBookmark(String file,int page){
+    String key="bookmark_"+file;
+    java.util.Set<String> values=new java.util.HashSet<>(readingState.getStringSet(key,java.util.Collections.emptySet()));
+    values.add(Integer.toString(page));
+    readingState.edit().putStringSet(key,values).apply();
+    android.widget.Toast.makeText(this,"Bookmark သိမ်းပြီး",android.widget.Toast.LENGTH_SHORT).show();
+  }
+  private void openBookmarks(){
+    String file=currentFile==null?readingState.getString("last_file",null):currentFile;
+    if(file==null){note("Bookmark မရှိသေးပါ။");return;}
+    java.util.ArrayList<Integer> pages=new java.util.ArrayList<>();
+    for(String v:readingState.getStringSet("bookmark_"+file,java.util.Collections.emptySet())){
+      try{pages.add(Integer.parseInt(v));}catch(Exception ignored){}
+    }
+    java.util.Collections.sort(pages);
+    if(pages.isEmpty()){new AlertDialog.Builder(this).setTitle("Bookmarks").setMessage("သိမ်းထားသော စာမျက်နှာ မရှိသေးပါ။").setPositiveButton("OK",null).show();return;}
+    String[] names=new String[pages.size()];
+    for(int i=0;i<pages.size();i++)names[i]="Page "+(pages.get(i)+1);
+    String chosenFile=file;
+    new AlertDialog.Builder(this).setTitle("Bookmarks • "+file).setItems(names,(d,i)->showFile(chosenFile,pages.get(i))).setNegativeButton("ပိတ်ရန်",null).show();
   }
   private String parent(String file){
     int n=file.lastIndexOf('/');
