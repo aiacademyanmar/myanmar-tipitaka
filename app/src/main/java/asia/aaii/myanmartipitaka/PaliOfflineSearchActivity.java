@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import java.io.File;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -52,7 +53,7 @@ public final class PaliOfflineSearchActivity extends Activity {
     query=new EditText(this);query.setSingleLine(true);query.setHint("ပါဠိစာသား သို့မဟုတ် Segment ID");
     query.setImeOptions(EditorInfo.IME_ACTION_SEARCH);root.addView(query);
     search=new Button(this);search.setText("⌕  Offline ရှာရန်");root.addView(search);
-    status=label("မူရင်းပါဠိစာသားများအတွင်းသာ ရှာဖွေမည်။ မြန်မာအတည်ပြုဘာသာပြန် မပါသေးပါ။",13,false);root.addView(status);
+    status=label("Unicode NFC ဖြင့် ရှာဖွေမည်။ မူရင်းမြန်မာအက္ခရာ ပါဠိစာသားသာ ပါသည် — ဘာသာပြန်မပါသေးပါ။",13,false);root.addView(status);
     ScrollView sc=new ScrollView(this);results=new LinearLayout(this);results.setOrientation(LinearLayout.VERTICAL);
     sc.addView(results);root.addView(sc,new LinearLayout.LayoutParams(-1,0,1));
     Button back=new Button(this);back.setText("‹  Reader သို့ပြန်ရန်");root.addView(back);
@@ -63,7 +64,7 @@ public final class PaliOfflineSearchActivity extends Activity {
     if(initial!=null){query.setText(initial);if(!initial.trim().isEmpty())runSearch();}
   }
   private void runSearch(){
-    String q=query.getText().toString().trim();
+    String q=Normalizer.normalize(query.getText().toString().trim(),Normalizer.Form.NFC);
     if(q.isEmpty()){query.setError("ရှာရန်စာသား ထည့်ပါ");return;}
     if(q.length()>100){query.setError("စာလုံးရေ ၁၀၀ ထက်မပိုရ");return;}
     int token=++generation;
@@ -74,8 +75,8 @@ public final class PaliOfflineSearchActivity extends Activity {
       String failure=null;long started=android.os.SystemClock.elapsedRealtime();
       SQLiteDatabase db=null;
       try{
-        File local=new File(getFilesDir(),"pali_root_source.sqlite");
-        if(!local.isFile())throw new IllegalStateException("Offline Pāli Source ကို Reader မှ အရင်ဖွင့်ပါ။");
+        // Search works even before the user opens the Pali reader.
+        File local=PaliSourceInstaller.prepare(getApplicationContext()).file;
         db=SQLiteDatabase.openDatabase(local.getAbsolutePath(),null,SQLiteDatabase.OPEN_READONLY);
         final String sql;
         final String[] args;
@@ -100,7 +101,7 @@ public final class PaliOfflineSearchActivity extends Activity {
         search.setEnabled(true);
         results.removeAllViews();
         if(error!=null){status.setText("ရှာဖွေမှု မအောင်မြင်ပါ: "+error);return;}
-        status.setText("တွေ့ရှိမှု "+hits.size()+" ခု (အများဆုံး "+MAX_RESULTS+") • "+elapsed+" ms");
+        status.setText("Unicode NFC • တွေ့ရှိမှု "+hits.size()+" ခု (အများဆုံး "+MAX_RESULTS+") • "+elapsed+" ms");
         if(hits.isEmpty()){results.addView(label("ကိုက်ညီသော ပါဠိစာသား မတွေ့ပါ။",15,false));return;}
         for(Hit h:hits){
           String snippet=h.body==null?"":h.body;
