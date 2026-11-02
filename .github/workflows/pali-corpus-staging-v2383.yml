@@ -1,0 +1,36 @@
+name: V2.3.8.3 Fetch Pali Corpus Staging
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  fetch-stage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download published source with Git commit provenance
+        run: python tools/fetch_bilara_pali.py --dest build/bilara-data --ref published
+      - name: Import all available Pali segments as unreviewed staging only
+        run: |
+          mkdir -p build/staging
+          echo '{}' > build/staging/unverified_mcu_crosswalk.json
+          cd build/bilara-data
+          SHA=$(git rev-parse HEAD)
+          cd ../..
+          python tools/import_bilara_pali.py --root build/bilara-data/root/pli/ms --mapping build/staging/unverified_mcu_crosswalk.json --out build/staging/pali_staging.sqlite --source-commit "$SHA"
+      - name: Report data integrity and mapping gaps
+        run: |
+          python tools/audit_pali_staging.py build/staging/pali_staging.sqlite --report build/staging/audit.json
+      - name: Publish staging files, NEVER label verified
+        uses: actions/upload-artifact@v4
+        with:
+          name: UNREVIEWED-PALI-STAGING-V2.3.8.3
+          path: |
+            build/staging/pali_staging.sqlite
+            build/staging/audit.json
+            build/bilara-data/pali-source-manifest.json
+          retention-days: 7
