@@ -6,8 +6,8 @@ android {
         applicationId = "asia.aaii.myanmartipitaka"
         minSdk = 24
         targetSdk = 35
-        versionCode = 60
-        versionName = "2.3.6.7"
+        versionCode = 61
+        versionName = "2.3.6.8"
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
