@@ -59,7 +59,8 @@ public class NativeFrontPagesActivity extends Activity {
     Intent i=new Intent(this,TipitakaLibraryActivity.class);
     i.putExtra("start_volume",start);i.putExtra("end_volume",end);startActivity(i);
   }
-  public void navigateTo(int p){go(p);}\n  private void go(int p){
+  public void navigateTo(int p){go(p);}
+  private void go(int p){
     if(p==22){startActivity(new Intent(this,DhammapadaYamakavaggaActivity.class));return;}
     if(p==23){startActivity(new Intent(this,OfflineBookmarksActivity.class));return;}
     if(p==24){startActivity(new Intent(this,OfflineSearchActivity.class));return;}
