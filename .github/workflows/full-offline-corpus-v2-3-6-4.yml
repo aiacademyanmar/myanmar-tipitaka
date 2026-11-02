@@ -1,4 +1,4 @@
-name: Myanmar Tipitaka V2.3.6.5 — Full Pali Source Corpus Staging
+name: Myanmar Tipitaka V2.3.6.6 — Full Pali Source Corpus Staging
 on:
   workflow_dispatch:
   push:
@@ -48,6 +48,10 @@ jobs:
         run: python3 -m unittest scripts/test_verified_45_mapping_review.py -v
       - name: Generate exact Pali source-file boundary review dossier
         run: python3 scripts/prepare_verified_45_mapping_review.py pali_root_source.sqlite --out mapping-review-v2-3-6-5
+      - name: Audit generated review sheet (expected blocked pending humans)
+        id: editorial_review
+        continue-on-error: true
+        run: python3 scripts/audit_45_mapping_review.py pali_root_source.sqlite --sheet mapping-review-v2-3-6-5/45_volume_human_review_sheet.csv --report mapping_editorial_audit.json
       - name: Candidate 45-volume crosswalk validation (expected blocked)
         id: crosswalk
         continue-on-error: true
@@ -59,7 +63,7 @@ jobs:
       - name: Upload genuine source text staging separately from release
         uses: actions/upload-artifact@v4
         with:
-          name: Myanmar-Tipitaka-V2.3.6.5-Pali-Source-UNMAPPED-NOT-45-APK
+          name: Myanmar-Tipitaka-V2.3.6.6-Pali-Source-UNMAPPED-NOT-45-APK
           path: |
             pali_root_source.sqlite
             source_commit.txt
@@ -67,13 +71,14 @@ jobs:
             pali_source_staging_report.json
             corpus/45_volume_crosswalk.csv
             mapping-review-v2-3-6-5/
+            mapping_editorial_audit.json
           if-no-files-found: error
           retention-days: 30
       - name: Upload fully verified 45-volume reader SQLite if approved
         if: steps.crosswalk.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
-          name: Myanmar-Tipitaka-V2.3.6.5-Native-45-Volumes-VERIFIED
+          name: Myanmar-Tipitaka-V2.3.6.6-Native-45-Volumes-VERIFIED
           path: |
             tipitaka_offline.sqlite
             native_corpus_report.json
