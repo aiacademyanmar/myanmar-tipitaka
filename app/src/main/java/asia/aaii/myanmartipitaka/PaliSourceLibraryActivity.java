@@ -82,6 +82,7 @@ public final class PaliSourceLibraryActivity extends Activity {
       PaliSourceInstaller.Result installed=PaliSourceInstaller.prepare(this);
       File dest=installed.file;
       sourceRevision=installed.revision;
+      android.util.Log.i("PaliSourcePerformance","install_ms="+installed.elapsedMs+" copied="+installed.copied);
       opened=SQLiteDatabase.openDatabase(dest.getAbsolutePath(),null,SQLiteDatabase.OPEN_READONLY);
       try(Cursor c=opened.rawQuery("SELECT DISTINCT source_file FROM source_segments ORDER BY source_file",null)){
         while(c.moveToNext())files.add(c.getString(0));
@@ -170,6 +171,11 @@ public final class PaliSourceLibraryActivity extends Activity {
   }
   private void jumpToSegment(String file,String segment){
     if(db==null)return;
+    try(Cursor present=db.rawQuery("SELECT 1 FROM source_segments WHERE source_file=? AND segment_id=? LIMIT 1",new String[]{file,segment})){
+      if(!present.moveToFirst()){
+        new AlertDialog.Builder(this).setMessage("Source Revision ပြောင်းသွား၍ Bookmark ကျမ်းပိုဒ် မတွေ့ပါ။").setPositiveButton("OK",null).show();return;
+      }
+    }
     try(Cursor cursor=db.rawQuery("SELECT COUNT(*) FROM source_segments WHERE source_file=? AND rowid<(SELECT rowid FROM source_segments WHERE source_file=? AND segment_id=? LIMIT 1)",new String[]{file,file,segment})){
       if(cursor.moveToFirst())showFile(file,cursor.getInt(0)/50);
     }
