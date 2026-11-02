@@ -47,7 +47,7 @@ else:
                 report["checks"]["build_info_paragraph_count"]=expected_count
                 if expected_count!=count:
                     report["errors"].append(f"build_info paragraph count mismatch: metadata={expected_count}, actual={count}.")
-                if meta.get("edition_mapping")!="45-volume human-reviewed crosswalk":
+                if meta.get("edition_mapping") not in ("45-volume human-reviewed crosswalk","45-volume human-reviewed crosswalk with approved multifile spans"):
                     report["errors"].append("Edition mapping metadata is missing or not approved.")
                 if not meta.get("source_commit"):
                     report["errors"].append("Pinned source commit metadata is missing.")
