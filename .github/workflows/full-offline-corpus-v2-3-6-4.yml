@@ -1,0 +1,76 @@
+name: Myanmar Tipitaka V2.3.6.4 — Full Pali Source Corpus Staging
+on:
+  workflow_dispatch:
+  push:
+    branches: [v2.3.4-offline-reader-critical-fix]
+    paths:
+      - '.github/workflows/full-offline-corpus-v2-3-6-4.yml'
+      - 'scripts/build_bilara_source_sqlite.py'
+      - 'scripts/build_native_45_sqlite.py'
+      - 'scripts/validate_45_volume_crosswalk.py'
+      - 'corpus/45_volume_crosswalk.csv'
+permissions:
+  contents: read
+jobs:
+  stage-pali:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Pin original source revision
+        run: |
+          git clone --depth 1 --branch published --filter=blob:none --sparse https://github.com/suttacentral/bilara-data.git source
+          git -C source sparse-checkout set root/pli/ms
+          git -C source rev-parse HEAD > source_commit.txt
+          cp source/LICENSE.md upstream_LICENSE.md
+      - name: Create real offline original Pali source SQLite
+        run: |
+          python3 scripts/build_bilara_source_sqlite.py source/root/pli/ms --output pali_root_source.sqlite --source-commit "$(cat source_commit.txt)"
+          python3 - <<'PY'
+          import sqlite3,hashlib,json
+          db=sqlite3.connect("file:pali_root_source.sqlite?mode=ro",uri=True)
+          assert db.execute("PRAGMA integrity_check").fetchone()[0]=="ok"
+          n=db.execute("SELECT count(*) FROM source_segments").fetchone()[0]
+          files=db.execute("SELECT count(distinct source_file) FROM source_segments").fetchone()[0]
+          assert n>0 and files>0
+          bad=sum(hashlib.sha256(body.encode()).hexdigest()!=digest for body,digest in db.execute("SELECT body,sha256 FROM source_segments"))
+          assert bad==0,f"Source SHA mismatches: {bad}"
+          r={"status":"PALI_SOURCE_STAGED_UNMAPPED","source_segments":n,"source_files":files,
+             "verified_printed_volumes":0,"myanmar_approved_translations":0,"myanmar_approved_explanations":0,
+             "not_final_apk":True}
+          open("pali_source_staging_report.json","w").write(json.dumps(r,indent=2)+"\n")
+          print(json.dumps(r,indent=2))
+          PY
+      - name: Candidate 45-volume crosswalk validation (expected blocked)
+        id: crosswalk
+        continue-on-error: true
+        run: python3 scripts/validate_45_volume_crosswalk.py
+      - name: Build final reader SQLite only if exact mapping is verified
+        if: steps.crosswalk.outcome == 'success'
+        run: |
+          python3 scripts/build_native_45_sqlite.py pali_root_source.sqlite --crosswalk corpus/45_volume_crosswalk.csv --output tipitaka_offline.sqlite --report native_corpus_report.json
+      - name: Upload genuine source text staging separately from release
+        uses: actions/upload-artifact@v4
+        with:
+          name: Myanmar-Tipitaka-V2.3.6.4-Pali-Source-UNMAPPED-NOT-45-APK
+          path: |
+            pali_root_source.sqlite
+            source_commit.txt
+            upstream_LICENSE.md
+            pali_source_staging_report.json
+            corpus/45_volume_crosswalk.csv
+          if-no-files-found: error
+          retention-days: 30
+      - name: Upload fully verified 45-volume reader SQLite if approved
+        if: steps.crosswalk.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: Myanmar-Tipitaka-V2.3.6.4-Native-45-Volumes-VERIFIED
+          path: |
+            tipitaka_offline.sqlite
+            native_corpus_report.json
+          if-no-files-found: error
+          retention-days: 30
