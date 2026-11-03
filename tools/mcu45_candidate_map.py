@@ -24,7 +24,8 @@ def classify(uid, basket):
         if uid in ("pli-tv-bu-pm", "pli-tv-bi-pm"): return "", "SUPPLEMENTARY"
         return "", "UNMATCHED"
 
-    family = (re.match(r"^[a-z-]+", uid) or [None])[0]
+    match = re.match(r"^[a-z-]+", uid)
+    family = match.group(0) if match else ""
     if basket == "sutta":
         m = re.match(r"^(dn|mn|sn|an)(\d+)(?:\.|-|$)", uid)
         if m:
