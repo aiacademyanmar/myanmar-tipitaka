@@ -1,0 +1,67 @@
+name: V2.3.9.3 MCU Apadana Patthana Crosswalk
+on:
+  push:
+    branches:
+      - feature/verified-pali-import-v2377
+    paths:
+      - 'tools/mcu45_apadana_patthana_v2393.py'
+      - 'tools/mcu45_boundary_rules_v2392.py'
+      - 'tests/test_mcu45_boundary_v2393.py'
+      - '.github/workflows/mcu45-crosswalk-v2393.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  mcu-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test split boundary rules
+        run: python -m unittest discover -s tests -p test_mcu45_boundary_v2393.py -v
+      - name: Install source corpus exporter
+        run: python -m pip install xlsxwriter python-docx
+      - name: Fetch pinned published Pali branch
+        run: |
+          git clone --depth 1 --branch published --filter=blob:none --sparse https://github.com/suttacentral/bilara-data.git build/bilara-data
+          git -C build/bilara-data sparse-checkout set root/pli/ms
+      - name: Export original Roman Pali corpus SQLite
+        run: |
+          SHA=$(git -C build/bilara-data rev-parse HEAD)
+          python tools/export_bilara_complete_source.py --root build/bilara-data/root/pli/ms --out build/complete_source --source-commit "$SHA"
+      - name: Construct V2.3.9.1 MCU candidates
+        run: |
+          python tools/mcu45_candidate_map.py build/complete_source/pali_source_unreviewed.sqlite build/candidates_v2391.sqlite
+      - name: Construct V2.3.9.2 split candidates
+        run: |
+          python tools/mcu45_boundary_rules_v2392.py --candidate-db build/candidates_v2391.sqlite --out build/splits_v2392.sqlite --report build/splits_v2392.json
+      - name: Construct V2.3.9.3 boundary review and verify hashes
+        run: |
+          python tools/mcu45_apadana_patthana_v2393.py --candidate-db build/candidates_v2391.sqlite --prior-split-db build/splits_v2392.sqlite --pali-db build/complete_source/pali_source_unreviewed.sqlite --out build/MCU45_Boundary_Review_UNVERIFIED_v2393.sqlite --report build/MCU45_Audit_v2393.json
+      - name: Fail closed on mismatched totals
+        run: |
+          python - <<'PY'
+          import json,sqlite3
+          r=json.load(open("build/MCU45_Audit_v2393.json"))
+          assert r["prior_candidates"]==362306, r
+          assert r["new_source_structure_candidates"]==47533, r
+          assert r["total_structure_candidates"]==409839, r
+          assert r["remaining_boundary_review"]==16114, r
+          assert r["verified_mcu_volumes"]==0, r
+          assert r["source_hashes_checked"]==63647, r
+          c=sqlite3.connect("build/MCU45_Boundary_Review_UNVERIFIED_v2393.sqlite")
+          assert c.execute("PRAGMA integrity_check").fetchone()[0]=="ok"
+          assert c.execute("SELECT COUNT(*) FROM segment_boundary_review WHERE mcu_paragraph_verified != 0").fetchone()[0]==0
+          PY
+      - name: Upload review database — not an approved 45-book APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: UNVERIFIED-MCU45-V2393-BOUNDARY-REVIEW
+          path: |
+            build/MCU45_Boundary_Review_UNVERIFIED_v2393.sqlite
+            build/MCU45_Audit_v2393.json
+            build/splits_v2392.json
+          retention-days: 14
