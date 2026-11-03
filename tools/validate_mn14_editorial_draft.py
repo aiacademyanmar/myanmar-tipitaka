@@ -10,6 +10,8 @@ COLUMNS=['segment_id','sutta_uid','pali','translation_draft','explanation_draft'
 METHODS={'SEGMENT_LEVEL_WORKING_TRANSLATION':130,'SOURCE_ELLIPSIS_UNEXPANDED':13,'CONTEXTUAL_SUMMARY_NEEDS_LITERAL_REVIEW':1}
 COUNTS={'mn1':334,'mn2':125,'mn3':128,'mn4':165,'mn5':203,'mn6':51,'mn7':147,'mn8':170,'mn9':234,'mn10':235,'mn11':132,'mn12':372,'mn13':152,'mn14':144}
 BLOB='7f38297154a85f06f97980d54b5b65a34f959e1d'
+EXPECTED_SOURCE_CHARS=14940
+EXPECTED_SOURCE_ROLLING=106229723
 def validate(csv_file,original_json,combined_db=None,prior_db=None):
  source=json.loads(Path(original_json).read_text(encoding='utf-8-sig'))
  if not isinstance(source,dict) or len(source)!=144 or not all(k.startswith('mn14:') for k in source):
@@ -17,7 +19,7 @@ def validate(csv_file,original_json,combined_db=None,prior_db=None):
  s=json.dumps(list(source.items()),ensure_ascii=False,separators=(',',':'))
  check=0
  for char in s:check=(check*131+ord(char))%1000000007
- if (len(s),check)!=(14940,106229723):raise ValueError('Source content checksum mismatch')
+ if (len(s),check)!=(EXPECTED_SOURCE_CHARS,EXPECTED_SOURCE_ROLLING):raise ValueError('Source content checksum mismatch')
  with Path(csv_file).open(encoding='utf-8-sig',newline='') as f:
   reader=csv.DictReader(f)
   if reader.fieldnames!=COLUMNS:raise ValueError('CSV schema mismatch')
