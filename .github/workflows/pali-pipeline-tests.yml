@@ -14,7 +14,7 @@ jobs:
         with:
           python-version: '3.12'
       - name: Test synthetic staging and reviewed-only export
-        run: python -m unittest discover -s tests -p 'test_pali_pipeline.py' -v
+        run: python -m unittest discover -s tests -p 'test_*.py' -v
       - name: Confirm no full-text release claim
         run: |
           test ! -e app/src/main/assets/approved_pali.sqlite || echo "Approved asset exists; manual license/content review required."
