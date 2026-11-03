@@ -61,8 +61,16 @@ def main():
   dst.execute("INSERT INTO evidence VALUES(?,?,?,?)",("OTHER_PENDING","",
       "https://tipitaka.cloud/library/","NOT_VERIFIED"))
   counts=collections.Counter(); per_volume=collections.Counter(); buff=[]
-  for seg,uid,pool,digest in src.execute("""SELECT segment_id,text_uid,volume_candidates,source_sha256
-    FROM candidate_map WHERE mapping_status='SPLIT_REQUIRED' ORDER BY segment_id"""):
+  tables={r[0] for r in src.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+  if "candidate_map" in tables:
+   table,pool_col,hash_col,status_col="candidate_map","volume_candidates","source_sha256","mapping_status"
+  elif "mapping_candidates" in tables:
+   table,pool_col,hash_col,status_col="mapping_candidates","volumes","sha256","status"
+  else:
+   raise ValueError("No recognized candidate mapping table")
+  rows=src.execute(f"""SELECT segment_id,text_uid,{pool_col},{hash_col}
+    FROM {table} WHERE {status_col}='SPLIT_REQUIRED' ORDER BY segment_id""")
+  for seg,uid,pool,digest in rows:
    volume,evidence=decide(pool,uid)
    status="SOURCE_ALIGNED_CANDIDATE" if volume is not None else "REVIEW_REQUIRED"
    counts[(pool,status)]+=1
@@ -70,8 +78,8 @@ def main():
    buff.append((seg,uid,pool,volume,status,evidence,digest))
    if len(buff)>=10000:dst.executemany("INSERT INTO split_candidates VALUES(?,?,?,?,?,?,?)",buff);buff=[]
   if buff:dst.executemany("INSERT INTO split_candidates VALUES(?,?,?,?,?,?,?)",buff)
-  total=src.execute("SELECT count(*) FROM candidate_map").fetchone()[0]
-  expected=src.execute("SELECT count(*) FROM candidate_map WHERE mapping_status='SPLIT_REQUIRED'").fetchone()[0]
+  total=src.execute(f"SELECT count(*) FROM {table}").fetchone()[0]
+  expected=src.execute(f"SELECT count(*) FROM {table} WHERE {status_col}='SPLIT_REQUIRED'").fetchone()[0]
   actual=dst.execute("SELECT count(*) FROM split_candidates").fetchone()[0]
   approved=dst.execute("SELECT count(*) FROM split_candidates WHERE mapping_status='SOURCE_ALIGNED_CANDIDATE'").fetchone()[0]
   assert total==444701 and expected==actual and dst.execute("pragma integrity_check").fetchone()[0]=="ok"
