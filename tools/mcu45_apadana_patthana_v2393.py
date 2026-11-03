@@ -12,15 +12,15 @@ PATTHANA="https://www.buddhaparisa.org/patthana.php"
 
 def boundary(pool, uid):
     if pool=="32|33":
-        m=re.fullmatch(r"tha-ap(\\d+)",uid)
+        m=re.fullmatch(r"tha-ap(\d+)",uid)
         if m:
             n=int(m.group(1))
             if not 1<=n<=563: raise ValueError(uid)
             return (32 if n<=412 else 33),None
-        if re.fullmatch(r"thi-ap\\d+",uid): return 33,None
+        if re.fullmatch(r"thi-ap\d+",uid): return 33,None
         raise ValueError(f"Unknown Apadana source UID: {uid}")
     if pool=="40|41|42|43|44|45":
-        m=re.fullmatch(r"patthana(\\d+)\\..+",uid)
+        m=re.fullmatch(r"patthana(\d+)\..+",uid)
         if not m: raise ValueError(f"Unknown Patthana source UID: {uid}")
         n=int(m.group(1))
         if n==1:return None,"40|41"
@@ -88,7 +88,7 @@ def run(candidates, previous, pali_source, output, report):
           "verified_mcu_volumes":0,"source_hashes_checked":total,
           "sqlite_integrity":"ok","status":"CANDIDATE_ONLY_NOT_RELEASE_READY"}
         report.parent.mkdir(parents=True,exist_ok=True)
-        report.write_text(json.dumps(audit,ensure_ascii=False,indent=2)+"\\n",encoding="utf-8")
+        report.write_text(json.dumps(audit,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
         print(json.dumps(audit,ensure_ascii=False,indent=2))
     except Exception:
         o.close();output.unlink(missing_ok=True);raise
