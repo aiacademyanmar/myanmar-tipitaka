@@ -5,13 +5,14 @@
   "source_path": "root/pli/ms/sutta/mn/mn57_root-pli-ms.json",
   "source_url": "https://github.com/suttacentral/bilara-data/blob/published/root/pli/ms/sutta/mn/mn57_root-pli-ms.json",
   "upstream_git_blob_sha1": "8507f962072ca4450402c50555c01c271c39c03c",
-  "source_utf8_sha256": null,
-  "source_utf8_sha256_status": "PENDING",
+  "source_utf8_sha256": "a14072ad5f7c64e2f9e149c3867e20ed84353b3d3cea0bc945a63c49098762af",
+  "source_utf8_sha256_status": "VERIFIED",
   "segment_count": 114,
   "first_segment_id": "mn57:0.1",
   "last_segment_id": "mn57:15.5",
   "exact_source_blob_verified": true,
   "mcu_45_crosswalk_verified": false,
   "approved_myanmar_translation": false,
-  "production_release": "BLOCKED"
+  "production_release": "BLOCKED",
+  "source_utf8_bytes": 13044
 }
