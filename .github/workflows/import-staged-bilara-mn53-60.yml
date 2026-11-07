@@ -1,0 +1,58 @@
+name: Myanmar Tipitaka - Verified Staged MN53-MN60 Pali SQLite
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'staging/bilara-pali/**'
+      - 'tools/import_staged_bilara.py'
+      - '.github/workflows/import-staged-bilara-mn53-60.yml'
+permissions:
+  contents: read
+jobs:
+  build-staged-pali:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Python version
+        run: python3 --version
+      - name: Verify exact source SHA256 and build offline SQLite
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p staging/output
+          python3 tools/import_staged_bilara.py \
+            --root staging/bilara-pali \
+            --db staging/output/pali_mn53_mn60.sqlite \
+            --report staging/output/pali_mn53_mn60_QA.json
+          python3 - <<'PY'
+          import json,sqlite3
+          p='staging/output/pali_mn53_mn60_QA.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['suttas']==8,d
+          assert d['segments']==1385,d
+          assert d['source_sha256_verified_files']==8,d
+          assert d['sqlite_integrity']=='ok' and d['foreign_key_errors']==0,d
+          assert d['mcu_45_crosswalk_verified']==0
+          assert d['approved_myanmar_translations']==0
+          assert d['production_release']=='BLOCKED'
+          with sqlite3.connect('staging/output/pali_mn53_mn60.sqlite') as c:
+            assert c.execute('SELECT count(*) FROM pali_documents').fetchone()[0]==8
+            assert c.execute('SELECT count(*) FROM pali_segments').fetchone()[0]==1385
+            assert c.execute('SELECT count(*) FROM pali_fts').fetchone()[0]==1385
+            assert c.execute('PRAGMA integrity_check').fetchone()[0]=='ok'
+          print('QA PASS: exact 8 Pali suttas, 1385 source segments, 0 approvals, production BLOCKED')
+          PY
+          gzip -n -9 < staging/output/pali_mn53_mn60.sqlite > staging/output/pali_mn53_mn60.sqlite.gz
+          sha256sum staging/output/pali_mn53_mn60.sqlite staging/output/pali_mn53_mn60.sqlite.gz > staging/output/SHA256SUMS.txt
+      - name: Upload staging database and QA
+        uses: actions/upload-artifact@v4
+        with:
+          name: Tipitaka-MN53-MN60-Exact-Pali-1385-Segments-STAGING
+          path: |
+            staging/output/pali_mn53_mn60.sqlite.gz
+            staging/output/pali_mn53_mn60_QA.json
+            staging/output/SHA256SUMS.txt
+          if-no-files-found: error
+          retention-days: 30
