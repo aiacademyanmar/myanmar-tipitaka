@@ -1,0 +1,122 @@
+name: Myanmar Tipitaka - Exact 45-volume Syamarattha Pali Import (Staging)
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/import-royal45-pali.yml'
+permissions:
+  contents: read
+jobs:
+  import-45-pali-volumes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Clone public Royal Thai Pali source edition
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --depth 1 --branch master https://github.com/jorgecaa/tipitaka.rte.git .royal45
+          git -C .royal45 rev-parse HEAD > source_commit.txt
+          test -d .royal45/Canonical
+      - name: Verify exact 45 source volume files and preserve original Pali pages
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p staging
+          python3 - <<'PY'
+          import json,sqlite3,hashlib,pathlib,re
+          root=pathlib.Path('.royal45/Canonical')
+          volumes=sorted(root.glob('*.txt'))
+          names=[f.name for f in volumes]
+          assert len(names)==45, f'Expected exactly 45 canonical volumes; got {len(names)}'
+          expected=list(range(1,46))
+          numbers=[int(f.name[:2]) for f in volumes]
+          assert sorted(numbers)==expected, '45 volume ID coverage error'
+          db=sqlite3.connect('staging/royal45_pali.sqlite')
+          db.executescript("""
+          PRAGMA foreign_keys=ON;
+          CREATE TABLE volumes(
+           vol INTEGER PRIMARY KEY,
+           source_filename TEXT NOT NULL,
+           category TEXT NOT NULL,
+           sha256 TEXT NOT NULL,
+           page_count INTEGER NOT NULL
+          );
+          CREATE TABLE pali_pages(
+           page_id TEXT PRIMARY KEY,
+           vol INTEGER NOT NULL REFERENCES volumes(vol),
+           page_no INTEGER NOT NULL,
+           pali_full_source_page TEXT NOT NULL,
+           page_sha256 TEXT NOT NULL,
+           UNIQUE(vol,page_no)
+          );
+          CREATE INDEX ix_pali_page_order ON pali_pages(vol,page_no);
+          CREATE VIRTUAL TABLE pali_page_fts USING fts5(page_id UNINDEXED,pali_full_source_page,tokenize='unicode61');
+          CREATE TABLE release_gate(key TEXT PRIMARY KEY,value TEXT NOT NULL);
+          """)
+          markers=re.compile(r'(?m)^page number: ([0-9]{3})\s*$')
+          divisions={'vinaya':0,'sutta':0,'abhidhamma':0}
+          pages=0
+          for path in volumes:
+             vol=int(path.name[:2])
+             cat='vinaya' if vol<=8 else 'sutta' if vol<=33 else 'abhidhamma'
+             raw=path.read_bytes()
+             pali=raw.decode('utf-8-sig')
+             spans=list(markers.finditer(pali))
+             assert spans, 'No pages in '+path.name
+             actual=[int(x.group(1)) for x in spans]
+             assert actual==list(range(1,len(spans)+1)), 'Non-sequential pages '+path.name
+             db.execute('INSERT INTO volumes VALUES(?,?,?,?,?)',(
+                 vol,path.name,cat,hashlib.sha256(raw).hexdigest(),len(spans)))
+             for index,start in enumerate(spans):
+                 end=spans[index+1].start() if index+1<len(spans) else len(pali)
+                 page_text=pali[start.start():end]
+                 assert page_text.strip()
+                 page_id=f'royalthai:{vol:02d}:{index+1:03d}'
+                 db.execute('INSERT INTO pali_pages VALUES(?,?,?,?,?)',(
+                     page_id,vol,index+1,page_text,hashlib.sha256(page_text.encode('utf-8')).hexdigest()))
+                 db.execute('INSERT INTO pali_page_fts VALUES(?,?)',(page_id,page_text))
+                 pages+=1
+             divisions[cat]+=1
+          assert divisions=={'vinaya':8,'sutta':25,'abhidhamma':12}
+          db.execute('INSERT INTO release_gate VALUES(?,?)',('edition','Syamarattha Royal Thai 1925-1928; not yet verified equivalent to Thai MCU'))
+          db.execute('INSERT INTO release_gate VALUES(?,?)',('my_translation_approved','0'))
+          db.execute('INSERT INTO release_gate VALUES(?,?)',('production_release','BLOCKED'))
+          db.commit()
+          check=db.execute('PRAGMA integrity_check').fetchone()[0]
+          foreign=db.execute('PRAGMA foreign_key_check').fetchall()
+          index_rows=db.execute('SELECT COUNT(*) FROM pali_page_fts').fetchone()[0]
+          assert check=='ok' and not foreign and index_rows==pages
+          db.execute('VACUUM')
+          db.close()
+          qa={
+             'source':'jorgecaa/tipitaka.rte Canonical',
+             'edition':'Syamarattha Royal Siamese (not MCU verified)',
+             'source_commit':pathlib.Path('source_commit.txt').read_text().strip(),
+             'volumes':len(volumes),
+             'division_volumes':divisions,
+             'pages':pages,
+             'sqlite_integrity':check,
+             'fts_page_count':index_rows,
+             'mcu_45_equivalence_verified':False,
+             'approved_myanmar_translation_count':0,
+             'source_license_redistribution_review':'PENDING',
+             'production_release':'BLOCKED'
+          }
+          pathlib.Path('staging/royal45_import_report.json').write_text(json.dumps(qa,indent=2,ensure_ascii=False)+'\n')
+          print(json.dumps(qa,ensure_ascii=False,indent=2))
+          PY
+          gzip -n -9 < staging/royal45_pali.sqlite > staging/royal45_pali.sqlite.gz
+          sha256sum staging/royal45_pali.sqlite staging/royal45_pali.sqlite.gz > staging/sha256.txt
+      - name: Upload 45-volume edition source and QA (NOT MCU-approved APK)
+        uses: actions/upload-artifact@v4
+        with:
+          name: Myanmar-Tipitaka-RoyalThai-45-Volume-Pali-STAGING
+          path: |
+            staging/royal45_pali.sqlite.gz
+            staging/royal45_import_report.json
+            staging/sha256.txt
+          retention-days: 30
+          if-no-files-found: error
