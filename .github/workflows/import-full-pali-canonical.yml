@@ -1,0 +1,121 @@
+name: Myanmar Tipitaka - Full Canonical Pali Source Import (Staging)
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/import-full-pali-canonical.yml'
+permissions:
+  contents: read
+jobs:
+  import-pali:
+    runs-on: ubuntu-latest
+    timeout-minutes: 110
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch published source Pali (sparse checkout)
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --depth 1 --filter=blob:none --sparse --branch published https://github.com/suttacentral/bilara-data.git .bilara
+          git -C .bilara sparse-checkout set root/pli/ms
+          git -C .bilara rev-parse HEAD > source_commit.txt
+          test -d .bilara/root/pli/ms
+      - name: Preserve exact Pali segments in offline SQLite
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p staging
+          python3 - <<'PY'
+          import json, sqlite3, hashlib, pathlib, collections
+          root=pathlib.Path('.bilara/root/pli/ms')
+          db=sqlite3.connect('staging/pali_canonical.sqlite')
+          db.executescript("""
+          PRAGMA foreign_keys=ON;
+          CREATE TABLE pali_documents(
+            doc_key TEXT PRIMARY KEY,
+            division TEXT NOT NULL,
+            nikaya TEXT NOT NULL,
+            title TEXT NOT NULL,
+            source_path TEXT NOT NULL,
+            source_sha256 TEXT NOT NULL,
+            segment_count INTEGER NOT NULL
+          );
+          CREATE TABLE pali_segments(
+            source_segment_id TEXT PRIMARY KEY,
+            doc_key TEXT NOT NULL REFERENCES pali_documents(doc_key),
+            sequence_no INTEGER NOT NULL,
+            pali_original TEXT NOT NULL,
+            pali_sha256 TEXT NOT NULL
+          );
+          CREATE INDEX ix_doc_seg ON pali_segments(doc_key,sequence_no);
+          CREATE VIRTUAL TABLE pali_fts USING fts5(
+            source_segment_id UNINDEXED, pali_original, tokenize='unicode61'
+          );
+          CREATE TABLE mcu_volume_crosswalk(
+            volume INTEGER PRIMARY KEY CHECK(volume BETWEEN 1 AND 45),
+            division TEXT NOT NULL,
+            crosswalk_status TEXT NOT NULL DEFAULT 'unverified'
+          );
+          """)
+          for i in range(1,46):
+            division='vinaya' if i<=8 else 'sutta' if i<=33 else 'abhidhamma'
+            db.execute('INSERT INTO mcu_volume_crosswalk(volume,division) VALUES(?,?)',(i,division))
+          counts=collections.Counter()
+          files=sorted(root.rglob('*_root-pli-ms.json'))
+          if not files: raise RuntimeError('No root Pali source files')
+          for file in files:
+            rel=file.relative_to(root)
+            division=rel.parts[0] if len(rel.parts)>1 else ''
+            if division not in ('vinaya','sutta','abhidhamma'):continue
+            raw=file.read_bytes()
+            segments=json.loads(raw.decode('utf-8-sig'))
+            if not isinstance(segments,dict) or not segments:raise RuntimeError('Bad file: '+str(file))
+            doc=file.name.split('_root-pli-')[0]
+            title=str(segments.get(doc+':0.2',doc)).strip()
+            nikaya=rel.parts[1] if len(rel.parts)>2 else division
+            db.execute('INSERT INTO pali_documents VALUES(?,?,?,?,?,?,?)',(
+                doc,division,nikaya,title,str(rel),hashlib.sha256(raw).hexdigest(),len(segments)))
+            for n,(sid,pali) in enumerate(segments.items(),1):
+              if not isinstance(sid,str) or not isinstance(pali,str) or not pali.strip():raise RuntimeError('Invalid '+str(sid))
+              db.execute('INSERT INTO pali_segments VALUES(?,?,?,?,?)',(
+                  sid,doc,n,pali,hashlib.sha256(pali.encode('utf-8')).hexdigest()))
+              db.execute('INSERT INTO pali_fts VALUES(?,?)',(sid,pali))
+              counts[division+'_segments']+=1
+            counts[division+'_files']+=1
+          db.commit()
+          integrity=db.execute('PRAGMA integrity_check').fetchone()[0]
+          fk=db.execute('PRAGMA foreign_key_check').fetchall()
+          docs=db.execute('SELECT COUNT(*) FROM pali_documents').fetchone()[0]
+          rows=db.execute('SELECT COUNT(*) FROM pali_segments').fetchone()[0]
+          indexed=db.execute('SELECT COUNT(*) FROM pali_fts').fetchone()[0]
+          assert integrity=='ok' and not fk and indexed==rows and docs>0
+          assert all(counts[x+'_files']>0 for x in ('vinaya','sutta','abhidhamma'))
+          db.execute('VACUUM'); db.close()
+          qa={
+           'edition':'SuttaCentral Bilara published / Mahasangiti Pali',
+           'source_commit':pathlib.Path('source_commit.txt').read_text().strip(),
+           'counts':dict(counts),'file_count':docs,'segment_count':rows,
+           'integrity_check':integrity,'foreign_key_errors':len(fk),
+           'fts_records':indexed,'mcu_45_volumes_indexed':45,
+           'mcu_45_volume_mapping_verified':0,
+           'approved_myanmar_translation_count':0,
+           'full_45_mcu_volumes_verified':False,
+           'note':'Exact available source Pali segment strings; source may abbreviate repetitions. MCU 45-volume crosswalk not yet verified.',
+           'production_release':'BLOCKED'
+          }
+          pathlib.Path('staging/pali_import_report.json').write_text(json.dumps(qa,indent=2,ensure_ascii=False)+'\n')
+          print(json.dumps(qa,indent=2,ensure_ascii=False))
+          PY
+          gzip -n -9 < staging/pali_canonical.sqlite > staging/pali_canonical.sqlite.gz
+          sha256sum staging/pali_canonical.sqlite staging/pali_canonical.sqlite.gz > staging/sha256.txt
+      - name: Upload exact-source corpus and QA report
+        uses: actions/upload-artifact@v4
+        with:
+          name: Myanmar-Tipitaka-Bilara-Full-Pali-Source-Staging
+          path: |
+            staging/pali_canonical.sqlite.gz
+            staging/pali_import_report.json
+            staging/sha256.txt
+          retention-days: 30
+          if-no-files-found: error
