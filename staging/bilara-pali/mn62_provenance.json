@@ -1,0 +1,19 @@
+{
+  "sutta_id": "mn62",
+  "source_repo": "suttacentral/bilara-data",
+  "source_ref": "published",
+  "source_path": "root/pli/ms/sutta/mn/mn62_root-pli-ms.json",
+  "source_url": "https://github.com/suttacentral/bilara-data/blob/published/root/pli/ms/sutta/mn/mn62_root-pli-ms.json",
+  "upstream_git_blob_sha1": "c571e2f5712d43492b699479671662638c2e00a5",
+  "source_utf8_sha256": "e7af98c00e8a6ed3c8e99bd83f791acf01a4207b5dcfcaeef8a36b32968d5433",
+  "source_utf8_sha256_status": "VERIFIED",
+  "segment_count": 122,
+  "first_segment_id": "mn62:0.1",
+  "last_segment_id": "mn62:30.5",
+  "exact_source_blob_verified": true,
+  "mcu_45_crosswalk_verified": false,
+  "approved_myanmar_translation": false,
+  "source_rights_review": "PENDING",
+  "production_release": "BLOCKED",
+  "source_utf8_bytes": 14677
+}
