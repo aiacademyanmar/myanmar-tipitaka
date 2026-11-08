@@ -45,7 +45,9 @@ def build(root,sqlite_file,report_file):
   for item in items:
    sid=item['sutta_id'];path=root/(sid+'_root-pli-ms.json')
    raw=path.read_bytes();sha=hashlib.sha256(raw).hexdigest()
-   if sha!=item['source_utf8_sha256']:raise ValueError('Source SHA mismatch: '+sid)
+   if sha!=item['source_utf8_sha256']:raise ValueError('Source SHA256 mismatch: '+sid)
+   git_blob_sha1=hashlib.sha1(b'blob '+str(len(raw)).encode('ascii')+b'\x00'+raw).hexdigest()
+   if git_blob_sha1!=item['source_blob_sha1']:raise ValueError('Source Git blob SHA1 mismatch: '+sid)
    data=json.loads(raw.decode('utf-8-sig'))
    if not isinstance(data,dict) or len(data)!=item['segment_count']:
     raise ValueError('Segment count mismatch: '+sid)
