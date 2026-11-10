@@ -1,9 +1,9 @@
 {
   "project": "Myanmar Tipitaka",
-  "updated_at": "2026-11-09",
+  "updated_at": "2026-11-10",
   "edition": "SuttaCentral Bilara published / Mahasangiti Roman Pali",
-  "staged_suttas": 24,
-  "staged_source_segments": 3926,
+  "staged_suttas": 32,
+  "staged_source_segments": 5763,
   "staged_items": [
     {
       "sutta_id": "mn53",
@@ -220,10 +220,82 @@
       "source_git_blob_verified": true,
       "local_sqlite_import_verified": false,
       "expert_translation_approved": false
+    },
+    {
+      "sutta_id": "mn77",
+      "source_blob_sha1": "79d9ec13ba63f2f3c42db403365ce8d225754cb7",
+      "source_utf8_sha256": "8db6618983d4aeaee0524db9a79705225892d5fb85523737f96fbbee8e56266c",
+      "segment_count": 390,
+      "source_git_blob_verified": true,
+      "local_sqlite_import_verified": false,
+      "expert_translation_approved": false
+    },
+    {
+      "sutta_id": "mn78",
+      "source_blob_sha1": "631635e147abb73d1187fe01da6497fe9113d741",
+      "source_utf8_sha256": "80b9c6cfac6ee0a7250093fec3986f988d5ac4cc794025193978f0db0e861051",
+      "segment_count": 162,
+      "source_git_blob_verified": true,
+      "local_sqlite_import_verified": false,
+      "expert_translation_approved": false
+    },
+    {
+      "sutta_id": "mn79",
+      "source_blob_sha1": "4bf599096bb5d326854a55e7cd519a23b30fb1d0",
+      "source_utf8_sha256": "dfbf228ebc47dccaa42b57cf733f8397940438e35ead6f63ea6a035f40db4adc",
+      "segment_count": 200,
+      "source_git_blob_verified": true,
+      "local_sqlite_import_verified": false,
+      "expert_translation_approved": false
+    },
+    {
+      "sutta_id": "mn80",
+      "source_blob_sha1": "57a10bedd7bba6fd497d12054c1ea20422f9689b",
+      "source_utf8_sha256": "d06cf0dc95b431bd4cb5f19952ad505165d353b5d052ef5f62ee697745d0ef48",
+      "segment_count": 101,
+      "source_git_blob_verified": true,
+      "local_sqlite_import_verified": false,
+      "expert_translation_approved": false
+    },
+    {
+      "sutta_id": "mn81",
+      "source_blob_sha1": "4ba2894c80b73819412d3bf405e653591565c374",
+      "source_utf8_sha256": "23bb7579d38a9981003666719e9c718d049bfd764d464a5dacdf7dc34ec00d91",
+      "segment_count": 198,
+      "source_git_blob_verified": true,
+      "local_sqlite_import_verified": false,
+      "expert_translation_approved": false
+    },
+    {
+      "sutta_id": "mn82",
+      "source_blob_sha1": "fffe30a6fc9b7e795e0ecc4d6f553a48a243bc58",
+      "source_utf8_sha256": "aacec1e02de0a217dea81bc9513a16d5deca4d530ad22cd3ae76ca26bbdba06b",
+      "segment_count": 434,
+      "source_git_blob_verified": true,
+      "local_sqlite_import_verified": false,
+      "expert_translation_approved": false
+    },
+    {
+      "sutta_id": "mn83",
+      "source_blob_sha1": "6e5e265c344d069293bafaef4f44dfa3d8d6e065",
+      "source_utf8_sha256": "e8a527534735f5cbb4541aa0b6e0d535f94798589a5503c747aa7e0344bbbb6c",
+      "segment_count": 181,
+      "source_git_blob_verified": true,
+      "local_sqlite_import_verified": false,
+      "expert_translation_approved": false
+    },
+    {
+      "sutta_id": "mn84",
+      "source_blob_sha1": "5fb8b5252ee19d3d9b13c379d98ecaa01668889a",
+      "source_utf8_sha256": "50d16708facdd6c2f6adb87b731375b10f6477fe1b0ce06d54482dd36f7e2605",
+      "segment_count": 171,
+      "source_git_blob_verified": true,
+      "local_sqlite_import_verified": false,
+      "expert_translation_approved": false
     }
   ],
-  "last_staged_sutta": "mn76",
-  "next_unstaged_sutta": "mn77",
+  "last_staged_sutta": "mn84",
+  "next_unstaged_sutta": "mn85",
   "legacy_mn38_mn52_thematic_drafts": 748,
   "legacy_mapping_collision": "MN40:mn40:3.2 maps to 12 thematic draft records; not 12 exact Pali segments",
   "mcu_45_volumes_verified": 0,
